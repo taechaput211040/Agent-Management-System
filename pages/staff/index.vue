@@ -3,11 +3,16 @@
     <div v-if="!isLoading">
       <v-row>
         <v-container>
-          <h1 class="text-center mt-2">ตั้งค่า Role</h1>
-
+          <h1 class="text-center mt-2">ตั้งค่า Staff</h1>
           <v-card class=" pa-3 mt-5  mb-2 classtable">
-            <v-row class="mt-2">
+            <v-row class="mt-2" align-baseline>
+              <v-col cols="4"
+                ><v-btn color="primary" rounded
+                  ><v-icon>mdi-plus</v-icon> ADD STAFF</v-btn
+                ></v-col
+              >
               <v-spacer></v-spacer>
+
               <v-col cols="3" align="baseline">
                 <v-text-field
                   v-model="searchdata"
@@ -35,16 +40,16 @@
                   fab
                   dark
                   x-small
-                  color="purple"
+                  color="warning"
                   @click="modal_add = true"
                 >
                   <v-icon dark>
                     mdi-pencil
                   </v-icon>
                 </v-btn>
-                <v-btn class="mx-2" fab dark x-small color="blue-grey">
+                <v-btn class="mx-2" fab dark x-small color="error">
                   <v-icon dark>
-                    mdi-key
+                    mdi-delete
                   </v-icon>
                 </v-btn>
               </template>
@@ -97,14 +102,20 @@ export default {
           divider: true
         },
         {
+          text: "Role",
+          value: "role",
+          align: "center",
+          divider: true
+        },
+        {
           text: "Name",
           value: "name",
           align: "center",
           divider: true
         },
         {
-          text: "Level",
-          value: "level",
+          text: "Username",
+          value: "username",
           divider: true,
           align: "center",
           sortable: false
@@ -116,12 +127,7 @@ export default {
           class: "col-1",
           divider: true
         },
-        {
-          text: "View",
-          value: "view",
-          align: "center",
-          divider: true
-        },
+
         {
           text: "Action",
           value: "action",
@@ -131,7 +137,9 @@ export default {
       ],
       exampleitem: [
         {
-          name: "senior",
+          role: "senior",
+          name: "ประหยัด",
+          username: "asdsad",
           level: "1",
           status: 1
         }

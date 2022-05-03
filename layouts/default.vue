@@ -4,53 +4,72 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
       <v-spacer />
-      <v-speed-dial
-        absolute
-        right
-        direction="bottom"
-        transition="slide-y-transition"
-      >
+
+      <v-btn icon @click.prevent="$vuetify.theme.dark = !$vuetify.theme.dark">
+        <v-icon>{{ $vuetify.theme.dark ? 'mdi-brightness-4' : 'mdi-weather-night' }}</v-icon>
+      </v-btn>
+      <!-- <v-speed-dial direction="bottom left" transition="slide-y-transition">
         <template v-slot:activator>
-          <v-btn v-model="fab" color="blue darken-2" dark fab>
+          <v-btn v-model="fab" fab>
             <v-icon> mdi-account-circle </v-icon>
           </v-btn>
         </template>
-        <v-btn @click.prevent="switchBackToAdmin">
-          Back To Admin
-        </v-btn>
-        <v-btn @click.prevent="switch_auth = true">
-          swith
-        </v-btn>
-
+        <v-btn @click.prevent="switchBackToAdmin">Back To Admin</v-btn>
+        <v-btn @click.prevent="switch_auth = true">Swith</v-btn>
         <v-btn @click="logout" fab dark small color="red">
           <v-icon>mdi-logout</v-icon>
         </v-btn>
-      </v-speed-dial>
+      </v-speed-dial> -->
+      <v-menu offset-y>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn icon v-bind="attrs" v-on="on">
+            <v-icon>mdi-account-circle</v-icon>
+            <v-icon small class="hidden-sm-and-down">mdi-chevron-down</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item @click.prevent="switchBackToAdmin">
+            <v-list-item-icon>
+              <v-icon>mdi-shield-account</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Back To Admin</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item @click.prevent="switch_auth = true">
+            <v-list-item-icon>
+              <v-icon>mdi-account-switch</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title> Switch</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item @click.prevent="logout">
+            <v-list-item-icon>
+              <v-icon>mdi-logout</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title> logout</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" :clipped="clipped" app fixed>
       <v-list nav dense>
-        <div v-for="(link, i) in items" :key="i">
+        <div v-for="(link, i) in navigationMenu" :key="i">
           <v-list-item v-if="!link.subLinks" :to="link.to" class="v-list-item">
             <v-list-item-icon>
               <v-icon>{{ link.icon }}</v-icon>
             </v-list-item-icon>
-
             <v-list-item-title v-text="link.title" />
           </v-list-item>
-
-          <v-list-group
-            v-else
-            :key="link.title"
-            no-action
-            :prepend-icon="link.icon"
-            :value="false"
-          >
+          <v-list-group v-else :key="link.title" no-action :prepend-icon="link.icon" :value="false">
             <template v-slot:activator>
               <v-list-item-title>{{ link.title }}</v-list-item-title>
             </template>
-
             <v-list-item
-              style="padding-left:30px !important"
+              style="padding-left: 30px !important"
               v-for="sublink in link.subLinks"
               :to="sublink.to"
               :key="sublink.text"
@@ -75,15 +94,9 @@
     </v-main>
     <v-dialog v-model="switch_auth" persistent width="600px">
       <v-card class="pa-5">
-        <div class="text-h6">
-          กรุณากรอก username ที่ต้องการ authentication
-        </div>
-        <v-form
-          style="width:100%"
-          class="q-gutter-sm"
-          @submit.prevent="submitauthen"
-        >
-          <span class="q-gutter-md" style="width:100%">
+        <div class="text-h6">กรุณากรอก username ที่ต้องการ authentication</div>
+        <v-form style="width: 100%" class="q-gutter-sm" @submit.prevent="submitauthen">
+          <span class="q-gutter-md" style="width: 100%">
             <v-text-field
               v-model="switchauthtoagent.usernameByAuthen"
               required
@@ -94,9 +107,7 @@
             />
           </span>
           <v-card-actions align="right">
-            <v-btn outlined rounded color="red" @click="switch_auth = false"
-              >ยกเลิก</v-btn
-            >
+            <v-btn outlined rounded color="red" @click="switch_auth = false">ยกเลิก</v-btn>
             <v-btn @click="submitauthen" color="primary">ยืนยัน</v-btn>
           </v-card-actions>
         </v-form>
@@ -107,13 +118,13 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex'
 export default {
-  middleware: "auth",
+  middleware: 'auth',
   data() {
     return {
       switchauthtoagent: {
-        usernameByAuthen: ""
+        usernameByAuthen: '',
       },
       switch_auth: false,
       fab: false,
@@ -122,160 +133,166 @@ export default {
       clipped: false,
       drawer: true,
       fixed: false,
-
       items: [
         {
-          title: "Dashboard",
-          to: "/",
-          icon: "mdi-view-dashboard"
+          title: 'Dashboard',
+          to: '/',
+          icon: 'mdi-view-dashboard',
         },
         {
-          title: "Account",
-          to: "/account",
-          icon: "mdi-account",
+          title: 'Account',
+          to: '/account',
+          icon: 'mdi-shield-account',
           subLinks: [
             {
-              icon: "mdi-view-dashboard",
-              text: "Profile",
-              to: "/account/profile"
+              icon: 'mdi-account',
+              text: 'Profile',
+              to: '/account/profile',
             },
             {
-              icon: "mdi-view-dashboard",
-              text: "Change Password",
-              to: "/account/changepassword"
-            }
-          ]
+              icon: 'mdi-key-variant',
+              text: 'Change Password',
+              to: '/account/changepassword',
+            },
+          ],
         },
+
         {
-          title: "Staff Management",
-          to: "/staff",
-          icon: "mdi-credit-card-check"
-        },
-        {
-          title: "Company Menagement",
-          to: "/company",
-          icon: "mdi-credit-card-plus-outline"
-        },
-        {
-          title: "Shareholder Management",
-          to: "/playHistory",
-          icon: "mdi-history"
-        },
-        {
-          title: "Senior Management",
-          to: "/downline/Senior",
-          icon: "mdi-gamepad-variant-outline"
-        },
-        {
-          title: "Agent Management",
-          to: "/downline/Agent",
-          icon: "mdi-cog-outline"
-        },
-        {
-          title: "Member Management",
-          to: "/downline/Member",
-          icon: "mdi-account-circle-outline"
-        },
-        {
-          title: "Setting",
-          to: "/setting",
-          icon: "mdi-gamepad-square",
+          title: 'Setting',
+          to: '/setting',
+          icon: 'mdi-cog',
           subLinks: [
             {
-              icon: "mdi-view-dashboard",
-              text: "Role",
-              to: "/setting/role"
+              icon: 'mdi-view-dashboard',
+              text: 'Role',
+              to: '/setting/role',
             },
             {
-              icon: "mdi-view-dashboard",
-              text: "Provider",
-              to: "/setting/provider"
+              icon: 'mdi-view-dashboard',
+              text: 'Provider',
+              to: '/setting/provider',
             },
             {
-              icon: "mdi-view-dashboard",
-              text: "Type",
-              to: "/setting/type"
-            }
-          ]
-        }
+              icon: 'mdi-view-dashboard',
+              text: 'Type',
+              to: '/setting/type',
+            },
+          ],
+        },
       ],
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: "SMART BET"
-    };
+      title: 'SMART BET',
+    }
   },
   computed: {
-    ...mapGetters("auth", ["token"])
+    ...mapGetters('auth', ['token']),
+    navigationMenu() {
+      return this.items
+    },
   },
   async created() {
     // await this.checkauthen();
+    const managementMenu = ['staff', 'company', 'shareholder', 'senior', 'agent', 'member'].map((x) => ({
+      title: `${x.charAt(0).toUpperCase() + x.slice(1)} Management`,
+      to: `/${x}`,
+      icon:
+        x == 'member'
+          ? 'mdi-account-group'
+          : x == 'senior'
+          ? 'mdi-account-tie'
+          : x == 'agent'
+          ? 'mdi-account-supervisor'
+          : 'mdi-office-building',
+    }))
+    const insert = (arr, index, newItem) => {
+      if (Array.isArray(newItem)) {
+        return [
+          // part of the array before the specified index
+          ...arr.slice(0, index),
+          // inserted item
+          ...newItem,
+          // part of the array after the specified index
+          ...arr.slice(index),
+        ]
+      }
+      return [
+        // part of the array before the specified index
+        ...arr.slice(0, index),
+        // inserted item
+        newItem,
+        // part of the array after the specified index
+        ...arr.slice(index),
+      ]
+    }
+    const menu = insert(
+      this.items,
+      this.items.findIndex((x) => x.title.toLowerCase() == 'setting'),
+      managementMenu
+    )
+    this.items = menu
   },
   watch: {
     switch_auth(newValue) {
       if (newValue) {
-        this.switchauthtoagent.usernameByAuthen = "";
+        this.switchauthtoagent.usernameByAuthen = ''
       }
-    }
+    },
   },
   methods: {
     async submitauthen() {
       try {
-        const { data } = await this.$axios.get(
-          `/api/v2/authenticate/token/${this.switchauthtoagent.usernameByAuthen}`
-        );
-        const { data: userProfile } = await this.$axios.get(
-          "/api/v1/authenticate/profile",
-          {
-            headers: {
-              Authorization: data.key
-            }
-          }
-        );
-        const token = this.token;
-        const profile = { ...userProfile, ...data };
-        profile.role = profile.level;
-        console.log(profile, "user");
-        this.set_login(profile);
+        const { data } = await this.$axios.get(`/api/v2/authenticate/token/${this.switchauthtoagent.usernameByAuthen}`)
+        const { data: userProfile } = await this.$axios.get('/api/v1/authenticate/profile', {
+          headers: {
+            Authorization: data.key,
+          },
+        })
+        const token = this.token
+        const profile = { ...userProfile, ...data }
+        profile.role = profile.level
+        console.log(profile, 'user')
+        this.set_login(profile)
         // console.log("is_switch_admin", true);
         // console.log("admin_token", token);
-        localStorage.setItem("is_switch_admin", true);
-        localStorage.setItem("admin_token", token);
+        localStorage.setItem('is_switch_admin', true)
+        localStorage.setItem('admin_token', token)
       } catch (err) {
-        console.log(err);
+        console.log(err)
       } finally {
-        this.switch_auth = false;
+        this.switch_auth = false
       }
     },
     async switchBackToAdmin() {
       try {
-        const { data } = await this.$axios.get("/api/v1/authenticate/profile", {
+        const { data } = await this.$axios.get('/api/v1/authenticate/profile', {
           headers: {
-            Authorization: localStorage.getItem("admin_token")
-          }
-        });
-        const profile = { ...data };
-        profile.role = profile.level;
-        profile.key = localStorage.getItem("admin_token");
-        this.set_login(profile);
-        console.log(profile, "back authen");
+            Authorization: localStorage.getItem('admin_token'),
+          },
+        })
+        const profile = { ...data }
+        profile.role = profile.level
+        profile.key = localStorage.getItem('admin_token')
+        this.set_login(profile)
+        console.log(profile, 'back authen')
       } finally {
-        console.log("final");
+        console.log('final')
       }
     },
-    ...mapMutations("auth", ["set_logout", "set_login"]),
+    ...mapMutations('auth', ['set_logout', 'set_login']),
     async logout() {
       try {
-        let token = localStorage.getItem("key");
+        let token = localStorage.getItem('key')
         if (token) {
-          localStorage.clear();
-          this.set_logout();
-          this.$router.push("/login");
+          localStorage.clear()
+          this.set_logout()
+          this.$router.push('/login')
         }
       } catch (err) {
-        console.log(err);
+        console.log(err)
       }
-    }
-  }
-};
+    },
+  },
+}
 </script>

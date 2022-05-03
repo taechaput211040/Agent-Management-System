@@ -3,12 +3,13 @@
     <div v-if="!isLoading">
       <v-row>
         <v-container>
-          <h1 class="text-center mt-2">Company Management</h1>
+          <h1 class="text-center mt-2">Shareholder Management</h1>
+
           <v-card class="pa-6">
             <v-divider class="my-3"></v-divider>
             <v-row class="select-item py-2">
               <v-col md="6" cols="12">
-                <h4 class="px-4">Company Name : sasadsad</h4> </v-col
+                <h4 class="px-4">Shareholder Name : sasadsad</h4> </v-col
               ><v-divider vertical></v-divider>
               <v-col md="6" cols="12">
                 <h4 class="px-4">Phone : 0842002222</h4>
@@ -16,16 +17,18 @@
             </v-row>
             <v-divider class="my-3"></v-divider>
           </v-card>
+
           <v-card class=" pa-2 mt-5  mb-2 classtable">
             <v-row class="ma-4">
-              <v-col cols="8"> <h2>Company Management</h2></v-col>
+              <v-col cols="8"> <h2>Shareholder Management</h2></v-col>
             </v-row>
+
             <v-row class="mx-4"
               ><v-col cols="4"
                 ><v-text-field
                   outlined
                   dense
-                  label="Filter Company Name"
+                  label="Filter Shareholder Name"
                 ></v-text-field
               ></v-col>
               <v-col cols="2">
@@ -129,7 +132,7 @@ export default {
         username: "",
         password: "",
         confrim: "",
-        company: "",
+        Shareholder: "",
         game_member: [],
         domain: "",
         parent: ""
@@ -154,8 +157,8 @@ export default {
           divider: true
         },
         {
-          text: "Company Name",
-          value: "company",
+          text: "Shareholder Name",
+          value: "Shareholder",
           align: "center",
           divider: true
         },
@@ -187,7 +190,7 @@ export default {
       ],
       exampleitem: [
         {
-          company: "เอเย่น",
+          Shareholder: "เอเย่น",
           owner: "senior",
           name: "agent",
           username: "agenttest",
@@ -197,7 +200,7 @@ export default {
           operationCode: "BBT"
         },
         {
-          company: "ซิเนียร์",
+          Shareholder: "ซิเนียร์",
           owner: "senior",
           name: "agent",
           username: "agenttest",

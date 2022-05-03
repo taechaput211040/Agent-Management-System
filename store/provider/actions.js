@@ -1,14 +1,14 @@
-export async function load({ commit }, params = { status: 1 }) {
+export async function load({ commit }, params = { isEnable: true }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get("/api/v1/provider", {
+      let response = await this.$axios.get('/v1alpha/provider/', {
         params: {
-          ...params
-        }
-      });
-      resolve(response);
+          ...params,
+        },
+      })
+      resolve(response)
     } catch (error) {
-      reject(error);
+      reject(error)
     }
-  });
+  })
 }

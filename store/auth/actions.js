@@ -1,11 +1,10 @@
 export function login(context, { username, password }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.post("/api/v1/authenticate/login", {
+      let response = await this.$axios.post("/v1alpha/auth/login", {
         username,
         password
       });
-      console.log(response.data);
       context.commit("set_login", response.data);
       resolve(response);
     } catch (error) {
