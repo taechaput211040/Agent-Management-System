@@ -13,6 +13,7 @@ export function login(context, { username, password }) {
   });
 }
 
+
 export function logout(context) {
   return new Promise(async (resolve, reject) => {
     try {
