@@ -7,20 +7,22 @@ import locale from "element-ui/lib/locale/lang/en";
 import VueSweetalert2 from "vue-sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import auth from "./auth";
-import account from "./account";
+// import account from "./account";
 import provider from "./provider";
 import group from "./group";
 import report from "./report";
 Vue.use(VueSweetalert2);
 Vue.use(Vuex);
-Vue.use(ElementUI, { locale });
-export default function(/* { ssrContext } */) {
+Vue.use(ElementUI, {
+  locale
+});
+export default function ( /* { ssrContext } */ ) {
   const Store = new Vuex.Store({
     modules: {
       // then we reference it
       auth,
       provider,
-      account,
+      // account,
       group,
       report
     },
