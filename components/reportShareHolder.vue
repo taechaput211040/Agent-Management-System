@@ -1,29 +1,46 @@
 <template>
   <v-flex>
+    <!-- header card -->
     <div v-if="!isLoading">
       <v-row>
         <v-container>
-          <h1 class="text-center mt-2">Member Management</h1>
-
-          <v-card class="pa-6">
+          <!-- row member name -->
+          <v-card class="px-6 pt-6">
             <v-row class="select-item py-2">
-              <h2 class="px-4">รายงานผลประกอบการ</h2>
-            </v-row>
-            <v-divider class="my-3"></v-divider>
-            <v-row class="select-item py-2">
-              <v-col md="4" cols="12">
-                <h4 class="px-4">Company Name : sasadsad</h4> </v-col
-              ><v-divider vertical></v-divider>
-              <v-col md="4" cols="12">
-                <h4 class="px-4">Owner Name : asdsadsa</h4> </v-col
-              ><v-divider vertical></v-divider>
-              <v-col md="4" cols="12">
-                <h4 class="px-4">Phone : 0842002222</h4>
+              <v-col cols="12" md="8">
+                <h3 class="mt-2">
+                  Member Management - List :/ <a class="px-5">{{customer_name}}</a>
+                  <v-btn elevation="2" > New </v-btn>
+                </h3>
+              </v-col>
+              <v-col cols="12" md="4">
+                <v-select
+                  :items="items"
+                  :label="items[0]"
+                  outlined
+                ></v-select>
               </v-col>
             </v-row>
-            <v-divider class="my-3"></v-divider>
+            <v-row>
+              <v-col cols="9" md="4">
+                <v-text-field
+                  label="Username"
+                  placeholder="username"
+                  outlined
+                ></v-text-field>
+              </v-col>
+              <v-col cols="3" md="2">
+                <v-btn elevation="2" x-large >
+                  <v-icon left> mdi-magnify</v-icon> Search
+                </v-btn>
+              </v-col>
+              <v-col cols="12" md="6" class="text-right">
+                <h4>เครดิตเอเย่นคงเหลือ : {{ remaining_credit}}</h4>
+              </v-col>
+            </v-row>
           </v-card>
 
+          <!-- row search + credit_balance -->
           <v-card class=" pa-2 mt-5  mb-2 classtable">
             <v-row class="ma-4">
               <v-col cols="8"> <h2>Member Management</h2></v-col>
@@ -108,6 +125,26 @@
                   </v-icon>
                 </v-btn>
               </template>
+              <template #[`item.view`]="{item}">
+                <v-btn
+                  class="mx-2"
+                  x-small
+                  color="primary"
+                  @click="showlog(item)"
+                >
+                  <span>View</span>
+                </v-btn>
+              </template>
+              <template #[`item.setting`]="{item}">
+                <v-btn
+                  class="mx-2"
+                  x-small
+                  color="success"
+                  @click="showlog(item)"
+                >
+                  <span>Edit</span>
+                </v-btn>
+              </template>
               <template #[`item.action`]>
                 <v-btn class="mx-2" fab dark x-small color="purple" @click="modal_add=true">
                   <v-icon dark>
@@ -121,13 +158,13 @@
                 </v-btn>
               </template>
               <template #[`item.status`]="{ item}">
-                <v-switch
-                  v-model="item.status"
-                  :false-value="0"
-                  :true-value="1"
-                  @click="addstatus(item.status)"
-                  flat
-                ></v-switch>
+                <span style="color: #c2e164;">{{ item.status ? "Active" : "Idle" }}</span>
+              </template>
+              <template #[`item.suspend`]="{ item }">
+                <span style="color: #c2e164;">{{ item.suspend ? "Yes" : "No" }}</span>
+              </template>
+              <template #[`item.lock`]="{ item}">
+                <span style="color: #c2e164;">{{ item.lock ? "Open" : "Close" }}</span>
               </template>
             </v-data-table>
             <v-dialog v-model="modalCredit" persistent max-width="400">
@@ -178,8 +215,8 @@
     <v-dialog full-width v-model="modal_add" persistent>
       <v-card class="pa-4">
         <v-form ref="form" v-model="valid">
-          <v-text-field label="Role" filled disabled></v-text-field>
-          <v-text-field label="Owner" filled disabled></v-text-field>
+          <v-text-field label="Username" filled disabled></v-text-field>
+          <v-text-field label="Nickname" filled disabled></v-text-field>
           <v-text-field label="Name" dense outlined></v-text-field>
           <v-text-field
             label="Credit"
@@ -237,6 +274,8 @@
       </v-card>
     </v-dialog>
 
+
+
     <div v-if="isLoading" class="text-center">
       <v-progress-circular
         :size="50"
@@ -250,6 +289,10 @@
 export default {
   data() {
     return {
+
+      items: ['Foo', 'Bar', 'Fizz', 'Buzz'],
+      customer_name : 'customer',
+      remaining_credit: "9,353,241,065",
       history: [],
       open_history: false,
       selectedGame: "",
@@ -312,10 +355,12 @@ export default {
           class: "col-1",
           divider: true
         },
-        { text: "Role", value: "role", divider: true },
-        { text: "Owner", value: "owner", divider: true },
-        { text: "Name", value: "name", divider: true },
         { text: "Username", value: "username", divider: true },
+        { text: "Nickname", value: "nickname", divider: true },
+        { text: "Phone", value: "phone", divider: true },
+        { text: "Contact", value: "contact", divider: true },
+        { text: "Currency", value: "currency", divider: true },
+        { text: "Init credit", value: "init_limit", divider: true },
         {
           text: "Credit",
           value: "credit",
@@ -339,34 +384,85 @@ export default {
           align: "center",
           sortable: false
         },
-        { text: "Phone", value: "phone", divider: true },
-        { text: "Status", value: "status", align: "center", divider: true },
         {
-          text: "Action",
-          value: "action",
+          text: "Downline",
+          value: "view",
           divider: true,
           align: "center",
-
+          sortable: false
+        },
+        {
+          text: "Setting",
+          value: "setting",
+          divider: true,
+          align: "center",
+          sortable: false
+        },
+        {
+          text: "Last Login",
+          value: "login",
+          divider: true,
+          align: "right",
+          sortable: false
+        },
+        {
+          text: "Login IP",
+          value: "IP",
+          divider: true,
+          align: "center",
+          sortable: false
+        },
+        {
+          text: "Suspend",
+          value: "suspend",
+          divider: true,
+          align: "center",
+          sortable: false
+        },
+        {
+          text: "Lock",
+          value: "lock",
+          divider: true,
+          align: "center",
+          sortable: false
+        },
+        {
+          text: "Status",
+          value: "status",
+          divider: true,
+          align: "center",
           sortable: false
         }
       ],
       exampleitem: [
         {
-          role: "เอเย่น",
-          owner: "senior",
-          name: "agent",
           username: "agenttest",
-          credit: 200,
+          nickname: "",
           phone: "0965555555",
+          contact: "",
+          currency: "THB",
+          inti_limit: "",
+          credit: "1,597,000.00",
+          view: [],
+          login: "07/01/2022/ 12:55",
+          IP : "1.46.192.24",
+          suspend: 0,
+          lock: 1,
           status: 1
         },
         {
-          role: "ซิเนียร์",
-          owner: "senior",
-          name: "agent",
-          username: "agenttest",
-          credit: 200,
-          phone: "0965555555",
+          username: "test2",
+          nickname: "",
+          phone: "0961111111",
+          contact: "",
+          currency: "THB",
+          inti_limit: "",
+          credit: "7,000.00",
+          view: [],
+          login: "04/01/2022/ 10:55",
+          IP : "192.168.0.2",
+          suspend: 1,
+          lock: 0,
           status: 1
         }
       ]

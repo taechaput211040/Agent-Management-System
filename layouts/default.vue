@@ -194,7 +194,7 @@ export default {
   },
   async created() {
     // await this.checkauthen();
-    const managementMenu = ['staff', 'company', 'shareholder', 'senior', 'agent', 'member'].map((x) => ({
+    const managementMenu = ['staff', 'company', 'shareholder', 'senior', 'agent', 'member', 'subAccount'].map((x) => ({
       title: `${x.charAt(0).toUpperCase() + x.slice(1)} Management`,
       to: `/${x}`,
       icon:
