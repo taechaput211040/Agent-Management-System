@@ -4,23 +4,26 @@
       <v-row>
         <v-container>
           <h1 class="text-center mt-2">User Profile</h1>
-
-          <v-card class="pa-6" v-if="data">
+          <!-- v-if="data" -->
+          <v-card class="pa-6">
             <v-row class="select-item py-2">
               <h2 class="px-4">User Profile</h2>
             </v-row>
             <v-divider class="my-3"></v-divider>
             <v-row class="select-item py-2">
               <v-col md="4" cols="12">
-                <h4 class="px-4">Company Name : {{ data.workspace }}</h4>
+                <h4 class="px-4">Company Name :</h4>
+                <!-- {{ data.workspace }} -->
               </v-col>
               <v-divider vertical></v-divider>
               <v-col md="4" cols="12">
-                <h4 class="px-4">Company Prefix : {{ data.comPrefix }}</h4>
+                <h4 class="px-4">Company Prefix :</h4>
+                <!-- {{ data.comPrefix }} -->
               </v-col>
               <v-divider vertical></v-divider>
               <v-col md="4" cols="12">
-                <h4 class="px-4">Role : {{ data.role }}</h4>
+                <h4 class="px-4">Role : </h4>
+                <!-- {{ null || data.role }} -->
               </v-col>
             </v-row>
             <v-divider class="my-3"></v-divider>
@@ -44,12 +47,12 @@ export default {
     }
   },
   async created() {
-    const { data } = await this.get_profile()
-    this.data = data.result.profile
+    // const { data } = await this.get_profile()
+    // this.data = data.result.profile
     this.isLoading = false
   },
   methods: {
-    ...mapActions('account', ['get_profile']),
+    // ...mapActions('account', ['get_profile']),
   },
 }
 </script>

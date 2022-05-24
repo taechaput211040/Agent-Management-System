@@ -7,7 +7,7 @@ import locale from "element-ui/lib/locale/lang/en";
 import VueSweetalert2 from "vue-sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import auth from "./auth";
-// import account from "./account";
+import account from "./account";
 import provider from "./provider";
 import group from "./group";
 import report from "./report";
@@ -22,7 +22,7 @@ export default function ( /* { ssrContext } */ ) {
       // then we reference it
       auth,
       provider,
-      // account,
+      account,
       group,
       report
     },

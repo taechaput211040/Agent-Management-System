@@ -4,10 +4,11 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
       <v-spacer />
-
       <v-btn icon @click.prevent="$vuetify.theme.dark = !$vuetify.theme.dark">
         <v-icon>{{ $vuetify.theme.dark ? 'mdi-brightness-4' : 'mdi-weather-night' }}</v-icon>
       </v-btn>
+      <v-chip rounded outlined class="mx-1">100000<v-icon right>mdi-cash</v-icon></v-chip>
+
       <!-- <v-speed-dial direction="bottom left" transition="slide-y-transition">
         <template v-slot:activator>
           <v-btn v-model="fab" fab>
@@ -22,9 +23,9 @@
       </v-speed-dial> -->
       <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn icon v-bind="attrs" v-on="on">
-            <v-icon>mdi-account-circle</v-icon>
-            <v-icon small class="hidden-sm-and-down">mdi-chevron-down</v-icon>
+          <v-btn small v-bind="attrs" v-on="on" rounded outlined>
+            <v-icon left>mdi-account-circle</v-icon>{{ $store.state.auth.username }}
+            <v-icon small class="hidden-sm-and-down" right>mdi-chevron-down</v-icon>
           </v-btn>
         </template>
         <v-list>
@@ -156,28 +157,56 @@ export default {
             },
           ],
         },
-
         {
-          title: 'Setting',
-          to: '/setting',
+          title: 'Sub Account',
+          to: '/subAccount',
+          icon: 'mdi-view-dashboard',
+        },
+        {
+          title: 'Downline Management',
+          to: '/downline/downlineManagement',
+          icon: 'mdi-view-dashboard',
+        },
+        {
+          title: 'Lotto Management',
+          to: '/lotto',
+          icon: 'mdi-view-dashboard',
+        },
+        {
+          title: 'Landing Page Management',
+          to: '/landinpage',
+          icon: 'mdi-view-dashboard',
+        },
+        {
+          title: 'Member Page Management',
+          to: '/mamberpage',
+          icon: 'mdi-view-dashboard',
+        },
+        {
+          title: 'Report',
           icon: 'mdi-cog',
           subLinks: [
             {
-              icon: 'mdi-view-dashboard',
-              text: 'Role',
-              to: '/setting/role',
+              icon: 'mdi-finance',
+              text: 'Report By provider',
+              to: '/report/byProvider',
             },
             {
-              icon: 'mdi-view-dashboard',
-              text: 'Provider',
-              to: '/setting/provider',
-            },
-            {
-              icon: 'mdi-view-dashboard',
-              text: 'Type',
-              to: '/setting/type',
+              icon: 'mdi-finance',
+              text: 'Report By User',
+              to: '/report/byUser',
             },
           ],
+        },
+        {
+          title: 'Chechk Outstanding',
+          to: '/outstanding',
+          icon: 'mdi-view-dashboard',
+        },
+        {
+          title: 'Staff Logs',
+          to: '/stafflog',
+          icon: 'mdi-view-dashboard',
         },
       ],
       miniVariant: false,
@@ -194,44 +223,44 @@ export default {
   },
   async created() {
     // await this.checkauthen();
-    const managementMenu = ['staff', 'company', 'shareholder', 'senior', 'agent', 'member'].map((x) => ({
-      title: `${x.charAt(0).toUpperCase() + x.slice(1)} Management`,
-      to: `/${x}`,
-      icon:
-        x == 'member'
-          ? 'mdi-account-group'
-          : x == 'senior'
-          ? 'mdi-account-tie'
-          : x == 'agent'
-          ? 'mdi-account-supervisor'
-          : 'mdi-office-building',
-    }))
-    const insert = (arr, index, newItem) => {
-      if (Array.isArray(newItem)) {
-        return [
-          // part of the array before the specified index
-          ...arr.slice(0, index),
-          // inserted item
-          ...newItem,
-          // part of the array after the specified index
-          ...arr.slice(index),
-        ]
-      }
-      return [
-        // part of the array before the specified index
-        ...arr.slice(0, index),
-        // inserted item
-        newItem,
-        // part of the array after the specified index
-        ...arr.slice(index),
-      ]
-    }
-    const menu = insert(
-      this.items,
-      this.items.findIndex((x) => x.title.toLowerCase() == 'setting'),
-      managementMenu
-    )
-    this.items = menu
+    // const managementMenu = ['staff', 'company', 'shareholder', 'senior', 'agent', 'member'].map((x) => ({
+    //   title: `${x.charAt(0).toUpperCase() + x.slice(1)} Management`,
+    //   to: `/${x}`,
+    //   icon:
+    //     x == 'member'
+    //       ? 'mdi-account-group'
+    //       : x == 'senior'
+    //       ? 'mdi-account-tie'
+    //       : x == 'agent'
+    //       ? 'mdi-account-supervisor'
+    //       : 'mdi-office-building',
+    // }))
+    // const insert = (arr, index, newItem) => {
+    //   if (Array.isArray(newItem)) {
+    //     return [
+    //       // part of the array before the specified index
+    //       ...arr.slice(0, index),
+    //       // inserted item
+    //       ...newItem,
+    //       // part of the array after the specified index
+    //       ...arr.slice(index),
+    //     ]
+    //   }
+    //   return [
+    //     // part of the array before the specified index
+    //     ...arr.slice(0, index),
+    //     // inserted item
+    //     newItem,
+    //     // part of the array after the specified index
+    //     ...arr.slice(index),
+    //   ]
+    // }
+    // const menu = insert(
+    //   this.items,
+    //   this.items.findIndex((x) => x.title.toLowerCase() == 'setting'),
+    //   managementMenu
+    // )
+    // this.items = menu
   },
   watch: {
     switch_auth(newValue) {

@@ -2,24 +2,24 @@
 export async function getAllReport(
   { commit },
   params = {
-    start: "undefined",
-    end: "undefined",
+    start: 'undefined',
+    end: 'undefined',
     providerCode: undefined,
-    typeCode: undefined
+    typeCode: undefined,
   }
 ) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get("/apiV2/", {
+      let response = await this.$axios.get('/v1alpha/report-transaction/owner', {
         params: {
-          ...params
-        }
-      });
-      resolve(response);
+          ...params,
+        },
+      })
+      resolve(response)
     } catch (error) {
-      reject(error);
+      reject(error)
     }
-  });
+  })
 }
 
 export async function getOwnerByIdV2(
@@ -32,12 +32,12 @@ export async function getOwnerByIdV2(
     providerCode: undefined,
     typeCode: undefined,
     id: undefined,
-    search: undefined
+    search: undefined,
   }
 ) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.get(`/apiV2/owner/${params.id}`, {
+      let response = await this.$axios.get(`/v1alpha/report-transaction/owner/${params.id}`, {
         params: {
           page: params.page,
           limit: params.limit,
@@ -45,14 +45,14 @@ export async function getOwnerByIdV2(
           end: params.end,
           providerCode: params.providerCode,
           typeCode: params.typeCode,
-          search: params.search
-        }
-      });
-      resolve(response);
+          search: params.search,
+        },
+      })
+      resolve(response)
     } catch (error) {
-      reject(error);
+      reject(error)
     }
-  });
+  })
 }
 
 export async function getSharebyOwner(
@@ -66,16 +66,16 @@ export async function getSharebyOwner(
     typeCode: undefined,
     id: undefined,
     search: undefined,
-    role: undefined
+    role: undefined,
   }
 ) {
   return new Promise(async (resolve, reject) => {
     try {
-      let url = "";
+      let url = ''
       if (params.role == 3) {
-        url = `/apiV2/share/`;
+        url = `/v1alpha/report-transaction/share/`
       } else {
-        url = `/apiV2/owner/${params.id}/share/`;
+        url = `/v1alpha/report-transaction/owner/${params.id}/share/`
       }
       let response = await this.$axios.get(url, {
         params: {
@@ -85,14 +85,14 @@ export async function getSharebyOwner(
           end: params.end,
           providerCode: params.providerCode,
           typeCode: params.typeCode,
-          search: params.search
-        }
-      });
-      resolve(response);
+          search: params.search,
+        },
+      })
+      resolve(response)
     } catch (error) {
-      reject(error);
+      reject(error)
     }
-  });
+  })
 }
 
 export async function getSeniorByShare(
@@ -107,18 +107,18 @@ export async function getSeniorByShare(
     id: undefined,
     search: undefined,
     senior_user: undefined,
-    role: undefined
+    role: undefined,
   }
 ) {
   return new Promise(async (resolve, reject) => {
     try {
-      let url = "";
+      let url = ''
       if (params.role == 3) {
-        url = `/apiV2/share/${params.senior_user}/senior`;
+        url = `/v1alpha/report-transaction/share/${params.senior_user}/senior`
       } else if (params.role <= 2) {
-        url = `/apiV2/owner/${params.id}/share/${params.senior_user}/senior`;
+        url = `/v1alpha/report-transaction/owner/${params.id}/share/${params.senior_user}/senior`
       } else if (params.role == 4) {
-        url = `/apiV2/senior`;
+        url = `/v1alpha/report-transaction/senior`
       }
       let response = await this.$axios.get(url, {
         params: {
@@ -128,14 +128,14 @@ export async function getSeniorByShare(
           end: params.end,
           providerCode: params.providerCode,
           typeCode: params.typeCode,
-          search: params.search
-        }
-      });
-      resolve(response);
+          search: params.search,
+        },
+      })
+      resolve(response)
     } catch (error) {
-      reject(error);
+      reject(error)
     }
-  });
+  })
 }
 
 export async function getAgentByShare(
@@ -150,18 +150,18 @@ export async function getAgentByShare(
     id: undefined,
     search: undefined,
     senior_user: undefined,
-    role: undefined
+    role: undefined,
   }
 ) {
   return new Promise(async (resolve, reject) => {
     try {
-      let url = "";
+      let url = ''
       if (params.role == 3 && params.senior_user && !params.id) {
-        url = `/apiV2/share/${params.senior_user}/agent`;
+        url = `/v1alpha/report-transaction/share/${params.senior_user}/agent`
       } else if (params.role == 4 || params.role == 5) {
-        url = `/apiV2/agent`;
+        url = `/v1alpha/report-transaction/agent`
       } else {
-        url = `/apiV2/owner/${params.id}/share/${params.senior_user}/agent`;
+        url = `/v1alpha/report-transaction/owner/${params.id}/share/${params.senior_user}/agent`
       }
 
       let response = await this.$axios.get(url, {
@@ -172,14 +172,14 @@ export async function getAgentByShare(
           end: params.end,
           providerCode: params.providerCode,
           typeCode: params.typeCode,
-          search: params.search
-        }
-      });
-      resolve(response);
+          search: params.search,
+        },
+      })
+      resolve(response)
     } catch (error) {
-      reject(error);
+      reject(error)
     }
-  });
+  })
 }
 
 export async function getUserByAgent(
@@ -195,23 +195,23 @@ export async function getUserByAgent(
     search: undefined,
     senior_user: undefined,
     agent_user: undefined,
-    role: undefined
+    role: undefined,
   }
 ) {
   return new Promise(async (resolve, reject) => {
     try {
-      let url = "";
+      let url = ''
       if (params.role <= 2) {
         if (params.id && params.senior_user && params.agent_user) {
-          url = `/apiV2/owner/${params.id}/share/${params.senior_user}/agent/${params.agent_user}`;
+          url = `/v1alpha/report-transaction/owner/${params.id}/share/${params.senior_user}/agent/${params.agent_user}`
         }
       } else if (params.role == 3) {
         if (params.senior_user && params.agent_user) {
-          url = `/apiV2/share/${params.senior_user}/agent/${params.agent_user}`;
+          url = `/v1alpha/report-transaction/share/${params.senior_user}/agent/${params.agent_user}`
         }
       } else if (params.role == 4 || params.role == 5) {
         if (params.agent_user) {
-          url = `/apiV2/agent/${params.agent_user}`;
+          url = `/v1alpha/report-transaction/agent/${params.agent_user}`
         }
       }
       let response = await this.$axios.get(url, {
@@ -222,14 +222,14 @@ export async function getUserByAgent(
           end: params.end,
           providerCode: params.providerCode,
           typeCode: params.typeCode,
-          search: params.search
-        }
-      });
-      resolve(response);
+          search: params.search,
+        },
+      })
+      resolve(response)
     } catch (error) {
-      reject(error);
+      reject(error)
     }
-  });
+  })
 }
 
 export async function getRoundBySenior(
@@ -246,35 +246,35 @@ export async function getRoundBySenior(
     senior_user: undefined,
     username: undefined,
     agent_user: undefined,
-    role: undefined
+    role: undefined,
   }
 ) {
   return new Promise(async (resolve, reject) => {
     try {
-      let url = "";
+      let url = ''
       if (params.role <= 2) {
         if (params.senior_user && !params.agent_user) {
-          url = `/apiV2/owner/${params.id}/share/${params.senior_user}/senior/${params.username}/round`;
+          url = `/v1alpha/report-transaction/owner/${params.id}/share/${params.senior_user}/senior/${params.username}/round`
         } else if (params.agent_user && params.senior_user) {
-          url = `/apiV2/owner/${params.id}/share/${params.senior_user}/agent/${params.agent_user}/round/${params.username}`;
-          console.log("agent");
+          url = `/v1alpha/report-transaction/owner/${params.id}/share/${params.senior_user}/agent/${params.agent_user}/round/${params.username}`
+          console.log('agent')
         }
       }
       if (params.role == 3) {
         if (params.senior_user && params.username && !params.agent_user) {
-          url = `/apiV2/share/${params.senior_user}/senior/${params.username}/round`;
+          url = `/v1alpha/report-transaction/share/${params.senior_user}/senior/${params.username}/round`
         } else {
-          url = `/apiV2/share/${params.senior_user}/agent/${params.agent_user}/round/${params.username}`;
+          url = `/v1alpha/report-transaction/share/${params.senior_user}/agent/${params.agent_user}/round/${params.username}`
         }
       }
       if (params.role == 4 || params.role == 5) {
         if (params.senior_user && params.username && !params.agent_user) {
-          url = `/apiV2/senior/${params.username}/round`;
+          url = `/v1alpha/report-transaction/senior/${params.username}/round`
         } else {
-          url = `/apiV2/agent/${params.agent_user}/round/${params.username}`;
+          url = `/v1alpha/report-transaction/agent/${params.agent_user}/round/${params.username}`
         }
       } else if (params.role == 6) {
-        url = `/apiV2/user/${localStorage.getItem("username")}/round`;
+        url = `/v1alpha/report-transaction/user/${localStorage.getItem('username')}/round`
       }
       let response = await this.$axios.get(url, {
         params: {
@@ -284,14 +284,14 @@ export async function getRoundBySenior(
           end: params.end,
           providerCode: params.providerCode,
           typeCode: params.typeCode,
-          search: params.search
-        }
-      });
-      resolve(response);
+          search: params.search,
+        },
+      })
+      resolve(response)
     } catch (error) {
-      reject(error);
+      reject(error)
     }
-  });
+  })
 }
 
 export async function getTransactionByRound(
@@ -309,32 +309,32 @@ export async function getTransactionByRound(
     agent_user: undefined,
     username: undefined,
     roundId: undefined,
-    role: undefined
+    role: undefined,
   }
 ) {
   return new Promise(async (resolve, reject) => {
     try {
-      let url = "";
+      let url = ''
       if (params.role <= 2) {
         if (!params.agent_user) {
-          url = `/apiV2/owner/${params.id}/share/${params.senior_user}/senior/${params.username}/round/${params.roundId}`;
+          url = `/v1alpha/report-transaction/owner/${params.id}/share/${params.senior_user}/senior/${params.username}/round/${params.roundId}`
         } else {
-          console.log("agenttranseaction");
-          url = `/apiV2/owner/${params.id}/share/${params.senior_user}/agent/${params.agent_user}/round/${params.username}/transaction/${params.roundId}`;
+          console.log('agenttranseaction')
+          url = `/v1alpha/report-transaction/owner/${params.id}/share/${params.senior_user}/agent/${params.agent_user}/round/${params.username}/transaction/${params.roundId}`
         }
       }
       if (params.role == 3) {
         if (!params.agent_user) {
-          url = `/apiV2/share/${params.senior_user}/senior/${params.username}/round/${params.roundId}`;
+          url = `/v1alpha/report-transaction/share/${params.senior_user}/senior/${params.username}/round/${params.roundId}`
         } else {
-          url = `/apiV2/share/${params.senior_user}/agent/${params.agent_user}/round/${params.username}/transaction/${params.roundId}`;
+          url = `/v1alpha/report-transaction/share/${params.senior_user}/agent/${params.agent_user}/round/${params.username}/transaction/${params.roundId}`
         }
       }
       if (params.role == 4 || params.role == 5) {
         if (!params.agent_user) {
-          url = `/apiV2/senior/${params.username}/round/${params.roundId}`;
+          url = `/v1alpha/report-transaction/senior/${params.username}/round/${params.roundId}`
         } else {
-          url = `/apiV2/agent/${params.agent_user}/round/${params.username}/transaction/${params.roundId}`;
+          url = `/v1alpha/report-transaction/agent/${params.agent_user}/round/${params.username}/transaction/${params.roundId}`
         }
       }
       let response = await this.$axios.get(url, {
@@ -345,12 +345,12 @@ export async function getTransactionByRound(
           end: params.end,
           providerCode: params.providerCode,
           typeCode: params.typeCode,
-          search: params.search
-        }
-      });
-      resolve(response);
+          search: params.search,
+        },
+      })
+      resolve(response)
     } catch (error) {
-      reject(error);
+      reject(error)
     }
-  });
+  })
 }
