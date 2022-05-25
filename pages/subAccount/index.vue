@@ -32,15 +32,17 @@
 
             <v-dialog v-model="modalAddSubAccount" persistent max-width="1100">
               <v-card class="pa-5">
+                <h2 class="mt-3 mb-6 text-center"> New Sub Account</h2>
                 <!-- username -->
                 <v-row class="select-item py-2">
-                  <v-col cols="12" md="4">
-                    <h3 class="mt-2 text-right">
+                  <v-col cols="12" sm="4" md="4" class="py-0">
+                    <h3 class="mt-2 text-left text-sm-right mx-4 mx-sm-0">
                       Username
                     </h3>
                   </v-col>
-                  <v-col cols="12" md="8">
+                  <v-col cols="12" sm="8" md="8" style="padding: 0 30px;">
                     <v-text-field
+                      v-model="new_user"
                       placeholder=""
                       outlined
                     ></v-text-field>
@@ -48,13 +50,14 @@
                 </v-row>
                 <!-- password -->
                 <v-row class="select-item py-2">
-                  <v-col cols="12" md="4">
-                    <h3 class="mt-2 text-right">
+                  <v-col cols="12" sm="4" md="4" class="py-0">
+                    <h3 class="mt-2 text-left text-sm-right mx-4 mx-sm-0">
                       Password
                     </h3>
                   </v-col>
-                  <v-col cols="12" md="8">
+                  <v-col cols="12" sm="8" md="8" style="padding: 0 30px;">
                     <v-text-field
+                      v-model="new_password"
                       type="password"
                       placeholder=""
                       outlined
@@ -63,30 +66,89 @@
                 </v-row>
                 <!-- contact -->
                 <v-row class="select-item py-2">
-                  <v-col cols="12" md="4">
-                    <h3 class="mt-2 text-right">
+                  <v-col cols="12" sm="4" md="4" class="py-0">
+                    <h3 class="mt-2 text-left text-sm-right mx-4 mx-sm-0">
                       Contact
                     </h3>
                   </v-col>
-                  <v-col cols="12" md="8">
+                  <v-col cols="12" sm="8" md="8" style="padding: 0 30px;">
                     <v-text-field
+                      v-model="new_contact"
                       placeholder=""
                       outlined
                     ></v-text-field>
                   </v-col>
                 </v-row>
-                <!--  -->
-
+                <!-- Sub user preference -->
+                <v-row class="select-item py-2">
+                  <v-col cols="12" sm="4" md="4" class="py-0">
+                    <h3 class="mt-2 mx-4 mx-sm-0 text-sm-right">
+                      Sub-User Preference
+                    </h3>
+                  </v-col>
+                  <v-col cols="12" sm="8" md="8" style="padding: 0 30px;">
+                    <v-checkbox
+                      v-model="stock_m"
+                      label="Stock Management"
+                      color="blue"
+                      value="blue"
+                      hide-details
+                    ></v-checkbox>
+                    <v-checkbox
+                      v-model="member_m"
+                      label="Member Management"
+                      color="blue"
+                      value="blue"
+                      hide-details
+                    ></v-checkbox>
+                    <v-checkbox
+                      v-model="member_m_v"
+                      label="Member Management(View Only)"
+                      color="blue"
+                      value="blue"
+                      hide-details
+                    ></v-checkbox>
+                    <v-checkbox
+                      v-model="report"
+                      label="Report"
+                      color="blue"
+                      value="blue"
+                      hide-details
+                    ></v-checkbox>
+                    <v-checkbox
+                      v-model="old_report"
+                      label="Old Report"
+                      color="blue"
+                      value="blue"
+                      hide-details
+                    ></v-checkbox>
+                    <v-checkbox
+                      v-model="correct_score"
+                      label="Correct Score"
+                      color="blue"
+                      value="blue"
+                      hide-details
+                    ></v-checkbox>
+                    <v-checkbox
+                      v-model="edit_credit"
+                      label="Edit Credit"
+                      color="blue"
+                      value="blue"
+                      hide-details
+                    ></v-checkbox>
+                  </v-col>
+                </v-row>
                 <!-- password agent -->
                 <v-row class="select-item py-2">
-                  <v-col cols="12" md="4">
-                    <h3 class="mt-2 text-right">
+                  <v-col cols="12" sm="4" md="4" class="py-0">
+                    <h3 class="mt-2 mx-4 mx-sm-0 text-left text-sm-right">
                       Password Agent
                     </h3>
                   </v-col>
-                  <v-col cols="12" md="8">
+                  <v-col cols="12" sm="8" md="8" style="padding: 0 30px;">
                     <v-text-field
                     type="password"
+                      v-model="new_a_password"
                       placeholder=""
                       outlined
                     ></v-text-field>
@@ -99,9 +161,9 @@
                   <v-btn
                     color="success"
                     depressed
-                    @click="handlcCloseCreditForm"
+                    @click="handlcCloseEditForm"
                   >
-                    เติมเงิน
+                    บันทีก
                   </v-btn>
                   <v-btn color="error" depressed @click="handleCloseDialog">
                     ยกเลิก </v-btn
@@ -209,6 +271,17 @@ export default {
       selectedGame: "",
       searchdata: "",
       modal_add: false,
+      new_user: "",
+      new_password: "",
+      new_contact: "",
+      new_a_password: "",
+      stock_m: false,
+      member_m:false,
+      member_m_v: false,
+      report: false,
+      old_report: false,
+      correct_score: false,
+      edit_credit: false,
       form_member: {
         role: "",
         owner: "",
@@ -314,7 +387,41 @@ export default {
     },
     async handleCloseDialog() {
       this.modalAddSubAccount = false;
-    }
+    },
+    async handlcCloseEditForm() {
+      console.log(this.new_user)
+      console.log(this.new_password)
+      console.log(this.new_contact)
+      console.log(this.new_a_password)
+      if(this.stock_m){
+        console.log("select stock_m")
+      }
+      if(this.member_m){
+        console.log("select member_m")
+      }
+      if(this.member_m){
+        console.log("select member_m_v")
+      }
+      if(this.report){
+        console.log("select report")
+      }
+      if(this.old_report){
+        console.log("select old report")
+      }
+      if(this.correct_score){
+        console.log("select correct_score")
+      }
+      if(this.edit_credit){
+        console.log("select edit_credit")
+      }
+      this.modalAddSubAccount = false;
+    },
   }
 };
 </script>
+
+<style lang="scss">
+  .v-text-field__details{
+    display: none;
+  }
+</style>
