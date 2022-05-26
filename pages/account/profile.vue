@@ -6,20 +6,20 @@
         <h2>User Profile</h2>
         <div class="pa-3">
           <v-divider class="mb-3"></v-divider>
-          <v-row class="select-item" v-if="data">
+          <v-row class="select-item" v-if="$store.state.account.profile">
             <v-col sm="6" md="3" cols="12" class="d-flex align-center">
               <v-icon>mdi-domain</v-icon>
-              <h4 class="px-4">Company Name : {{ data.workspace }}</h4>
+              <h4 class="px-4">Company Name : {{ $store.state.account.profile.workspace }}</h4>
             </v-col>
             <v-divider vertical class="d-sm-block d-none"></v-divider>
             <v-col sm="6" md="3" cols="12" class="d-flex align-center">
               <v-icon>mdi-domain</v-icon>
-              <h4 class="px-4">Company Prefix : {{ data.comPrefix }}</h4>
+              <h4 class="px-4">Company Prefix : {{ $store.state.account.profile.comPrefix }}</h4>
             </v-col>
             <v-divider vertical class="d-md-block d-none"></v-divider>
             <v-col sm="6" md="3" cols="12" class="d-flex align-center">
               <v-icon>mdi-account-box</v-icon>
-              <h4 class="px-4">Role : {{ null || data.role }}</h4>
+              <h4 class="px-4">Role : {{ null || $store.state.account.profile.role }}</h4>
             </v-col>
             <v-divider vertical class="d-sm-block d-none"></v-divider>
             <v-col sm="6" md="3" cols="12" class="d-flex align-center">
@@ -52,10 +52,7 @@ export default {
       isLoading: false,
     }
   },
-  async created() {
-    const { data } = await this.get_profile()
-    this.data = data.result.profile
-  },
+
   methods: {
     ...mapActions('account', ['get_profile']),
   },

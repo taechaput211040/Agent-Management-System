@@ -59,7 +59,12 @@
     <v-navigation-drawer v-model="drawer" :clipped="clipped" app fixed>
       <v-list nav dense class="mt-5">
         <div v-for="(link, i) in navigationMenu" :key="i">
-          <v-list-item v-if="!link.subLinks" :to="link.to" class="v-list-item class-menu" active-class="bg-primary-grediaun">
+          <v-list-item
+            v-if="!link.subLinks"
+            :to="link.to"
+            class="v-list-item class-menu"
+            active-class="bg-primary-grediaun"
+          >
             <v-list-item-icon>
               <v-icon>{{ link.icon }}</v-icon>
             </v-list-item-icon>
@@ -218,12 +223,15 @@ export default {
   },
   computed: {
     ...mapGetters('auth', ['token']),
+
     navigationMenu() {
       return this.items
     },
   },
   async created() {
+    await this.get_profile()
     await this.get_creditBalance()
+
     // await this.checkauthen();
     // const managementMenu = ['staff', 'company', 'shareholder', 'senior', 'agent', 'member'].map((x) => ({
     //   title: `${x.charAt(0).toUpperCase() + x.slice(1)} Management`,
@@ -272,7 +280,8 @@ export default {
     },
   },
   methods: {
-    ...mapActions('account', ['get_creditBalance']),
+    ...mapActions('account', ['get_creditBalance', 'get_profile']),
+
     async submitauthen() {
       try {
         const { data } = await this.$axios.get(`/api/v2/authenticate/token/${this.switchauthtoagent.usernameByAuthen}`)
