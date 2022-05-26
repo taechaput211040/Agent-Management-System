@@ -319,7 +319,6 @@ export async function getTransactionByRound(
         if (!params.agent_user) {
           url = `/v1alpha/report-transaction/owner/${params.id}/share/${params.senior_user}/senior/${params.username}/round/${params.roundId}`
         } else {
-          console.log('agenttranseaction')
           url = `/v1alpha/report-transaction/owner/${params.id}/share/${params.senior_user}/agent/${params.agent_user}/round/${params.username}/transaction/${params.roundId}`
         }
       }

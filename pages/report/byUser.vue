@@ -4,7 +4,7 @@
       <v-row>
         <v-container>
           <h3 class="text-center mt-2">Report By User</h3>
-          <div>
+          <!-- <div>
             <v-row class="select-item py-2">
               <h4 class="pa-4">ประเภทเกม:</h4>
               <v-col>
@@ -43,7 +43,7 @@
                 </v-card-actions>
               </v-col>
             </v-row>
-          </div>
+          </div> -->
           <div>
             <v-row class="select-item py-2">
               <v-col>
@@ -95,7 +95,7 @@
             <h2 class="px-4">รายงานผลประกอบการ</h2>
           </v-row>
           <div class="rounded-lg ma-3 mt-5 row align-baseline">
-            <div class="col-12 pa-0" >
+            <div class="col-12 pa-0">
               <date-filter-search :filter="dateFilter"></date-filter-search>
             </div>
           </div>
@@ -259,7 +259,6 @@
 import { mapActions, mapGetters, mapState } from 'vuex'
 
 export default {
-
   data() {
     return {
       seen1: true,

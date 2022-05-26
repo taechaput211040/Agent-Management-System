@@ -7,7 +7,7 @@
       <v-btn icon @click.prevent="$vuetify.theme.dark = !$vuetify.theme.dark">
         <v-icon>{{ $vuetify.theme.dark ? 'mdi-brightness-4' : 'mdi-weather-night' }}</v-icon>
       </v-btn>
-      <v-chip rounded outlined class="mx-1">100000<v-icon right>mdi-cash</v-icon></v-chip>
+      <v-chip rounded outlined class="mx-1">{{ $store.state.account.credit }}<v-icon right>mdi-cash</v-icon></v-chip>
 
       <!-- <v-speed-dial direction="bottom left" transition="slide-y-transition">
         <template v-slot:activator>
@@ -57,9 +57,9 @@
       </v-menu>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" :clipped="clipped" app fixed>
-      <v-list nav dense>
+      <v-list nav dense class="mt-5">
         <div v-for="(link, i) in navigationMenu" :key="i">
-          <v-list-item v-if="!link.subLinks" :to="link.to" class="v-list-item">
+          <v-list-item v-if="!link.subLinks" :to="link.to" class="v-list-item class-menu" active-class="bg-primary-grediaun">
             <v-list-item-icon>
               <v-icon>{{ link.icon }}</v-icon>
             </v-list-item-icon>
@@ -70,10 +70,11 @@
               <v-list-item-title>{{ link.title }}</v-list-item-title>
             </template>
             <v-list-item
-              style="padding-left: 30px !important"
+              style="padding-left: 8px !important"
               v-for="sublink in link.subLinks"
               :to="sublink.to"
               :key="sublink.text"
+              active-class="bg-primary-grediaun"
             >
               <v-list-item-icon>
                 <v-icon>{{ sublink.icon }}</v-icon>
@@ -199,7 +200,7 @@ export default {
           ],
         },
         {
-          title: 'Chechk Outstanding',
+          title: 'Check Outstanding',
           to: '/outstanding',
           icon: 'mdi-view-dashboard',
         },
@@ -222,6 +223,7 @@ export default {
     },
   },
   async created() {
+    await this.get_creditBalance()
     // await this.checkauthen();
     // const managementMenu = ['staff', 'company', 'shareholder', 'senior', 'agent', 'member'].map((x) => ({
     //   title: `${x.charAt(0).toUpperCase() + x.slice(1)} Management`,
@@ -270,6 +272,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions('account', ['get_creditBalance']),
     async submitauthen() {
       try {
         const { data } = await this.$axios.get(`/api/v2/authenticate/token/${this.switchauthtoagent.usernameByAuthen}`)

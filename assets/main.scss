@@ -1,5 +1,5 @@
-@import "https://fonts.googleapis.com/css?family=Montserrat";
-@import "https://fonts.googleapis.com/css?family=Noto+Sans+Thai";
+@import 'https://fonts.googleapis.com/css?family=Montserrat';
+@import 'https://fonts.googleapis.com/css?family=Noto+Sans+Thai';
 html,
 body,
 h1,
@@ -11,7 +11,7 @@ h6,
 p,
 div,
 span {
-  font-family: "Montserrat", "Noto Sans Thai", "sans-serif";
+  font-family: 'Montserrat', 'Noto Sans Thai', 'sans-serif';
 }
 .v-toolbar__content {
   background-size: cover;
@@ -24,6 +24,9 @@ span {
     padding: 0.5rem 0.5rem 0;
     // background-color: #eaeaea;
   }
+}
+.text-input-color {
+  color: black !important;
 }
 // .v-main__wrap {
 //   background-color: #eaeaea;
@@ -138,12 +141,12 @@ span {
 //   // background-color: white;
 //   transition: 0.3s;
 //   transform: scale(1);
- 
+
 //   div {
 //     justify-content: space-between;
 //     display: flex;
 //   }
-// } 
+// }
 // .card-transaction {
 //   width: 160px !important;
 //   // background-color: white;
@@ -169,3 +172,42 @@ span {
 //   padding: 0px 8px !important;
 //   transition: height 0.2s cubic-bezier(0.4, 0, 0.6, 1);
 // }
+.centered-input {
+  text-align: center;
+}
+.v-navigation-drawer .v-list:not(.v-select-list) {
+  padding: 0 10px 0px 0;
+}
+.bg-primary-grediaun,
+.bg-primary-grediaun:hover {
+  background: linear-gradient(98deg, #c48eff, #9155fd 94%) !important;
+  color: white !important;
+  box-shadow: 0 5px 10px -4px rgb(94 86 105 / 42%);
+  transition: box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.v-list-item--dense, .v-list--dense .v-list-item{
+  border-bottom-right-radius: 32px !important;
+  border-top-right-radius: 32px !important;
+}
+
+.theme--light.v-list-item--active:hover::before,
+.theme--light.v-list-item--active::before,
+.theme--light.v-list-item:hover::before {
+  opacity: 0 !important;
+}
+.theme--dark.v-list-item--active:hover::before,
+.theme--dark.v-list-item--active::before,
+.theme--dark.v-list-item:hover::before {
+  opacity: 0 !important;
+}
+.theme--light.class-menu:hover {
+  border-bottom-right-radius: 32px !important;
+  border-top-right-radius: 32px !important;
+  background: #0000000a;
+}
+.theme--dark.class-menu:hover {
+  border-bottom-right-radius: 32px !important;
+  border-top-right-radius: 32px !important;
+  background: rgb(0 0 0 / 15%);
+}

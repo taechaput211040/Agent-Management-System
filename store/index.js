@@ -1,22 +1,24 @@
-import Vue from "vue";
-import Vuex from "vuex";
-import ElementUI from "element-ui";
-import "element-ui/lib/theme-chalk/index.css";
-import locale from "element-ui/lib/locale/lang/en";
+import Vue from 'vue'
+import Vuex from 'vuex'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import locale from 'element-ui/lib/locale/lang/en'
 // we first import the module
-import VueSweetalert2 from "vue-sweetalert2";
-import "sweetalert2/dist/sweetalert2.min.css";
-import auth from "./auth";
-import account from "./account";
-import provider from "./provider";
-import group from "./group";
-import report from "./report";
-Vue.use(VueSweetalert2);
-Vue.use(Vuex);
+import VueSweetalert2 from 'vue-sweetalert2'
+import 'sweetalert2/dist/sweetalert2.min.css'
+import auth from './auth'
+import account from './account'
+import provider from './provider'
+import group from './group'
+import report from './report'
+import marketshare from './marketshare'
+import downline from './downline'
+Vue.use(VueSweetalert2)
+Vue.use(Vuex)
 Vue.use(ElementUI, {
-  locale
-});
-export default function ( /* { ssrContext } */ ) {
+  locale,
+})
+export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
       // then we reference it
@@ -24,13 +26,15 @@ export default function ( /* { ssrContext } */ ) {
       provider,
       account,
       group,
-      report
+      report,
+      marketshare,
+      downline,
     },
 
     // enable strict mode (adds overhead!)
     // for dev mode only
-    strict: process.env.DEV
-  });
+    strict: process.env.DEV,
+  })
 
   /*
     if we want some HMR magic for it, we handle
@@ -46,5 +50,5 @@ export default function ( /* { ssrContext } */ ) {
   //   })
   // }
 
-  return Store;
+  return Store
 }
