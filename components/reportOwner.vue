@@ -236,11 +236,11 @@ export default {
         {
           text: 'Username',
           value: '_id',
-          cellClass: 'text-center font-weight-bold',
+          cellClass: 'font-weight-bold',
         },
-        { text: 'Bet', value: 'providerBet', cellClass: 'text-center' },
-        { text: 'Turn over', value: 'providerTurn', cellClass: 'text-center' },
-        { text: 'Payout', value: 'providerPay', cellClass: 'text-center' },
+        { text: 'Bet', value: 'providerBet' },
+        { text: 'Turn over', value: 'providerTurn' },
+        { text: 'Payout', value: 'providerPay' },
         {
           text: 'สมาชิก',
           value: 'memberWin',
@@ -418,7 +418,7 @@ export default {
         // ...pagination,
 
         typeCode: this.group_select.join(',') ? this.group_select.join(',') : undefined,
-        providerCode: this.provider_select.join(',') ? this.provider_select.join(',') : undefined,
+        provider: this.provider_select.join(',') ? this.provider_select.join(',') : undefined,
         start: new Date(start).toISOString(),
         end: new Date(end).toISOString(),
       }

@@ -70,7 +70,7 @@ export default {
         sortBy: 'desc',
         descending: false,
         page: 1,
-        rowsPerPage: 25,
+        rowsPerPage: 15,
         rowsNumber: 0,
       },
       options: {},

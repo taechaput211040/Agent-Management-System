@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar :clipped-left="clipped" fixed app>
+    <v-app-bar clipped-left fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
       <v-spacer />
@@ -62,7 +62,7 @@
           <v-list-item
             v-if="!link.subLinks"
             :to="link.to"
-            class="v-list-item class-menu"
+            class="v-list-item class-menu pa-1 font-weight-bold"
             active-class="bg-primary-grediaun"
           >
             <v-list-item-icon>
@@ -70,11 +70,19 @@
             </v-list-item-icon>
             <v-list-item-title v-text="link.title" />
           </v-list-item>
-          <v-list-group v-else :key="link.title" no-action :prepend-icon="link.icon" :value="false">
+          <v-list-group
+            color="deep-purple lighten-2"
+            v-else
+            :key="link.title"
+            no-action
+            :prepend-icon="link.icon"
+            :value="false"
+          >
             <template v-slot:activator>
               <v-list-item-title>{{ link.title }}</v-list-item-title>
             </template>
             <v-list-item
+              class="pa-1"
               style="padding-left: 8px !important"
               v-for="sublink in link.subLinks"
               :to="sublink.to"
@@ -137,7 +145,7 @@ export default {
       fab: false,
       dialogOutside: false,
       dialogInside: false,
-      clipped: false,
+      clipped: true,
       drawer: true,
       fixed: false,
       items: [

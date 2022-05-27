@@ -7,7 +7,7 @@
           <div class="d-sm-flex d-block">
             <h2>Member Management</h2>
             <v-spacer></v-spacer>
-            <v-btn @click="$router.push('/downline/addMember')" color="primary" rounded
+            <v-btn @click="handleCreateDownline()" color="primary" rounded
               ><v-icon>mdi-plus</v-icon> เพิ่ม Downline</v-btn
             >
           </div>
@@ -47,13 +47,14 @@
               class="elevation-2"
               :headers="headers"
               :items="itemRendering"
+              :server-items-length="pagination.rowsNumber"
               :page.sync="pagination.page"
               :options.sync="options"
               :items-per-page="pagination.rowsPerPage"
               hide-default-footer
             >
               <template #[`item.no`]="{ index }">
-                {{ index + 1 }}
+                {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
               </template>
               <template #[`item.credit`]="{ item }">
                 <span v-if="show == true">{{ item.credit }}</span>
@@ -73,8 +74,8 @@
                   <v-icon dark> mdi-format-list-bulleted-square </v-icon>
                 </v-btn>
               </template>
-              <template #[`item.view`]="{}">
-                <v-btn class="mx-2" x-small color="primary">
+              <template #[`item.view`]="{ item }">
+                <v-btn class="mx-2" x-small color="primary" @click="viewDownline(item)">
                   <span>View</span>
                 </v-btn>
               </template>
@@ -101,7 +102,7 @@
                 <span style="color: #c2e164">{{ item.lock ? 'Open' : 'Close' }}</span>
               </template>
             </v-data-table>
-            <v-row align="baseline pa-3">
+            <v-row align="baseline">
               <v-col cols="12" sm="2">
                 <v-select
                   dense
@@ -326,10 +327,21 @@ export default {
       ],
     }
   },
+  watch: {
+    options: {
+      async handler() {
+        this.getDownlineData()
+      },
+    },
+  },
   created() {
     this.getDownlineData()
   },
   methods: {
+    viewDownline() {},
+    handleCreateDownline() {
+      this.$router.push(`/downline/createDownline/${this.$store.state.auth.role}`)
+    },
     checkRole() {
       let role = this.$store.state.auth.role ? this.$store.state.auth.role : undefined
       let roletoRendering = undefined
@@ -350,12 +362,11 @@ export default {
     },
     ...mapActions('downline', ['getDownlineMember']),
     async getDownlineData() {
-      // console.log(this.checkRole(), 'rolerender')
       let parameters = this.getParameter()
       try {
         let { data } = await this.getDownlineMember(parameters)
-        this.itemRendering = data.result.docs
-        console.log(this.itemRendering)
+        this.pagination.rowsNumber = data.result.count
+        this.itemRendering = data.result.items
       } catch (error) {
         console.log(error)
       }

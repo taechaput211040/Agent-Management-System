@@ -31,7 +31,7 @@
               </div>
             </td>
             <template #[`item._id`]="{ item }">
-              <div class="text-center">
+              <div>
                 <span class="cursor-pointer" @click="renderingMember(item._id)">
                   {{ providerMap(item._id) || item._id }}
                 </span>
@@ -42,7 +42,11 @@
                 {{ numberFormat(item.providerBet) }}
               </span>
             </template>
-
+            <template #[`item.providerTurn`]="{ item }">
+              <span class="cursor-pointer">
+                {{ numberFormat(item.providerTurn) }}
+              </span>
+            </template>
             <template #[`item.providerPay`]="{ item }">
               <span class="cursor-pointer">
                 {{ numberFormat(item.providerPay) }}
@@ -247,11 +251,11 @@ export default {
         {
           text: 'Username',
           value: '_id',
-          cellClass: 'text-center font-weight-bold',
+          cellClass: 'font-weight-bold',
         },
-        { text: 'Bet', value: 'providerBet', cellClass: 'text-center' },
-        { text: 'Turn over', value: 'providerTurn', cellClass: 'text-center' },
-        { text: 'Payout', value: 'providerPay', cellClass: 'text-center' },
+        { text: 'Bet', value: 'providerBet' },
+        { text: 'Turn over', value: 'providerTurn' },
+        { text: 'Payout', value: 'providerPay' },
         {
           text: 'สมาชิก',
           value: 'memberWin',
@@ -431,7 +435,7 @@ export default {
       }
       return {
         typeCode: this.group_select.join(',') ? this.group_select.join(',') : undefined,
-        providerCode: this.provider_select.join(',') ? this.provider_select.join(',') : undefined,
+        provider: this.provider_select.join(',') ? this.provider_select.join(',') : undefined,
         start: new Date(start).toISOString(),
         end: new Date(end).toISOString(),
       }

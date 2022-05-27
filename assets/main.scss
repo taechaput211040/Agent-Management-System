@@ -16,7 +16,24 @@ span {
 .v-toolbar__content {
   background-size: cover;
 }
+.v-data-table > .v-data-table__wrapper > table > tbody > tr > td,
+.v-data-table > .v-data-table__wrapper > table > tbody > tr > th,
+.v-data-table > .v-data-table__wrapper > table > thead > tr > td,
+.v-data-table > .v-data-table__wrapper > table > thead > tr > th,
+.v-data-table > .v-data-table__wrapper > table > tfoot > tr > td,
+.v-data-table > .v-data-table__wrapper > table > tfoot > tr > th {
+  padding: 0px 5px !important;
+}
+@media (min-width: 1904px) {
+  .container {
+    // max-width: 1600px !important;
+  }
+}
+
 @media only screen and (min-width: 992px) {
+  // .v-main {
+  //   padding: 64px 0px 56px 68px !important;
+  // }
   .size-card {
     width: 88%;
   }
@@ -27,6 +44,16 @@ span {
 }
 .text-input-color {
   color: black !important;
+}
+.v-list--nav.v-list--dense .v-list-item:not(:last-child):not(:only-child),
+.v-list--nav .v-list-item--dense:not(:last-child):not(:only-child),
+.v-list--rounded.v-list--dense .v-list-item:not(:last-child):not(:only-child),
+.v-list--rounded .v-list-item--dense:not(:last-child):not(:only-child) {
+  margin-bottom: 0px;
+  padding: 4px !important;
+}
+.v-text-field__prefix {
+  font-weight: bold;
 }
 // .v-main__wrap {
 //   background-color: #eaeaea;
@@ -70,14 +97,14 @@ span {
 //   left: 0;
 // }
 
-// .positive_text {
-//   color: rgb(0, 129, 6);
-//   font-weight: bold;
-// }
-// .negative_text {
-//   color: rgb(233, 71, 66);
-//   font-weight: bold;
-// }
+.positive_text {
+  color: rgb(0, 129, 6);
+  font-weight: bold;
+}
+.negative_text {
+  color: rgb(233, 71, 66);
+  font-weight: bold;
+}
 // .usertext {
 //   color: rgb(4, 0, 66);
 //   font-weight: bolder;
@@ -125,44 +152,42 @@ span {
 //     }
 //   }
 // }
-// .card-detail {
-//   width: 160px !important;
-//   // background-color: white;
-//   transition: 0.3s;
-//   transform: scale(1);
-//   margin: auto;
-//   div {
-//     justify-content: space-between;
-//     display: flex;
-//   }
-// }
-// .card-detail-transaction {
-//   width: 130 px !important;
-//   // background-color: white;
-//   transition: 0.3s;
-//   transform: scale(1);
-
-//   div {
-//     justify-content: space-between;
-//     display: flex;
-//   }
-// }
-// .card-transaction {
-//   width: 160px !important;
-//   // background-color: white;
-//   transition: 0.3s;
-//   transform: scale(1);
-//   margin: auto;
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: space-between;
-//   div {
-//     justify-content: space-between;
-//     display: flex;
-//     flex-direction: column;
-//     align-items: center;
-//   }
-// }
+.card-detail {
+  // background-color: white;
+  transition: 0.3s;
+  transform: scale(1);
+  margin: auto;
+  div {
+    justify-content: space-between;
+    display: flex;
+  }
+}
+.card-detail-transaction {
+  width: 130 px !important;
+  // background-color: white;
+  transition: 0.3s;
+  transform: scale(1);
+  div {
+    justify-content: space-between;
+    display: flex;
+  }
+}
+.card-transaction {
+  width: 160px !important;
+  // background-color: white;
+  transition: 0.3s;
+  transform: scale(1);
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  div {
+    justify-content: space-between;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
 // .v-data-table > .v-data-table__wrapper > table > tbody > tr > td,
 // .v-data-table > .v-data-table__wrapper > table > tbody > tr > th,
 // .v-data-table > .v-data-table__wrapper > table > thead > tr > td,
@@ -186,7 +211,8 @@ span {
   transition: box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.v-list-item--dense, .v-list--dense .v-list-item{
+.v-list-item--dense,
+.v-list--dense .v-list-item {
   border-bottom-right-radius: 32px !important;
   border-top-right-radius: 32px !important;
 }

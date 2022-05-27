@@ -400,7 +400,7 @@ export default {
         page: pagination.page,
         limit: pagination.rowsPerPage,
         typeCode: this.group_select.join(',') ? this.group_select.join(',') : undefined,
-        providerCode: this.provider_select.join(',') ? this.provider_select.join(',') : undefined,
+        provider: this.provider_select.join(',') ? this.provider_select.join(',') : undefined,
         start: new Date(start).toISOString(),
         end: new Date(end).toISOString(),
       }

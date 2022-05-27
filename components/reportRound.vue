@@ -26,6 +26,15 @@
             <template #[`item._id`]="{ item }">
               <span @click="userendering(item.roundId)"> {{ item.username }}</span>
             </template>
+            <template #[`item.bet`]="{ item }">
+              {{ numberFormat(item.bet) }}
+            </template>
+            <template #[`item.payout`]="{ item }">
+              {{ numberFormat(item.payout) }}
+            </template>
+            <template #[`item.amount`]="{ item }">
+              {{ numberFormat(item.amount) }}
+            </template>
             <template #[`item.roundId`]="{ item }">
               <span @click="userendering(item.roundId)"> {{ item.roundId }}</span>
             </template>
@@ -274,6 +283,7 @@ export default {
           text: 'Round ID',
           value: 'roundId',
           cellClass: 'font-weight-bold',
+          sortable: false,
           width: '100px',
         },
         {
@@ -281,6 +291,7 @@ export default {
           value: '_id',
           cellClass: 'font-weight-bold',
           width: '100px',
+          sortable: false,
         },
 
         {
@@ -530,7 +541,7 @@ export default {
         // ...pagination,
 
         typeCode: this.group_select.join(',') ? this.group_select.join(',') : undefined,
-        providerCode: this.provider_select.join(',') ? this.provider_select.join(',') : undefined,
+        provider: this.provider_select.join(',') ? this.provider_select.join(',') : undefined,
         start: new Date(start).toISOString(),
         end: new Date(end).toISOString(),
       }
