@@ -32,16 +32,49 @@
         hide-default-footer
         :items="rendering"
       >
-        <template #[`item.revenueShare`]="{ item }">
+        <template #[`item.commission`]="{ item }">
           <v-text-field
-            class="centered-input"
-            outlined
-            disabled
-            filled
-            :value="`${item.revenueShare} %`"
             dense
+            outlined
+            type="number"
+            v-model="item.commission"
             hide-details="auto"
+            :disabled="!item.edit_status"
           ></v-text-field>
+        </template>
+        <template #[`item.percent`]="{ item }">
+          <v-text-field
+            dense
+            outlined
+            v-model="item.percent"
+            hide-details="auto"
+            :disabled="!item.edit_status"
+            type="number"
+          ></v-text-field>
+        </template>
+        <template #[`item.percent_limit`]="{ item }">
+          <v-text-field
+            dense
+            type="number"
+            outlined
+            v-model="item.percent_limit"
+            hide-details="auto"
+            :disabled="!item.edit_status"
+          ></v-text-field>
+        </template>
+        <template #[`item.option_limit`]="{ item }">
+          <v-text-field
+            dense
+            outlined
+            type="number"
+            v-model="item.option_limit"
+            hide-details="auto"
+            :disabled="!item.edit_status"
+          ></v-text-field>
+        </template>
+
+        <template #[`item.actions`]="{ item }">
+          <v-btn color="primary" @click="item.edit_status = !item.edit_status">edit</v-btn>
         </template>
       </v-data-table>
       <v-row align="baseline mt-3 px-2">
@@ -87,8 +120,10 @@ export default {
         {
           text: 'code',
           value: 'code',
+          align: 'center',
           cellClass: 'font-weight-bold primary--text',
           sortable: false,
+          width: '200px',
         },
         {
           text: 'percent',
@@ -111,6 +146,12 @@ export default {
         {
           text: 'option_limit',
           value: 'option_limit',
+          align: 'center',
+          sortable: false,
+        },
+        {
+          text: 'actions',
+          value: 'actions',
           align: 'center',
           sortable: false,
         },
@@ -145,6 +186,11 @@ export default {
         let { data } = await this.getRevenueProviderByUser(parameters)
         this.pagination.rowsNumber = data.result.count
         this.rendering = data.result.items
+
+        this.rendering = this.rendering.map((object) => {
+          return { ...object, edit_status: false }
+        })
+        console.log(this.rendering, 'statuse')
       } catch (error) {
         console.log(error)
       }

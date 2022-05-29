@@ -22,9 +22,9 @@ export function isRoleLevel(state) {
   let level = -1
   if (state.role === 'ADMIN') {
     level = 0
-  } else if (state.role === 'OWNER') {
-    level = 1
   } else if (state.role === 'STAFF') {
+    level = 1
+  } else if (state.role === 'OWNER') {
     level = 2
   } else if (state.role === 'SHAREHOLDER') {
     level = 3

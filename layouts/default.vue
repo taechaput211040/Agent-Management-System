@@ -226,7 +226,7 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'SMART BET',
+      title: 'SMART AGENT',
     }
   },
   computed: {
