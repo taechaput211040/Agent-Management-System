@@ -8,7 +8,8 @@
             <h2>Member Management</h2>
             <v-spacer></v-spacer>
           </div>
-          <downline-table></downline-table>
+          <downline-table v-if="Object.keys(this.$route.query).length <= 0"></downline-table>
+          <downline-byusertable v-else></downline-byusertable>
         </v-container>
       </v-row>
     </div>
@@ -19,9 +20,10 @@
   </v-flex>
 </template>
 <script>
+import DownlineByusertable from '~/components/downline/DownlineByusertable.vue'
 import DownlineTable from '~/components/downline/DownlineTable.vue'
 export default {
-  components: { DownlineTable },
+  components: { DownlineTable, DownlineByusertable },
   data: () => ({
     isLoading: false,
   }),

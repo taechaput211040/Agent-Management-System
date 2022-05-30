@@ -54,22 +54,26 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   data: () => ({
     formCreate: {
-      username: 'undefined',
-      password: 'OWdRbZVfZ',
+      username: '',
+      password: '',
       role: 'OWNER',
-      comPrefix: 'string',
-      agentPrefix: 'string',
+      comPrefix: '',
+      agentPrefix: '',
       isClone: true,
-      groups: ['string'],
+      groups: [],
     },
     prefixRole: 'prefix',
     roleToCrate: 'OWNER',
   }),
   created() {
     console.log(this.$route.params.role)
+  },
+  methods: {
+    ...mapActions('account', ['create_SubAccont']),
   },
 }
 </script>

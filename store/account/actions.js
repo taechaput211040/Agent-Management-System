@@ -36,3 +36,14 @@ export async function get_creditBalance({ commit, state }) {
     }
   })
 }
+
+export async function create_SubAccont({ commit }, body) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let data = await this.$axios.post('/v1alpha/user/register', body)
+      resolve(data)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}

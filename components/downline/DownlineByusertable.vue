@@ -30,11 +30,7 @@
 
     <!-- row search + credit_balance -->
     <v-card class="mt-5">
-      <div class="text-right pa-2">
-        <v-btn class="my-3" @click="handleCreateDownline()" color="primary" rounded
-          ><v-icon>mdi-plus</v-icon> เพิ่ม Downline</v-btn
-        >
-      </div>
+      <div class="pa-2"><v-btn color="error" small @click="backFunction()">back</v-btn></div>
       <v-data-table
         class="elevation-2"
         :headers="headers"
@@ -48,12 +44,7 @@
         <template #[`item.no`]="{ index }">
           {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
         </template>
-        <template #[`item.credit`]="{ item, index }">
-          <div class="pa-2">
-            <div v-if="showCreditamount == true">{{ item.credit }}</div>
-            <v-btn @click="showcredit(item, index)" depressed color="warning" elevation="2" small>ตรวจสอบเครดิต</v-btn>
-          </div>
-        </template>
+
         <template #[`item.edit`]="{ item }">
           <div class="d-flex justify-center">
             <v-btn class="mx-2" fab dark x-small color="success" @click="hanClickCredit(item, false)">
@@ -63,8 +54,8 @@
             </v-btn>
           </div>
         </template>
-        <template #[`item.log`]="{ item }">
-          <v-btn class="mx-2" fab dark x-small color="teal" @click="showlog(item)">
+        <template #[`item.log`]="{}">
+          <v-btn class="mx-2" fab dark x-small color="teal">
             <v-icon dark> mdi-format-list-bulleted-square </v-icon>
           </v-btn>
         </template>
@@ -73,11 +64,7 @@
             <span>View</span>
           </v-btn>
         </template>
-        <template #[`item.setting`]="{ item }">
-          <v-btn class="mx-2" x-small color="success" @click="showlog(item)">
-            <span>Edit</span>
-          </v-btn>
-        </template>
+
         <template #[`item.action`]>
           <v-btn class="mx-2" fab dark x-small color="purple" @click="modal_add = true">
             <v-icon dark> mdi-pencil </v-icon>
@@ -118,24 +105,6 @@
       </v-row>
     </v-card>
 
-    <v-dialog v-model="modalCredit" persistent max-width="400">
-      <v-card class="pa-5">
-        {{ this.formCredit.isMinus ? 'ลบ' : 'เติม' }} Credit
-        <v-text-field
-          type="number"
-          dense
-          v-model.number="formCredit.amount"
-          required
-          autofocus
-          @keyup.enter="handlcSubmitcredit()"
-        ></v-text-field>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="success" depressed @click="handlcSubmitcredit"> เติมเงิน </v-btn>
-          <v-btn color="error" depressed @click="handlcCloseCreditForm"> ยกเลิก </v-btn
-          ><v-spacer></v-spacer> </v-card-actions
-      ></v-card>
-    </v-dialog>
     <v-dialog v-model="open_history" width="800">
       <v-card class="pb-2">
         <v-card color="indigo darken-2" dark align-baseline>
@@ -187,7 +156,7 @@ export default {
         parent: '',
       },
       formCredit: {
-        amount: 0,
+        amount: null,
         username: null,
         isMinus: false,
       },
@@ -233,18 +202,7 @@ export default {
           align: 'center',
           sortable: false,
         },
-        {
-          text: 'Credit',
-          value: 'credit',
-          align: 'center',
-          sortable: false,
-        },
-        {
-          text: '+ / -',
-          value: 'edit',
-          align: 'center',
-          sortable: false,
-        },
+
         {
           text: 'Log',
           value: 'log',
@@ -254,12 +212,6 @@ export default {
         {
           text: 'Downline',
           value: 'view',
-          align: 'center',
-          sortable: false,
-        },
-        {
-          text: 'Setting',
-          value: 'setting',
           align: 'center',
           sortable: false,
         },
@@ -324,52 +276,62 @@ export default {
       },
     },
   },
-  created() {},
+  created() {
+    console.log(Object.keys(this.$route.query).length)
+    // this.getDownlineData()
+  },
   methods: {
     viewDownline(item) {
-      this.$router.push(`${this.$route.fullPath}?username=${item.username}`)
+      console.log(item, 'itemrender')
+      //   this.$router.push(`${this.$route.path}?username=${item.username}`)
+      this.getDownlineData(item.username)
+
+      if (!sessionStorage.getItem(`userPrev`) || JSON.parse(sessionStorage.getItem(`userPrev`)).length <= 0) {
+        let form_path = [item.supervisor.username]
+        sessionStorage.setItem(`userPrev`, JSON.stringify(form_path))
+      } else {
+        let form_path = JSON.parse(sessionStorage.getItem('userPrev'))
+        form_path.push(item.supervisor.username)
+        sessionStorage.setItem(`userPrev`, JSON.stringify(form_path))
+      }
+    },
+    backFunction() {
+      let form_path = JSON.parse(sessionStorage.getItem('userPrev'))
+      if (!form_path || form_path.length <= 0) {
+        this.$router.go(-1)
+      } else {
+        let user = form_path.pop()
+        this.getDownlineData(user)
+        sessionStorage.setItem(`userPrev`, JSON.stringify(form_path))
+      }
+      console.log(form_path)
     },
     handleCreateDownline() {
       this.$router.push(`/downline/createDownline/${this.$store.state.auth.role}`)
     },
-    checkRole() {
-      let role = this.$store.state.auth.role ? this.$store.state.auth.role : undefined
-      let roletoRendering = undefined
-      if (role === 'ADMIN') {
-        roletoRendering = 'OWNER'
-      } else if (role === 'OWNER') {
-        roletoRendering = 'SHAREHOLDER'
-      } else if (role === 'SHAREHOLDER') {
-        roletoRendering = 'SENIOR'
-      } else if (role === 'SENIOR') {
-        roletoRendering = 'AGENT'
-      } else if (role === 'AGENT') {
-        roletoRendering = 'MEMBER'
-      } else {
-        roletoRendering = undefined
-      }
-      return roletoRendering
-    },
-    ...mapActions('downline', ['getDownlineMember', 'depositCredit', 'withdrawCredit', 'checkCreditByuser']),
-    async getDownlineData() {
-      let parameters = this.getParameter()
+
+    ...mapActions('downline', ['getDownlineMemberByUser', 'depositCredit', 'withdrawCredit', 'checkCreditByuser']),
+    async getDownlineData(userid) {
+      let parameters = this.getParameter(userid)
       try {
-        let { data } = await this.getDownlineMember(parameters)
+        let { data } = await this.getDownlineMemberByUser(parameters)
         this.pagination.rowsNumber = data.result.totalDocs
         this.itemRendering = data.result.items.map((list) => ({
           ...list,
           credit: null,
         }))
+        // console.log(this.itemRendering,'list')
       } catch (error) {
         console.log(error)
+        this.itemRendering = []
+        this.pagination.rowsNumber = 0
       }
     },
-    getParameter() {
-      let rowUseRender = this.checkRole()
+    getParameter(userid) {
       let params = {
+        username: userid ? userid : this.$route.query.username,
         page: this.pagination.page,
         limit: this.pagination.rowsPerPage,
-        role: rowUseRender,
       }
       return params
     },
@@ -378,11 +340,6 @@ export default {
       this.pagination.rowsPerPage = size
       this.getDownlineData()
     },
-    showlog(dataHistory) {
-      this.open_history = true
-      this.history = dataHistory
-    },
-
     async showcredit(item, index) {
       this.showCreditamount = true
       try {
@@ -392,28 +349,6 @@ export default {
       } catch (error) {
         console.log(error)
       }
-    },
-    hanClickCredit(data, isMinus) {
-      this.formCredit.isMinus = isMinus
-      this.formCredit.username = data.username
-      this.modalCredit = true
-    },
-    async handlcCloseCreditForm() {
-      this.formCredit = {
-        amount: 0,
-        username: null,
-        isMinus: false,
-      }
-      this.modalCredit = false
-    },
-    async handlcSubmitcredit() {
-      try {
-        this.formCredit.isMinus ? await this.withdrawCredit(this.formCredit) : await this.depositCredit(this.formCredit)
-      } catch (error) {
-        console.log(error)
-      }
-
-      this.handlcCloseCreditForm()
     },
   },
 }

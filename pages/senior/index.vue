@@ -175,7 +175,7 @@
         ></v-data-table
       ></v-card>
     </v-dialog>
-    <v-dialog full-width v-model="modal_add" persistent>
+    <v-dialog  v-model="modal_add" persistent>
       <v-card class="pa-4">
         <v-form ref="form" v-model="valid">
           <v-text-field label="Role" filled disabled></v-text-field>

@@ -145,7 +145,7 @@
               </div>
             </template>
           </v-data-table>
-          <v-row align="baseline " class="ma-3 rounded-lg elevation-3">
+          <v-row align="baseline" class="ma-3 rounded-lg elevation-3">
             <v-col cols="12" sm="2">
               <v-select
                 dense
