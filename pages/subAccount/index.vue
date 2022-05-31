@@ -199,11 +199,11 @@ export default {
         },
         { text: 'Username', value: 'username', divider: true, align: 'center' },
 
-        { text: 'role', value: 'role', divider: true, align: 'center' },
         { text: 'Created at', value: 'created', divider: true },
         { text: 'Created by', value: 'created', divider: true },
         { text: 'Login IP', value: 'ip', divider: true },
-        { text: 'Status', value: 'status', align: 'center', divider: false },
+        { text: 'Last Login', value: 'last_login', divider: true },
+        { text: 'Suppend', value: 'Suppend', align: 'center', divider: false },
       ],
       exampleitem: [],
     }

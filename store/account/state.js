@@ -1,6 +1,6 @@
 export default function () {
   return {
-    profile: null,
+    profile: JSON.parse(localStorage.getItem('profile')) || null,
     credit: null,
   }
 }

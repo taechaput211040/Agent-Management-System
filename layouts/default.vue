@@ -236,9 +236,11 @@ export default {
       return this.items
     },
   },
+  async fetch() {
+    await this.get_creditBalance()
+  },
   async created() {
     await this.get_profile()
-    await this.get_creditBalance()
 
     // await this.checkauthen();
     // const managementMenu = ['staff', 'company', 'shareholder', 'senior', 'agent', 'member'].map((x) => ({

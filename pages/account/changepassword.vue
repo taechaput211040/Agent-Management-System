@@ -34,8 +34,8 @@
                   v-model="repassword"
                   prepend-inner-icon="mdi-lock"
                   :rules="[
-                    (v) => !!v || 'passwords are not the same ',
-                    (v) => (v && v === this.password) || 'กรอกรหัสให้ตรงกัน',
+                    (v) => !!v || 'Re-Passwords is Required ',
+                    (v) => (v && v === this.password) || 'Re-passwords are not the same ',
                   ]"
                   type="password"
                   class="rounded-0"

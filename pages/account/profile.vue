@@ -28,6 +28,7 @@
             </v-col>
           </v-row>
           <v-divider class="mt-3"></v-divider>
+          <provider-share></provider-share>
           <!-- <revenue-table></revenue-table> -->
           <marketshare-table></marketshare-table>
         </div>
@@ -42,9 +43,10 @@
 <script>
 import { mapActions } from 'vuex'
 import MarketshareTable from '~/components/market-share/MarketshareTable.vue'
+import ProviderShare from '~/components/market-share/ProviderShare.vue'
 import RevenueTable from '~/components/market-share/RevenueTable.vue'
 export default {
-  components: { RevenueTable, MarketshareTable },
+  components: { RevenueTable, MarketshareTable, ProviderShare },
   data() {
     return {
       search: '',

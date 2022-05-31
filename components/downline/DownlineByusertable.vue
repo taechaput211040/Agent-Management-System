@@ -228,12 +228,6 @@ export default {
           align: 'center',
           sortable: false,
         },
-        {
-          text: 'Status',
-          value: 'status',
-          align: 'center',
-          sortable: false,
-        },
       ],
       itemRendering: [
         {
