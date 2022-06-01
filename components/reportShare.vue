@@ -9,8 +9,28 @@
     <div v-if="!loadingpage">
       <v-btn v-if="isRoleLevel != 3" color="red" @click="$router.go(-1)" dark small class="mx-3">Back</v-btn>
       <h2 class="mt-3">Report หุ้นส่วน</h2>
+      <div class="row pa-3">
+        <div class="col-12 col-sm-4 col-md-4 col-lg-2 pa-2">
+          <card-data icon="mdi-account" title="ยอดรวมสมาชิก" :value="sumMember()"></card-data>
+        </div>
+        <div class="col-12 col-sm-4 col-md-4 col-lg-2 pa-2">
+          <card-data icon="mdi-account-multiple" title="ยอดรวม Agent" :value="sumAgent()"></card-data>
+        </div>
+        <div class="col-12 col-sm-4 col-md-4 col-lg-2 pa-2">
+          <card-data icon="mdi-clipboard-account" title="ยอดรวม Senior" :value="sumSenior()"></card-data>
+        </div>
+        <div class="col-12 col-sm-4 col-md-4 col-lg-2 pa-2">
+          <card-data icon="mdi-sale" title="ยอดรวม หุ้นส่วน" :value="sumShare()"></card-data>
+        </div>
+        <div class="col-12 col-sm-4 col-md-4 col-lg-2 pa-2">
+          <card-data icon="mdi-domain" title="ยอดรวม คอมปะนี" :value="sumOwner()"></card-data>
+        </div>
+        <div class="col-12 col-sm-4 col-md-4 col-lg-2 pa-2">
+          <card-data title="ยอดรวม Smartbet" :value="sumSmartbet()"></card-data>
+        </div>
+      </div>
       <template>
-        <div class="ma-3 pb-1 justify-center white rounded-lg classtable">
+        <v-card class="ma-3 pb-1 justify-center white rounded-lg classtable">
           <v-data-table
             :options.sync="options"
             :server-items-length="pagination.rowsNumber"
@@ -149,11 +169,12 @@
               </div>
             </template>
           </v-data-table>
-          <v-row align="baseline" class="ma-3 rounded-lg elevation-3">
+          <v-row align="baseline" class="ma-3">
             <v-col cols="12" sm="2">
               <v-select
                 dense
                 solo
+                hide-details="auto"
                 v-model="pagination.rowsPerPage"
                 :items="pageSizes"
                 @change="handlePageSizeChange"
@@ -168,7 +189,7 @@
               ></v-pagination>
             </v-col>
           </v-row>
-        </div>
+        </v-card>
       </template>
     </div>
     <div v-if="loadingpage" class="text-center">
@@ -180,8 +201,10 @@
 </template>
 <script>
 import * as moment from 'moment'
+import CardData from './form/CardData.vue'
 import { mapActions, mapGetters, mapState } from 'vuex'
 export default {
+  components: { CardData },
   props: {
     group_select: {
       type: [Array, Object],
@@ -344,6 +367,42 @@ export default {
     this.onSearch()
   },
   methods: {
+    sumMember() {
+      let results = this.reportdata?.docs?.reduce((initVal, item) => {
+        return (initVal += item.memberWin + item.memberCom)
+      }, 0)
+      return this.numberFormat(results)
+    },
+    sumAgent() {
+      let results = this.reportdata?.docs?.reduce((initVal, item) => {
+        return (initVal += item.agentWin + item.agentCom)
+      }, 0)
+      return this.numberFormat(results)
+    },
+    sumSenior() {
+      let results = this.reportdata?.docs?.reduce((initVal, item) => {
+        return (initVal += item.seniorWin + item.shareCom)
+      }, 0)
+      return this.numberFormat(results)
+    },
+    sumShare() {
+      let results = this.reportdata?.docs?.reduce((initVal, item) => {
+        return (initVal += item.shareWin + item.shareCom)
+      }, 0)
+      return this.numberFormat(results)
+    },
+    sumOwner() {
+      let results = this.reportdata?.docs?.reduce((initVal, item) => {
+        return (initVal += item.ownerWin + item.ownerCom)
+      }, 0)
+      return this.numberFormat(results)
+    },
+    sumSmartbet() {
+      let results = this.reportdata?.docs?.reduce((initVal, item) => {
+        return (initVal += item.smartWin + item.smartCom)
+      }, 0)
+      return this.numberFormat(results)
+    },
     async handlepage(page) {
       this.pagination_render.page = page
       await this.onRequest({

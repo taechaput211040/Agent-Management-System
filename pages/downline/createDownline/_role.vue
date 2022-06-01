@@ -21,14 +21,14 @@
             >
             </v-text-field>
           </div>
-          <div class="col-12 col-sm-3 pa-2" >
+          <div class="col-12 col-sm-3 pa-2">
             <v-text-field
               hide-details="auto"
               v-model="formCreate.agentPrefix"
               label="Agent Prefix"
               dense
-              :filled="isRoleLevel >= 4"
-              :disabled="isRoleLevel >= 4"
+              :filled="isRoleLevel >= 5"
+              :disabled="isRoleLevel >= 5"
               required
               :rules="[(v) => !!v || 'Agent Prefix  is required']"
               outlined
@@ -110,10 +110,12 @@ export default {
     if (this.$store.state.account.profile) {
       this.prefixRole = this.$store.state.account.profile.comPrefix
       this.formCreate.comPrefix = this.$store.state.account.profile.comPrefix
-      this.formCreate.agentPrefix =
-        this.$store.state.account.profile.agentPrefix || this.$store.state.account.profile.agentPrefix != ''
-          ? this.$store.state.account.profile.agentPrefix
-          : null
+      if (this.isRoleLevel >= 5) {
+        this.formCreate.agentPrefix =
+          this.$store.state.account.profile.agentPrefix || this.$store.state.account.profile.agentPrefix != ''
+            ? this.$store.state.account.profile.agentPrefix
+            : null
+      }
     }
     this.formCreate.role = this.checkRole()
     console.log(this.isRoleLevel, 'use for check agent prefix')

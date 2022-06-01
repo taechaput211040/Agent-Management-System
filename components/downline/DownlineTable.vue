@@ -31,7 +31,7 @@
     <!-- row search + credit_balance -->
     <v-card class="mt-5">
       <div class="text-right pa-2">
-        <v-btn class="my-3" @click="handleCreateDownline()" color="primary" rounded
+        <v-btn class="my-3" v-if="checkRole() !== 'MEMBER'" @click="handleCreateDownline()" color="primary" rounded
           ><v-icon>mdi-plus</v-icon> เพิ่ม Downline</v-btn
         >
       </div>
@@ -69,12 +69,12 @@
           </v-btn>
         </template>
         <template #[`item.view`]="{ item }">
-          <v-btn class="mx-2" x-small color="primary" @click="viewDownline(item)">
+          <v-btn class="mx-2" :disabled="item.role === 'MEMBER'" x-small color="primary" @click="viewDownline(item)">
             <span>View</span>
           </v-btn>
         </template>
         <template #[`item.setting`]="{ item }">
-          <v-btn class="mx-2" x-small color="success" @click="showlog(item)">
+          <v-btn class="mx-2" x-small :disabled="item.role === 'MEMBER'" color="success" @click="showlog(item)">
             <span>Edit</span>
           </v-btn>
         </template>
@@ -321,7 +321,9 @@ export default {
   created() {},
   methods: {
     viewDownline(item) {
-      this.$router.push(`${this.$route.fullPath}?username=${item.username}`)
+      this.$router.push(`${this.$route.fullPath}?username=${item.username}&role=${item.role}`)
+      let form_path = [item.username]
+      sessionStorage.setItem(`userPrev`, JSON.stringify(form_path))
     },
     handleCreateDownline() {
       this.$router.push(`/downline/createDownline/${this.$store.state.auth.role}`)

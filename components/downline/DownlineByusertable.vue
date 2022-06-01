@@ -278,7 +278,7 @@ export default {
     viewDownline(item) {
       console.log(item, 'itemrender')
       //   this.$router.push(`${this.$route.path}?username=${item.username}`)
-      this.getDownlineData(item.username)
+      this.getDownlineData(item.username, item.role)
 
       if (!sessionStorage.getItem(`userPrev`) || JSON.parse(sessionStorage.getItem(`userPrev`)).length <= 0) {
         let form_path = [item.supervisor.username]
@@ -291,7 +291,7 @@ export default {
     },
     backFunction() {
       let form_path = JSON.parse(sessionStorage.getItem('userPrev'))
-      if (!form_path || form_path.length <= 0) {
+      if (!form_path || form_path.length <= 1) {
         this.$router.go(-1)
       } else {
         let user = form_path.pop()
@@ -305,8 +305,8 @@ export default {
     },
 
     ...mapActions('downline', ['getDownlineMemberByUser', 'depositCredit', 'withdrawCredit', 'checkCreditByuser']),
-    async getDownlineData(userid) {
-      let parameters = this.getParameter(userid)
+    async getDownlineData(userid, role) {
+      let parameters = this.getParameter(userid, role)
       try {
         let { data } = await this.getDownlineMemberByUser(parameters)
         this.pagination.rowsNumber = data.result.totalDocs
@@ -321,13 +321,31 @@ export default {
         this.pagination.rowsNumber = 0
       }
     },
-    getParameter(userid) {
+    getParameter(userid, role) {
       let params = {
         username: userid ? userid : this.$route.query.username,
         page: this.pagination.page,
         limit: this.pagination.rowsPerPage,
+        role: role ? this.checkRoleRender(role) : this.checkRoleRender(this.$route.query.role),
       }
       return params
+    },
+    checkRoleRender(role) {
+      let roletoRendering = undefined
+      if (role === 'ADMIN') {
+        roletoRendering = 'OWNER'
+      } else if (role === 'OWNER') {
+        roletoRendering = 'SHAREHOLDER'
+      } else if (role === 'SHAREHOLDER') {
+        roletoRendering = 'SENIOR'
+      } else if (role === 'SENIOR') {
+        roletoRendering = 'AGENT'
+      } else if (role === 'AGENT') {
+        roletoRendering = 'MEMBER'
+      } else {
+        roletoRendering = undefined
+      }
+      return roletoRendering
     },
     async handlePageSizeChange(size) {
       this.pagination.page = 1

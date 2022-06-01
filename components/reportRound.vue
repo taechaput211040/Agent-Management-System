@@ -10,7 +10,7 @@
       <v-btn color="red" @click="$router.go(-1)" dark small class="mx-3">Back</v-btn>
       <h2 class="mt-3">Report Round</h2>
       <template>
-        <div class="ma-3 pb-1 justify-center white rounded-lg classtable">
+        <v-card class="ma-3 pb-1 justify-center white rounded-lg classtable">
           <v-data-table
             :options.sync="options"
             :server-items-length="pagination.rowsNumber"
@@ -184,9 +184,12 @@
               </div>
             </template>
           </v-data-table>
-          <v-row align="baseline" class="ma-3 rounded-lg elevation-3">
+          <v-row align="baseline" class="ma-3">
             <v-col cols="12" sm="2">
               <v-select
+                solo
+                dense
+                hide-details="auto"
                 v-model="pagination.rowsPerPage"
                 :items="pageSizes"
                 @change="handlePageSizeChange"
@@ -201,7 +204,7 @@
               ></v-pagination>
             </v-col>
           </v-row>
-        </div>
+        </v-card>
       </template>
     </div>
     <div v-if="loadingpage" class="text-center">

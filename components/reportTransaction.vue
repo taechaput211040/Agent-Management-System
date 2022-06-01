@@ -10,7 +10,7 @@
       <v-btn color="red" @click="$router.go(-1)" dark small class="mx-3">Back</v-btn>
       <h2 class="mt-3">Report Transaction</h2>
       <template>
-        <div class="ma-3 justify-center white rounded-lg classtable">
+        <v-card class="ma-3 justify-center white rounded-lg classtable">
           <v-data-table
             :page.sync="pagination.page"
             :items-per-page="pagination.rowsPerPage"
@@ -171,7 +171,7 @@
               </div>
             </template>
           </v-data-table>
-        </div>
+        </v-card>
       </template>
     </div>
     <div v-if="loadingpage" class="text-center">
@@ -226,7 +226,7 @@ export default {
         sortBy: 'desc',
         descending: false,
         page: 1,
-        rowsPerPage: 25,
+        rowsPerPage: 50,
         rowsNumber: 0,
       },
       reportdata: [],

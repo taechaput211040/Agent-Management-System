@@ -18,7 +18,7 @@
       >
       <h2 class="mt-3">Report Agent</h2>
       <template>
-        <div class="ma-3 justify-center white rounded-lg classtable">
+        <v-card class="ma-3 justify-center white rounded-lg classtable">
           <v-data-table
             :headers="headersTable"
             :items="reportdata.docs"
@@ -146,11 +146,11 @@
               </div>
             </template>
           </v-data-table>
-        </div>
+        </v-card>
       </template>
       <h2 class="mt-3" v-if="isRoleLevel != 5">Report Senior</h2>
       <template v-if="isRoleLevel != 5">
-        <div class="ma-3 justify-center white rounded-lg classtable ">
+        <v-card class="ma-3 justify-center white rounded-lg classtable ">
           <v-data-table
             :server-items-length="pagination.rowsNumber"
             :items-per-page.sync="pagination.rowsPerPage"
@@ -280,14 +280,15 @@
               </div>
             </template>
           </v-data-table>
-        </div>
+        </v-card>
 
-        <v-row align="baseline" class="ma-3 justify-center white rounded-lg classtable pb-1">
+        <v-row align="baseline" class="ma-3 ">
           <v-col cols="12" sm="2">
             <v-select
               dense
               solo
               v-model="pagination.rowsPerPage"
+              hide-details="auto"
               :items="pageSizes"
               @change="handlePageSizeChange"
               label="Items per Page"

@@ -7,9 +7,29 @@
       </v-btn>
     </div>
     <div v-if="!loadingpage">
-      <h2 class="mt-3">Report Summary</h2>
+      <h2 class="my-3">Report Summary</h2>
+      <div class="row pa-3">
+        <div class="col-12 col-sm-4 col-md-4 col-lg-2 pa-2">
+          <card-data icon="mdi-account" title="ยอดรวมสมาชิก" :value="sumMember()"></card-data>
+        </div>
+        <div class="col-12 col-sm-4 col-md-4 col-lg-2 pa-2">
+          <card-data icon="mdi-account-multiple" title="ยอดรวม Agent" :value="sumAgent()"></card-data>
+        </div>
+        <div class="col-12 col-sm-4 col-md-4 col-lg-2 pa-2">
+          <card-data icon="mdi-clipboard-account" title="ยอดรวม Senior" :value="sumSenior()"></card-data>
+        </div>
+        <div class="col-12 col-sm-4 col-md-4 col-lg-2 pa-2">
+          <card-data icon="mdi-sale" title="ยอดรวม หุ้นส่วน" :value="sumShare()"></card-data>
+        </div>
+        <div class="col-12 col-sm-4 col-md-4 col-lg-2 pa-2">
+          <card-data icon="mdi-domain" title="ยอดรวม คอมปะนี" :value="sumOwner()"></card-data>
+        </div>
+        <div class="col-12 col-sm-4 col-md-4 col-lg-2 pa-2">
+          <card-data title="ยอดรวม Smartbet" :value="sumSmartbet()"></card-data>
+        </div>
+      </div>
       <template>
-        <div class="ma-3 pb-1 justify-center white rounded-lg classtable">
+        <v-card class="ma-3 pb-1 justify-center elevation-3 white rounded-lg classtable">
           <v-data-table
             :server-items-length="pagination.rowsNumber"
             :items-per-page.sync="pagination.rowsPerPage"
@@ -145,7 +165,7 @@
               </div>
             </template>
           </v-data-table>
-          <v-row align="baseline" class="ma-3 rounded-lg elevation-3">
+          <v-row align="baseline" class="ma-3 ">
             <v-col cols="12" sm="2">
               <v-select
                 dense
@@ -154,6 +174,7 @@
                 :items="pageSizes"
                 @change="handlePageSizeChange"
                 label="Items per Page"
+                hide-details="auto"
               ></v-select>
             </v-col>
             <v-col cols="12" sm="10">
@@ -164,7 +185,7 @@
               ></v-pagination>
             </v-col>
           </v-row>
-        </div>
+        </v-card>
       </template>
     </div>
     <div v-if="loadingpage" class="text-center">
@@ -177,7 +198,9 @@
 <script>
 import * as moment from 'moment'
 import { mapActions, mapGetters, mapState } from 'vuex'
+import CardData from './form/CardData.vue'
 export default {
+  components: { CardData },
   props: {
     group_select: {
       type: [Array, Object],
@@ -247,11 +270,12 @@ export default {
         {
           text: 'Username',
           value: '_id',
-          cellClass: 'text-center font-weight-bold',
+          cellClass: 'font-weight-bold',
+          sortable: false,
         },
-        { text: 'Bet', value: 'providerBet', cellClass: 'text-center' },
-        { text: 'Turn over', value: 'providerTurn', cellClass: 'text-center' },
-        { text: 'Payout', value: 'providerPay', cellClass: 'text-center' },
+        { text: 'Bet', value: 'providerBet', sortable: false },
+        { text: 'Turn over', value: 'providerTurn', sortable: false },
+        { text: 'Payout', value: 'providerPay', sortable: false },
         {
           text: 'สมาชิก',
           value: 'memberWin',
@@ -328,7 +352,7 @@ export default {
     }),
   },
   async created() {
-    this.onSearch()
+    // this.onSearch()
   },
   async fetch() {},
   methods: {
@@ -338,6 +362,42 @@ export default {
       await this.onRequest({
         pagination: this.pagination_render,
       })
+    },
+    sumMember() {
+      let results = this.reportdata?.docs?.reduce((initVal, item) => {
+        return (initVal += item.memberWin + item.memberCom)
+      }, 0)
+      return this.numberFormat(results)
+    },
+    sumAgent() {
+      let results = this.reportdata?.docs?.reduce((initVal, item) => {
+        return (initVal += item.agentWin + item.agentCom)
+      }, 0)
+      return this.numberFormat(results)
+    },
+    sumSenior() {
+      let results = this.reportdata?.docs?.reduce((initVal, item) => {
+        return (initVal += item.seniorWin + item.shareCom)
+      }, 0)
+      return this.numberFormat(results)
+    },
+    sumShare() {
+      let results = this.reportdata?.docs?.reduce((initVal, item) => {
+        return (initVal += item.shareWin + item.shareCom)
+      }, 0)
+      return this.numberFormat(results)
+    },
+    sumOwner() {
+      let results = this.reportdata?.docs?.reduce((initVal, item) => {
+        return (initVal += item.ownerWin + item.ownerCom)
+      }, 0)
+      return this.numberFormat(results)
+    },
+    sumSmartbet() {
+      let results = this.reportdata?.docs?.reduce((initVal, item) => {
+        return (initVal += item.smartWin + item.smartCom)
+      }, 0)
+      return this.numberFormat(results)
     },
     async userendering(company_user) {
       this.$router.push(`${this.$route.path}?company=${company_user}`)
