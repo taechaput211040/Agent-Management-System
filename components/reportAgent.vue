@@ -16,11 +16,11 @@
         class="mx-3"
         >Back</v-btn
       >
-      <h2 class="mt-3">Report Agent</h2>
+      <h2 class="mt-3">Report Agent by Senior</h2>
       <template>
         <v-card class="ma-3 justify-center white rounded-lg classtable">
           <v-data-table
-            :headers="headersTable"
+            :headers="headerCustom"
             :items="reportdata.docs"
             :server-items-length="pagination.rowsNumber"
             :items-per-page.sync="pagination.rowsPerPage"
@@ -114,7 +114,59 @@
               </div>
             </template>
             <template #[`item.ownerWin`]="{ item }">
-              <div class="pa-1 card-detail rounded-lg my-2 elevation-2">
+              <!--  seniorlogin -->
+              <div class="pa-1 card-detail rounded-lg my-2 elevation-2" v-if="isRoleLevel === 4">
+                <div
+                  class="cursor-pointer"
+                  :class="bgFunc(numberFormat(item.ownerWin + item.shareWin + item.smartWin))"
+                >
+                  <v-chip label x-small color="primary" dark class="px-1">W/L</v-chip>
+                  {{ numberFormat(item.ownerWin + item.shareWin + item.smartWin) }}
+                </div>
+                <div class="purple--text">
+                  <v-chip label x-small color="purple" dark class="px-1">com</v-chip>
+                  {{ numberFormat(item.ownerCom + item.shareCom + item.smartCom) }}
+                </div>
+                <div class="grey--text">
+                  <v-chip label x-small color="black" dark class="px-1">W/L+com</v-chip>
+                  {{
+                    numberFormat(
+                      item.ownerCom + item.ownerWin + item.smartCom + item.smartWin + item.shareCom + item.shareWin
+                    )
+                  }}
+                </div>
+              </div>
+              <!--  agentlogin -->
+              <div class="pa-1 card-detail rounded-lg my-2 elevation-2" v-else-if="isRoleLevel === 5">
+                <div
+                  class="cursor-pointer"
+                  :class="bgFunc(numberFormat(item.ownerWin + item.shareWin + item.smartWin + item.seniorWin))"
+                >
+                  <v-chip label x-small color="primary" dark class="px-1">W/L</v-chip>
+                  {{ numberFormat(item.ownerWin + item.shareWin + item.smartWin + item.seniorWin) }}
+                </div>
+                <div class="purple--text">
+                  <v-chip label x-small color="purple" dark class="px-1">com</v-chip>
+                  {{ numberFormat(item.ownerCom + item.shareCom + item.smartCom + item.seniorCom) }}
+                </div>
+                <div class="grey--text">
+                  <v-chip label x-small color="black" dark class="px-1">W/L+com</v-chip>
+                  {{
+                    numberFormat(
+                      item.ownerCom +
+                        item.ownerWin +
+                        item.smartCom +
+                        item.smartWin +
+                        item.shareCom +
+                        item.shareWin +
+                        item.seniorWin +
+                        item.seniorCom
+                    )
+                  }}
+                </div>
+              </div>
+              <!--  otherlogin -->
+              <div class="pa-1 card-detail rounded-lg my-2 elevation-2" v-else>
                 <div class="cursor-pointer" :class="bgFunc(numberFormat(item.ownerWin))">
                   <v-chip label x-small color="primary" dark class="px-1">W/L</v-chip>
                   {{ numberFormat(item.ownerWin) }}
@@ -129,6 +181,7 @@
                 </div>
               </div>
             </template>
+
             <template #[`item.smartWin`]="{ item }">
               <div class="pa-1 card-detail rounded-lg my-2 elevation-2">
                 <div class="cursor-pointer" :class="bgFunc(numberFormat(item.smartWin))">
@@ -148,15 +201,16 @@
           </v-data-table>
         </v-card>
       </template>
-      <h2 class="mt-3" v-if="isRoleLevel != 5">Report Senior</h2>
-      <template v-if="isRoleLevel != 5">
-        <v-card class="ma-3 justify-center white rounded-lg classtable ">
+      <!-- v-if="isRoleLevel != 5" -->
+      <h2 class="mt-3">Report Member by Senior</h2>
+      <template>
+        <v-card class="ma-3 justify-center white rounded-lg classtable">
           <v-data-table
             :server-items-length="pagination.rowsNumber"
             :items-per-page.sync="pagination.rowsPerPage"
             :page.sync="pagination.page"
             :options.sync="options"
-            :headers="headersTable"
+            :headers="headerCustom"
             :items="reportsenior.docs"
             :loading="isLoading"
             loading-text="Loading... Please wait"
@@ -232,7 +286,149 @@
               </div>
             </template>
             <template #[`item.ownerWin`]="{ item }">
-              <div class="pa-1 card-detail rounded-lg my-2 elevation-2">
+              <!-- seniorlogin -->
+              <div class="pa-1 card-detail rounded-lg my-2 elevation-2" v-if="isRoleLevel === 4">
+                <div
+                  class="cursor-pointer"
+                  :class="
+                    bgFunc(
+                      numberFormat(
+                        getReport(item.reports, 0).win +
+                          getReport(item.reports, 1).win +
+                          getReport(item.reports, 2).win +
+                          getReport(item.reports, 3).win
+                      )
+                    )
+                  "
+                >
+                  <v-chip label x-small color="primary" dark class="px-1">W/L</v-chip>
+                  {{
+                    numberFormat(
+                      getReport(item.reports, 0).win +
+                        getReport(item.reports, 1).win +
+                        getReport(item.reports, 2).win +
+                        getReport(item.reports, 3).win
+                    )
+                  }}
+                </div>
+                <div class="purple--text">
+                  <v-chip label x-small color="purple" dark class="px-1">com</v-chip>
+                  {{
+                    numberFormat(
+                      getReport(item.reports, 0).com +
+                        getReport(item.reports, 1).com +
+                        getReport(item.reports, 2).com +
+                        getReport(item.reports, 3).com
+                    )
+                  }}
+                </div>
+                <div
+                  :class="
+                    bgFunc(
+                      numberFormat(
+                        getReport(item.reports, 0).win +
+                          getReport(item.reports, 1).win +
+                          getReport(item.reports, 2).win +
+                          getReport(item.reports, 3).win +
+                          getReport(item.reports, 0).com +
+                          getReport(item.reports, 1).com +
+                          getReport(item.reports, 2).com +
+                          getReport(item.reports, 3).com
+                      )
+                    )
+                  "
+                >
+                  <v-chip label x-small color="black" dark class="px-1">W/L+com </v-chip>
+                  {{
+                    numberFormat(
+                      getReport(item.reports, 0).win +
+                        getReport(item.reports, 1).win +
+                        getReport(item.reports, 2).win +
+                        getReport(item.reports, 3).win +
+                        getReport(item.reports, 0).com +
+                        getReport(item.reports, 1).com +
+                        getReport(item.reports, 2).com +
+                        getReport(item.reports, 3).com
+                    )
+                  }}
+                </div>
+              </div>
+              <!-- agentlogin -->
+              <div class="pa-1 card-detail rounded-lg my-2 elevation-2" v-else-if="isRoleLevel === 5">
+                <div
+                  class="cursor-pointer"
+                  :class="
+                    bgFunc(
+                      numberFormat(
+                        getReport(item.reports, 0).win +
+                          getReport(item.reports, 1).win +
+                          getReport(item.reports, 2).win +
+                          getReport(item.reports, 3).win +
+                          getReport(item.reports, 4).win
+                      )
+                    )
+                  "
+                >
+                  <v-chip label x-small color="primary" dark class="px-1">W/L</v-chip>
+                  {{
+                    numberFormat(
+                      getReport(item.reports, 0).win +
+                        getReport(item.reports, 1).win +
+                        getReport(item.reports, 2).win +
+                        getReport(item.reports, 3).win +
+                        getReport(item.reports, 4).win
+                    )
+                  }}
+                </div>
+                <div class="purple--text">
+                  <v-chip label x-small color="purple" dark class="px-1">com</v-chip>
+                  {{
+                    numberFormat(
+                      getReport(item.reports, 0).com +
+                        getReport(item.reports, 1).com +
+                        getReport(item.reports, 2).com +
+                        getReport(item.reports, 3).com +
+                        getReport(item.reports, 4).com
+                    )
+                  }}
+                </div>
+                <div
+                  :class="
+                    bgFunc(
+                      numberFormat(
+                        getReport(item.reports, 0).win +
+                          getReport(item.reports, 1).win +
+                          getReport(item.reports, 2).win +
+                          getReport(item.reports, 3).win +
+                          getReport(item.reports, 4).win +
+                          getReport(item.reports, 0).com +
+                          getReport(item.reports, 1).com +
+                          getReport(item.reports, 2).com +
+                          getReport(item.reports, 3).com +
+                          getReport(item.reports, 4).com
+                      )
+                    )
+                  "
+                >
+                  <v-chip label x-small color="black" dark class="px-1">W/L+com </v-chip>
+                  {{
+                    numberFormat(
+                      getReport(item.reports, 0).win +
+                        getReport(item.reports, 1).win +
+                        getReport(item.reports, 2).win +
+                        getReport(item.reports, 3).win +
+                        getReport(item.reports, 4).win +
+                        getReport(item.reports, 0).com +
+                        getReport(item.reports, 1).com +
+                        getReport(item.reports, 2).com +
+                        getReport(item.reports, 3).com +
+                        getReport(item.reports, 4).com
+                    )
+                  }}
+                </div>
+              </div>
+              <!-- otherlogin -->
+              <div class="pa-1 card-detail rounded-lg my-2 elevation-2" v-else>
                 <div class="cursor-pointer" :class="bgFunc(numberFormat(getReport(item.reports, 2).win))">
                   <v-chip label x-small color="primary" dark class="px-1">W/L</v-chip>
                   {{ numberFormat(getReport(item.reports, 2).win) }}
@@ -282,7 +478,7 @@
           </v-data-table>
         </v-card>
 
-        <v-row align="baseline" class="ma-3 ">
+        <v-row align="baseline" class="ma-3">
           <v-col cols="12" sm="2">
             <v-select
               dense
@@ -414,6 +610,22 @@ export default {
     },
   },
   computed: {
+    headerCustom() {
+      if (this.isRoleLevel === 4) {
+        let header = this.headersTable.filter((x) => {
+          return x.value !== 'shareWin' && x.value !== 'smartWin'
+        })
+        return header
+      } else if (this.isRoleLevel === 5) {
+        let header = this.headersTable.filter((x) => {
+          return x.value !== 'shareWin' && x.value !== 'smartWin' && x.value !== 'seniorWin'
+        })
+        return header
+      } else {
+        return this.headersTable
+      }
+    },
+
     pagination_render() {
       return this.pagination
     },

@@ -4,17 +4,6 @@
       <v-card-text class="pa-0 indigo lighten-3 white--text d-sm-flex d-block align-baseline">
         <h2 class="ml-2 py-3">Market Share</h2>
         <v-spacer></v-spacer>
-        <!-- <div class="col-12 col-sm-4 col-md-3">
-          <v-text-field
-            v-model="search"
-            label="seacrh"
-            append-icon="mdi-magnify"
-            dense
-            solo
-            rounded
-            hide-details="auto"
-          ></v-text-field>
-        </div> -->
       </v-card-text>
       <v-data-table
         :server-items-length="pagination.rowsNumber"
@@ -28,7 +17,7 @@
         :items="rendering"
       >
         <template #[`item.username`]="{ item }">
-          <v-btn text color="primary" class="font-weight-bold" @click="renderRevenue(item)">{{ item.username }}</v-btn>
+          <v-btn text color="primary" class="font-weight-bold">{{ item.username }}</v-btn>
         </template>
       </v-data-table>
       <v-row align="baseline pa-3">
@@ -110,9 +99,7 @@ export default {
       this.pagination.rowsPerPage = size
       this.getMember()
     },
-    renderRevenue(item) {
-      this.$router.push(`?username=${item.username}`)
-    },
+
     getParameter() {
       let params = {
         page: this.pagination.page,

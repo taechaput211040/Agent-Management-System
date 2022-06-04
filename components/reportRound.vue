@@ -16,7 +16,7 @@
             :server-items-length="pagination.rowsNumber"
             :items-per-page.sync="pagination.rowsPerPage"
             :page.sync="pagination.page"
-            :headers="headersTable"
+            :headers="headerCustom"
             :items="reportdata.docs"
             hide-default-footer
             :loading="isLoading"
@@ -124,7 +124,149 @@
               </div>
             </template>
             <template #[`item.ownerWin`]="{ item }">
-              <div class="pa-1 card-detail-transaction rounded-lg my-2 elevation-2">
+              <!--seniorlogin -->
+              <div class="pa-1 card-detail-transaction rounded-lg my-2 elevation-2" v-if="isRoleLevel === 4">
+                <div
+                  class="cursor-pointer"
+                  :class="
+                    bgFunc(
+                      numberFormat(
+                        getpercent(item, 0).winLosePayout +
+                          getpercent(item, 1).winLosePayout +
+                          getpercent(item, 2).winLosePayout +
+                          getpercent(item, 3).winLosePayout
+                      )
+                    )
+                  "
+                >
+                  <v-chip label x-small color="primary" dark class="px-1">W/L</v-chip>
+                  {{
+                    numberFormat(
+                      getpercent(item, 0).winLosePayout +
+                        getpercent(item, 1).winLosePayout +
+                        getpercent(item, 2).winLosePayout +
+                        getpercent(item, 3).winLosePayout
+                    )
+                  }}
+                </div>
+                <div class="purple--text">
+                  <v-chip label x-small color="purple" dark class="px-1">com</v-chip>
+                  {{
+                    numberFormat(
+                      getpercent(item, 0).commissionPayout +
+                        getpercent(item, 1).commissionPayout +
+                        getpercent(item, 2).commissionPayout +
+                        getpercent(item, 3).commissionPayout
+                    )
+                  }}
+                </div>
+                <div
+                  :class="
+                    bgFunc(
+                      numberFormat(
+                        getpercent(item, 0).winLosePayout +
+                          getpercent(item, 1).winLosePayout +
+                          getpercent(item, 2).winLosePayout +
+                          getpercent(item, 3).winLosePayout +
+                          getpercent(item, 0).commissionPayout +
+                          getpercent(item, 1).commissionPayout +
+                          getpercent(item, 2).commissionPayout +
+                          getpercent(item, 3).commissionPayout
+                      )
+                    )
+                  "
+                >
+                  <v-chip label x-small color="black" dark class="px-1">W/L+com </v-chip>
+                  {{
+                    numberFormat(
+                      getpercent(item, 0).winLosePayout +
+                        getpercent(item, 1).winLosePayout +
+                        getpercent(item, 2).winLosePayout +
+                        getpercent(item, 3).winLosePayout +
+                        getpercent(item, 0).commissionPayout +
+                        getpercent(item, 1).commissionPayout +
+                        getpercent(item, 2).commissionPayout +
+                        getpercent(item, 3).commissionPayout
+                    )
+                  }}
+                </div>
+              </div>
+              <!-- agentlogin -->
+              <div class="pa-1 card-detail-transaction rounded-lg my-2 elevation-2" v-else-if="isRoleLevel === 5">
+                <div
+                  class="cursor-pointer"
+                  :class="
+                    bgFunc(
+                      numberFormat(
+                        getpercent(item, 0).winLosePayout +
+                          getpercent(item, 1).winLosePayout +
+                          getpercent(item, 2).winLosePayout +
+                          getpercent(item, 3).winLosePayout +
+                          getpercent(item, 4).winLosePayout
+                      )
+                    )
+                  "
+                >
+                  <v-chip label x-small color="primary" dark class="px-1">W/L</v-chip>
+                  {{
+                    numberFormat(
+                      getpercent(item, 0).winLosePayout +
+                        getpercent(item, 1).winLosePayout +
+                        getpercent(item, 2).winLosePayout +
+                        getpercent(item, 3).winLosePayout +
+                        getpercent(item, 4).winLosePayout
+                    )
+                  }}
+                </div>
+                <div class="purple--text">
+                  <v-chip label x-small color="purple" dark class="px-1">com</v-chip>
+                  {{
+                    numberFormat(
+                      getpercent(item, 0).commissionPayout +
+                        getpercent(item, 1).commissionPayout +
+                        getpercent(item, 2).commissionPayout +
+                        getpercent(item, 3).commissionPayout +
+                        getpercent(item, 4).commissionPayout
+                    )
+                  }}
+                </div>
+                <div
+                  :class="
+                    bgFunc(
+                      numberFormat(
+                        getpercent(item, 0).winLosePayout +
+                          getpercent(item, 1).winLosePayout +
+                          getpercent(item, 2).winLosePayout +
+                          getpercent(item, 3).winLosePayout +
+                          getpercent(item, 4).winLosePayout +
+                          getpercent(item, 0).commissionPayout +
+                          getpercent(item, 1).commissionPayout +
+                          getpercent(item, 2).commissionPayout +
+                          getpercent(item, 3).commissionPayout +
+                          getpercent(item, 4).commissionPayout
+                      )
+                    )
+                  "
+                >
+                  <v-chip label x-small color="black" dark class="px-1">W/L+com </v-chip>
+                  {{
+                    numberFormat(
+                      getpercent(item, 0).winLosePayout +
+                        getpercent(item, 1).winLosePayout +
+                        getpercent(item, 2).winLosePayout +
+                        getpercent(item, 3).winLosePayout +
+                        getpercent(item, 4).winLosePayout +
+                        getpercent(item, 0).commissionPayout +
+                        getpercent(item, 1).commissionPayout +
+                        getpercent(item, 2).commissionPayout +
+                        getpercent(item, 3).commissionPayout +
+                        getpercent(item, 4).commissionPayout
+                    )
+                  }}
+                </div>
+              </div>
+              <!-- otherlogin -->
+              <div class="pa-1 card-detail-transaction rounded-lg my-2 elevation-2" v-else>
                 <div class="cursor-pointer" :class="bgFunc(numberFormat(getpercent(item, 2).winLosePayout))">
                   <v-chip label x-small color="primary" dark class="px-1">W/L</v-chip>
                   {{ numberFormat(getpercent(item, 2).winLosePayout) }}
@@ -392,6 +534,23 @@ export default {
   },
 
   computed: {
+    headerCustom() {
+      if (this.isRoleLevel === 4) {
+        let header = this.headersTable.filter((x) => {
+          return x.value !== 'shareWin' && x.value !== 'smartWin' && x.value !== 'providerwin'
+        })
+        return header
+      } else if (this.isRoleLevel === 5) {
+        let header = this.headersTable.filter((x) => {
+          return (
+            x.value !== 'shareWin' && x.value !== 'smartWin' && x.value !== 'seniorWin' && x.value !== 'providerwin'
+          )
+        })
+        return header
+      } else {
+        return this.headersTable
+      }
+    },
     pagination_render() {
       return this.pagination
     },

@@ -1,11 +1,11 @@
 <template>
   <!-- <h2 class="mt-4">Market-Share</h2> -->
-  <div>
-    <v-card class="elevation-3 mt-3">
+  <div class="dl_rendering">
+    <div v-if="isLoading" class="loading"><loading-page></loading-page></div>
+    <div>
       <v-card-text class="pa-0 indigo lighten-3 white--text d-sm-flex d-block align-baseline">
-        <div class="d-flex align-center py-2">
-          <v-btn color="error" class="mx-2" small @click="$router.go(-1)">back</v-btn>
-          <h2>Revenue Share : {{ $route.query.username || null }}</h2>
+        <div class="d-flex align-center pa-2">
+          <h2>Revenue Share : {{ username || null }}</h2>
         </div>
 
         <v-spacer></v-spacer>
@@ -23,9 +23,9 @@
       </v-card-text>
       <v-data-table
         :search="search"
-        :server-items-length="pagination.rowsNumber"
-        :page.sync="pagination.page"
-        :items-per-page="pagination.rowsPerPage"
+        :server-items-length="paginationProvider.rowsNumber"
+        :page.sync="paginationProvider.page"
+        :items-per-page="paginationProvider.rowsPerPage"
         :options.sync="options"
         class="elevation-3"
         :headers="headersProvider"
@@ -46,13 +46,14 @@
           <v-text-field
             dense
             outlined
+            :suffix="item.edit_status ? `limit : ${item.percent_limit}` : null"
             v-model="item.percent"
             hide-details="auto"
             :disabled="!item.edit_status"
             type="number"
           ></v-text-field>
         </template>
-        <template #[`item.percent_limit`]="{ item }">
+        <!-- <template #[`item.percent_limit`]="{ item }">
           <v-text-field
             dense
             type="number"
@@ -61,8 +62,8 @@
             hide-details="auto"
             :disabled="!item.edit_status"
           ></v-text-field>
-        </template>
-        <template #[`item.option_limit`]="{ item }">
+        </template> -->
+        <!-- <template #[`item.option_limit`]="{ item }">
           <v-text-field
             dense
             outlined
@@ -71,47 +72,60 @@
             hide-details="auto"
             :disabled="!item.edit_status"
           ></v-text-field>
-        </template>
+        </template> -->
 
         <template #[`item.actions`]="{ item }">
-          <v-btn color="primary" @click="item.edit_status = !item.edit_status">edit</v-btn>
+          <v-btn color="primary" small v-if="!item.edit_status" @click="item.edit_status = !item.edit_status"
+            >edit</v-btn
+          >
+          <v-btn color="success" small v-else @click="item.edit_status = !item.edit_status">save</v-btn>
         </template>
       </v-data-table>
-      <v-row align="baseline mt-3 px-2">
+      <v-row align="baseline" class="mt-3">
         <v-col cols="12" sm="2">
           <v-select
             dense
             hide-details="auto"
             solo
-            v-model="pagination.rowsPerPage"
+            v-model="paginationProvider.rowsPerPage"
             :items="pageSizes"
-            @change="handlePageSizeChange"
+            @change="handlePageSizeChangeProvider"
             label="Items per Page"
           ></v-select>
         </v-col>
         <v-col cols="12" sm="10">
           <v-pagination
-            v-model="pagination.page"
+            v-model="paginationProvider.page"
             :total-visible="7"
-            :length="Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)"
+            :length="Math.ceil(paginationProvider.rowsNumber / paginationProvider.rowsPerPage)"
           ></v-pagination>
         </v-col>
       </v-row>
-    </v-card>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import loadingPage from '../form/loadingPage.vue'
 export default {
+  components: { loadingPage },
+  props: {
+    username: {
+      type: String,
+      default: () => undefined,
+    },
+  },
+
   data() {
     return {
+      isLoading: false,
       pageSizes: [5, 10, 15, 25],
-      pagination: {
+      paginationProvider: {
         sortBy: 'desc',
         descending: false,
         page: 1,
-        rowsPerPage: 15,
+        rowsPerPage: 10,
         rowsNumber: 0,
       },
       options: {},
@@ -130,25 +144,21 @@ export default {
           value: 'percent',
           align: 'center',
           sortable: false,
+          width: '300px',
         },
-        {
-          text: 'commission',
-          value: 'commission',
-          align: 'center',
-          sortable: false,
-        },
-        {
-          text: 'percent_limit',
-          value: 'percent_limit',
-          align: 'center',
-          sortable: false,
-        },
-        {
-          text: 'option_limit',
-          value: 'option_limit',
-          align: 'center',
-          sortable: false,
-        },
+        // {
+        //   text: 'commission',
+        //   value: 'commission',
+        //   align: 'center',
+        //   sortable: false,
+        // },
+        // {
+        //   text: 'option_limit',
+        //   value: 'option_limit',
+        //   align: 'center',
+        //   sortable: false,
+        //   width: '300px',
+        // },
         {
           text: 'actions',
           value: 'actions',
@@ -159,32 +169,43 @@ export default {
       rendering: [],
     }
   },
-  async created() {
-    this.getRevenueListByuser()
-  },
   watch: {
     options: {
       async handler() {
         await this.getRevenueListByuser()
       },
     },
+    username() {
+      this.setPage()
+      this.getRevenueListByuser()
+    },
   },
 
   methods: {
+    setPage() {
+      this.paginationProvider = {
+        sortBy: 'desc',
+        descending: false,
+        page: 1,
+        rowsPerPage: 10,
+        rowsNumber: 0,
+      }
+    },
     ...mapActions('marketshare', ['getRevenueProviderByUser']),
-    getParameter() {
+    getParameterProvider() {
       let params = {
-        username: this.$route.query.username,
-        page: this.pagination.page,
-        limit: this.pagination.rowsPerPage,
+        username: this.username,
+        page: this.paginationProvider.page,
+        limit: this.paginationProvider.rowsPerPage,
       }
       return params
     },
     async getRevenueListByuser() {
-      let parameters = this.getParameter()
+      this.isLoading = true
+      let parameters = this.getParameterProvider()
       try {
         let { data } = await this.getRevenueProviderByUser(parameters)
-        this.pagination.rowsNumber = data.result.count
+        this.paginationProvider.rowsNumber = data.result.count
         this.rendering = data.result.items
 
         this.rendering = this.rendering.map((object) => {
@@ -196,9 +217,9 @@ export default {
       }
       this.isLoading = false
     },
-    async handlePageSizeChange(size) {
-      this.pagination.page = 1
-      this.pagination.rowsPerPage = size
+    async handlePageSizeChangeProvider(size) {
+      this.paginationProvider.page = 1
+      this.paginationProvider.rowsPerPage = size
       this.getRevenueListByuser()
     },
   },

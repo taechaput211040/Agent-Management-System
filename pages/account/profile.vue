@@ -28,9 +28,9 @@
             </v-col>
           </v-row>
           <v-divider class="mt-3"></v-divider>
-          <provider-share></provider-share>
+          <provider-share></provider-share> 
           <!-- <revenue-table></revenue-table> -->
-          <marketshare-table></marketshare-table>
+          <!-- <marketshare-table></marketshare-table> -->
         </div>
       </div>
     </div>

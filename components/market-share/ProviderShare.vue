@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div v-if="!rendering.length <= 0">
     <h2 class="mt-4">Market-Share</h2>
-    <div class="col-12">
+    <div class="mt-4">
       <v-card class="elevation-3">
         <v-card-text class="pa-0 indigo lighten-3 white--text d-sm-flex d-block align-baseline">
           <h2 class="ml-2 pt-3">Revenue Share</h2>
@@ -71,6 +71,7 @@ export default {
         this.rendering = data
       } catch (error) {
         console.log(error)
+        this.rendering = []
       }
       this.isLoading = false
     },

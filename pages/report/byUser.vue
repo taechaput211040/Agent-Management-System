@@ -50,10 +50,11 @@
                 <v-row class="my-2">
                   <h4 class="pa-4">ผู้ให้บริการ:</h4>
                   <div class="col-12 col-md-6">
+                    <small class="font-weight-bold red--text">**ค่าเริ่มต้นคือเลือกทั้งหมด**</small>
                     <v-autocomplete
                       clearable
                       label="เลือกผู้ให้บริการ"
-                      placeholder="กรุณาเลือกผู้ให้บริการ"
+                      placeholder="เลือกทั้งหมด"
                       v-model="provider_select"
                       :items="providerList"
                       item-text="name"

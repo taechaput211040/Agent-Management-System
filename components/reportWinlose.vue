@@ -25,7 +25,7 @@
           <card-data icon="mdi-domain" title="ยอดรวม คอมปะนี" :value="sumOwner()"></card-data>
         </div>
         <div class="col-12 col-sm-4 col-md-4 col-lg-2 pa-2">
-          <card-data title="ยอดรวม Smartbet" :value="sumSmartbet()"></card-data>
+          <card-data title="ยอดรวม Smartbet" icon="mdi-hexagram" :value="sumSmartbet()"></card-data>
         </div>
       </div>
       <template>
@@ -165,7 +165,7 @@
               </div>
             </template>
           </v-data-table>
-          <v-row align="baseline" class="ma-3 ">
+          <v-row align="baseline" class="ma-3">
             <v-col cols="12" sm="2">
               <v-select
                 dense

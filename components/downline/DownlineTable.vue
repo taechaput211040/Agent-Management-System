@@ -74,7 +74,7 @@
           </v-btn>
         </template>
         <template #[`item.setting`]="{ item }">
-          <v-btn class="mx-2" x-small :disabled="item.role === 'MEMBER'" color="success" @click="showlog(item)">
+          <v-btn class="mx-2" x-small :disabled="item.role === 'MEMBER'" color="success" @click="settingProvider(item)">
             <span>Edit</span>
           </v-btn>
         </template>
@@ -147,14 +147,25 @@
         <v-data-table class="elevation-2 ma-2" :headers="headersHistory" hide-default-footer></v-data-table
       ></v-card>
     </v-dialog>
+    <v-dialog v-model="dlProvider" persistent max-width="900px"
+      ><v-card class="pa-3">
+        <revenue-table :username="targetUser" ref="table"></revenue-table>
+        <v-card-actions class="justify-center">
+          <v-btn color="error" @click="CloseDl">ปิด</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import RevenueTable from '../market-share/RevenueTable.vue'
 export default {
+  components: { RevenueTable },
   data() {
     return {
+      dlProvider: false,
       showCreditamount: false,
       pageSizes: [5, 10, 15, 25],
       options: {},
@@ -309,6 +320,7 @@ export default {
           status: 1,
         },
       ],
+      targetUser: '',
     }
   },
   watch: {
@@ -320,6 +332,13 @@ export default {
   },
   created() {},
   methods: {
+    CloseDl() {
+      this.dlProvider = false
+    },
+    settingProvider(item) {
+      this.targetUser = item.username
+      this.dlProvider = true
+    },
     viewDownline(item) {
       this.$router.push(`${this.$route.fullPath}?username=${item.username}&role=${item.role}`)
       let form_path = [item.username]
@@ -347,6 +366,7 @@ export default {
       return roletoRendering
     },
     ...mapActions('downline', ['getDownlineMember', 'depositCredit', 'withdrawCredit', 'checkCreditByuser']),
+    //  ...mapActions('marketshare', ['getRevenueProviderByUser']),
     async getDownlineData() {
       let parameters = this.getParameter()
       try {
