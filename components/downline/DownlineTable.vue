@@ -29,94 +29,104 @@
     </v-card>
 
     <!-- row search + credit_balance -->
-    <v-card class="mt-5">
+    <div class="mt-5">
       <div class="text-right pa-2">
         <v-btn class="my-3" v-if="checkRole() !== 'MEMBER'" @click="handleCreateDownline()" color="primary" rounded
           ><v-icon>mdi-plus</v-icon> เพิ่ม Downline</v-btn
         >
       </div>
-      <v-data-table
-        class="elevation-2"
-        :headers="headers"
-        :items="itemRendering"
-        :server-items-length="pagination.rowsNumber"
-        :page.sync="pagination.page"
-        :options.sync="options"
-        :items-per-page="pagination.rowsPerPage"
-        hide-default-footer
-      >
-        <template #[`item.no`]="{ index }">
-          {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
-        </template>
-        <template #[`item.credit`]="{ item, index }">
-          <div class="pa-2">
-            <div v-if="showCreditamount == true">{{ item.credit }}</div>
-            <v-btn @click="showcredit(item, index)" depressed color="warning" elevation="2" small>ตรวจสอบเครดิต</v-btn>
-          </div>
-        </template>
-        <template #[`item.edit`]="{ item }">
-          <div class="d-flex justify-center">
-            <v-btn class="mx-2" fab dark x-small color="success" @click="hanClickCredit(item, false)">
-              <v-icon dark> mdi-plus </v-icon> </v-btn
-            ><v-btn class="mx-2" fab dark x-small color="error" @click="hanClickCredit(item, true)">
-              <v-icon dark> mdi-minus </v-icon>
+      <v-card class=" pb-1 justify-center elevation-3 white rounded-lg classtable">
+        <v-data-table
+          class="elevation-2"
+          :headers="headers"
+          :items="itemRendering"
+          :server-items-length="pagination.rowsNumber"
+          :page.sync="pagination.page"
+          :options.sync="options"
+          :items-per-page="pagination.rowsPerPage"
+          hide-default-footer
+        >
+          <template #[`item.no`]="{ index }">
+            {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
+          </template>
+          <template #[`item.credit`]="{ item, index }">
+            <div class="pa-2">
+              <div v-if="showCreditamount == true">{{ item.credit }}</div>
+              <v-btn @click="showcredit(item, index)" depressed color="warning" elevation="2" small
+                >ตรวจสอบเครดิต</v-btn
+              >
+            </div>
+          </template>
+          <template #[`item.edit`]="{ item }">
+            <div class="d-flex justify-center">
+              <v-btn class="mx-2" fab dark x-small color="success" @click="hanClickCredit(item, false)">
+                <v-icon dark> mdi-plus </v-icon> </v-btn
+              ><v-btn class="mx-2" fab dark x-small color="error" @click="hanClickCredit(item, true)">
+                <v-icon dark> mdi-minus </v-icon>
+              </v-btn>
+            </div>
+          </template>
+          <template #[`item.log`]="{ item }">
+            <v-btn class="mx-2" fab dark x-small color="teal" @click="showlog(item)">
+              <v-icon dark> mdi-format-list-bulleted-square </v-icon>
             </v-btn>
-          </div>
-        </template>
-        <template #[`item.log`]="{ item }">
-          <v-btn class="mx-2" fab dark x-small color="teal" @click="showlog(item)">
-            <v-icon dark> mdi-format-list-bulleted-square </v-icon>
-          </v-btn>
-        </template>
-        <template #[`item.view`]="{ item }">
-          <v-btn class="mx-2" :disabled="item.role === 'MEMBER'" x-small color="primary" @click="viewDownline(item)">
-            <span>View</span>
-          </v-btn>
-        </template>
-        <template #[`item.setting`]="{ item }">
-          <v-btn class="mx-2" x-small :disabled="item.role === 'MEMBER'" color="success" @click="settingProvider(item)">
-            <span>Edit</span>
-          </v-btn>
-        </template>
-        <template #[`item.action`]>
-          <v-btn class="mx-2" fab dark x-small color="purple" @click="modal_add = true">
-            <v-icon dark> mdi-pencil </v-icon>
-          </v-btn>
-          <v-btn class="mx-2" fab dark x-small color="blue-grey">
-            <v-icon dark> mdi-key </v-icon>
-          </v-btn>
-        </template>
-        <template #[`item.status`]="{ item }">
-          <span style="color: #c2e164">{{ item.status ? 'Active' : 'Idle' }}</span>
-        </template>
-        <template #[`item.suspend`]="{ item }">
-          <span style="color: #c2e164">{{ item.suspend ? 'Yes' : 'No' }}</span>
-        </template>
-        <template #[`item.lock`]="{ item }">
-          <span style="color: #c2e164">{{ item.lock ? 'Open' : 'Close' }}</span>
-        </template>
-      </v-data-table>
-      <v-row align="baseline">
-        <v-col cols="12" sm="2">
-          <v-select
-            dense
-            hide-details="auto"
-            solo
-            v-model="pagination.rowsPerPage"
-            :items="pageSizes"
-            @change="handlePageSizeChange"
-            label="Items per Page"
-          ></v-select>
-        </v-col>
-        <v-col cols="12" sm="10">
-          <v-pagination
-            v-model="pagination.page"
-            :total-visible="7"
-            :length="Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)"
-          ></v-pagination>
-        </v-col>
-      </v-row>
-    </v-card>
+          </template>
+          <template #[`item.view`]="{ item }">
+            <v-btn class="mx-2" :disabled="item.role === 'MEMBER'" x-small color="primary" @click="viewDownline(item)">
+              <span>View</span>
+            </v-btn>
+          </template>
+          <template #[`item.setting`]="{ item }">
+            <v-btn
+              class="mx-2"
+              x-small
+              :disabled="item.role === 'MEMBER'"
+              color="success"
+              @click="settingProvider(item)"
+            >
+              <span>Edit</span>
+            </v-btn>
+          </template>
+          <template #[`item.action`]>
+            <v-btn class="mx-2" fab dark x-small color="purple" @click="modal_add = true">
+              <v-icon dark> mdi-pencil </v-icon>
+            </v-btn>
+            <v-btn class="mx-2" fab dark x-small color="blue-grey">
+              <v-icon dark> mdi-key </v-icon>
+            </v-btn>
+          </template>
+          <template #[`item.status`]="{ item }">
+            <span style="color: #c2e164">{{ item.status ? 'Active' : 'Idle' }}</span>
+          </template>
+          <template #[`item.suspend`]="{ item }">
+            <span style="color: #c2e164">{{ item.suspend ? 'Yes' : 'No' }}</span>
+          </template>
+          <template #[`item.lock`]="{ item }">
+            <span style="color: #c2e164">{{ item.lock ? 'Open' : 'Close' }}</span>
+          </template>
+        </v-data-table>
+        <v-row align="baseline" class="pa-3">
+          <v-col cols="12" sm="2">
+            <v-select
+              dense
+              hide-details="auto"
+              solo
+              v-model="pagination.rowsPerPage"
+              :items="pageSizes"
+              @change="handlePageSizeChange"
+              label="Items per Page"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" sm="10">
+            <v-pagination
+              v-model="pagination.page"
+              :total-visible="7"
+              :length="Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)"
+            ></v-pagination>
+          </v-col>
+        </v-row>
+      </v-card>
+    </div>
 
     <v-dialog v-model="modalCredit" persistent max-width="400">
       <v-card class="pa-5">

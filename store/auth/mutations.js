@@ -23,7 +23,7 @@ export function set_login(
   localStorage.setItem('groups', state.groups)
   localStorage.setItem('key', state.key)
   localStorage.setItem('role', state.role)
-  localStorage.setItem('supervisor', state.supervisor)
+  localStorage.setItem('supervisor', JSON.stringify(state.supervisor))
   localStorage.setItem('username', state.username)
   localStorage.setItem('workspace', state.workspace)
 }

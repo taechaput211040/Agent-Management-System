@@ -138,6 +138,10 @@ export default {
   middleware: 'auth',
   data() {
     return {
+      fillter: {
+        start: '2022-03-31T17:00:00.000Z',
+        end: '2022-06-03T16:59:59.000Z',
+      },
       switchauthtoagent: {
         usernameByAuthen: '',
       },
@@ -291,7 +295,6 @@ export default {
   },
   methods: {
     ...mapActions('account', ['get_creditBalance', 'get_profile']),
-
     async submitauthen() {
       try {
         const { data } = await this.$axios.get(`/api/v2/authenticate/token/${this.switchauthtoagent.usernameByAuthen}`)

@@ -1,4 +1,27 @@
-// getall
+export async function getAllByDashboard(
+  { commit, state },
+  params = {
+    start: 'undefined',
+    end: 'undefined',
+    provider: undefined,
+    typeCode: undefined,
+  }
+) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.get('/v1alpha/report-transaction/', {
+        params: {
+          ...params,
+        },
+      })
+      commit('set_dataDashboard', response)
+      resolve(response)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
 export async function getAllReport(
   { commit },
   params = {

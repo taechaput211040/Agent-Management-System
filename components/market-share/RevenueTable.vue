@@ -78,7 +78,7 @@
           <v-btn color="primary" small v-if="!item.edit_status" @click="item.edit_status = !item.edit_status"
             >edit</v-btn
           >
-          <v-btn color="success" small v-else @click="item.edit_status = !item.edit_status">save</v-btn>
+          <v-btn color="success" small v-else @click="saveConfig(item)">save</v-btn>
         </template>
       </v-data-table>
       <v-row align="baseline" class="mt-3">
@@ -144,7 +144,6 @@ export default {
           value: 'percent',
           align: 'center',
           sortable: false,
-          width: '300px',
         },
         // {
         //   text: 'commission',
@@ -164,6 +163,7 @@ export default {
           value: 'actions',
           align: 'center',
           sortable: false,
+          width: '200px',
         },
       ],
       rendering: [],
@@ -182,6 +182,11 @@ export default {
   },
 
   methods: {
+    saveConfig(item) {
+      item.edit_status = !item.edit_status
+      console.log('save')
+    },
+
     setPage() {
       this.paginationProvider = {
         sortBy: 'desc',
@@ -211,7 +216,6 @@ export default {
         this.rendering = this.rendering.map((object) => {
           return { ...object, edit_status: false }
         })
-        console.log(this.rendering, 'statuse')
       } catch (error) {
         console.log(error)
       }

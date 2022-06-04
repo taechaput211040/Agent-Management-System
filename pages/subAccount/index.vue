@@ -1,21 +1,19 @@
 <template>
   <v-flex>
     <div v-if="!isLoading">
-      <v-row>
+      
         <v-container>
-          <v-card class="px-6 pt-6">
-            <v-row class="select-item py-2">
-              <v-col cols="12" md="8">
-                <h3 class="mt-2">
-                  Member Management - List : <span class="mx-3">Sub Account List</span>
-                  <v-btn elevation="2" color="primary" @click="handleAdd"> New sub account </v-btn>
-                </h3>
-              </v-col>
-            </v-row>
-          </v-card>
+          <v-row class="select-item py-2">
+            <v-col cols="12" md="8">
+              <h3 class="mt-2">
+                Member Management - List : <span class="mx-3">Sub Account List</span>
+                <v-btn elevation="2" color="primary" @click="handleAdd"> New sub account </v-btn>
+              </h3>
+            </v-col>
+          </v-row>
 
-          <v-card class="pa-2 mt-5 mb-2 classtable">
-            <v-data-table class="elevation-2 ma-4" :headers="headers" :items="exampleitem" hide-default-footer>
+          <v-card class="pb-1 mt-5 justify-center elevation-3 white rounded-lg classtable">
+            <v-data-table :headers="headers" :items="exampleitem" hide-default-footer>
               <!-- index -->
               <template #[`item.no`]="{ index }">
                 {{ index + 1 }}
@@ -102,7 +100,7 @@
             </v-dialog>
           </v-card>
         </v-container>
-      </v-row>
+     
     </div>
     <v-dialog v-model="open_history" width="800">
       <v-card class="pb-2">
