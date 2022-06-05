@@ -12,6 +12,8 @@
       <template>
         <div class="ma-3 justify-center white rounded-lg classtable">
           <v-data-table
+            :server-items-length="pagination.rowsNumber"
+            :options.sync="options"
             :page.sync="pagination.page"
             :items-per-page="pagination.rowsPerPage"
             :headers="headersTable"
@@ -137,6 +139,26 @@
               </div>
             </template>
           </v-data-table>
+          <v-row align="baseline" class="ma-3">
+            <v-col cols="12" sm="2">
+              <v-select
+                dense
+                hide-details="auto"
+                solo
+                v-model="pagination.rowsPerPage"
+                :items="pageSizes"
+                @change="handlePageSizeChange"
+                label="Items per Page"
+              ></v-select>
+            </v-col>
+            <v-col cols="12" sm="10">
+              <v-pagination
+                v-model="pagination.page"
+                :total-visible="7"
+                :length="Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)"
+              ></v-pagination>
+            </v-col>
+          </v-row>
         </div>
       </template>
     </div>
@@ -172,6 +194,8 @@ export default {
   },
   data() {
     return {
+      pageSizes: [5, 10, 15, 25],
+      options: {},
       progressBar: true,
       loadingpage: false,
       fishing: 'FH',
@@ -249,6 +273,13 @@ export default {
     reportdata() {
       this.progressBar = false
     },
+    options: {
+      async handler() {
+        await this.onRequest({
+          pagination: this.pagination,
+        })
+      },
+    },
   },
   computed: {
     numberFormat() {
@@ -315,7 +346,7 @@ export default {
       }
     },
     async userendering(username) {
-      if (this.isRoleLevel == 6) {
+      if (this.isRoleLevel == 6 || this.isRoleLevel == 5) {
         this.$router.push(`${this.$route.fullPath}?username=${username}`)
       } else {
         this.$router.push(`${this.$route.fullPath}&username=${username}`)
@@ -369,15 +400,14 @@ export default {
     handleClickCopy(text) {
       console.log(text)
     },
-    getFilterParameter({ filter = this.filter, pagination = this.pagination }) {
-      if (this.$route.meta.level) {
-        this.filter.level = this.$route.meta.level
-      }
-      if (this.$route.params.id) {
-        filter.parent_id = this.$route.params.id
-      } else {
-        delete filter.parent_id
-      }
+    async handlePageSizeChange(size) {
+      this.pagination.page = 1
+      this.pagination.rowsPerPage = size
+      await this.onRequest({
+        pagination: this.pagination,
+      })
+    },
+    getFilterParameter() {
       let start = undefined
       let end = undefined
       if (this.dateFilter.startDate) {
@@ -397,8 +427,6 @@ export default {
       return {
         // ...filter,
         // ...pagination,
-        page: pagination.page,
-        limit: pagination.rowsPerPage,
         typeCode: this.group_select.join(',') ? this.group_select.join(',') : undefined,
         provider: this.provider_select.join(',') ? this.provider_select.join(',') : undefined,
         start: new Date(start).toISOString(),
@@ -412,15 +440,18 @@ export default {
 
         const { data } = await this.getUserByAgent({
           ...parameters,
+          page: this.pagination.page,
+          limit: this.pagination.rowsPerPage,
           id: this.$route.query.share_user ? this.$route.query.share_user : undefined,
           senior_user: this.$route.query.senior_user ? this.$route.query.senior_user : undefined,
-          agent_user: this.$route.query.agent_user ? this.$route.query.agent_user : undefined,
+          agent_user: this.$route.query.agent_user ? this.$route.query.agent_user : this.$store.state.auth.username,
           role: this.isRoleLevel,
         })
 
         this.reportdata = data.docs
+        this.pagination.rowsNumber = data.pageInfo.total
         let a = this.providerMap(this.reportdata)
-        console.log(a, 'ss')
+        // console.log(a, 'ss')
 
         // if (this.isArray) {
         //   await Promise.all(

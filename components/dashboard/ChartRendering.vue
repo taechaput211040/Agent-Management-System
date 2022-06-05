@@ -1,19 +1,50 @@
 <template>
   <div>
-    <div class="row pa-0 mt-5">
-      <div class="col-sm-8 col-md-4 col-12 pa-0">
-        <v-card class="justify-center elevation-1 rounded-lg classtable"
-          ><VueApexCharts
-            type="radialBar"
+    <div class="row justify-center mt-5">
+      <div class="col-sm-8 col-md-6 col-12">
+        <div class="elevation-3 rounded-lg pa-3">
+          <v-card-title class="pa-1 mb-2">Total Summary <v-spacer></v-spacer></v-card-title>
+          <VueApexCharts
             width="100%"
-            height="450"
+            ref="realtimeChart"
+            height="500"
             :options="chartOptions"
             :series="series"
           ></VueApexCharts>
-        </v-card>
+        </div>
       </div>
-      <div class="col-sm-6 col-md-4 col-12 pa-0">
-        <pre> {{ getSummarydata() }}</pre>
+      <div class="col-sm-6 col-md-6 col-12 row">
+        <div class="row pa-3">
+          <div class="col-12">
+            <v-card class="elevation-3 rounded-lg pa-3" height="100%">
+              <h3>Credit</h3>
+              <h4>50000</h4>
+            </v-card>
+          </div>
+          <div class="col-12">
+            <v-card class="elevation-3 rounded-lg pa-3" height="100%">
+              <v-card-title class="pa-1 mb-2 font-weight-bold"
+                >Total Summary <v-spacer></v-spacer
+                ><v-btn
+                  small
+                  text
+                  rounded
+                  color="primary"
+                  class="font-weight-bold"
+                  @click.stop="$router.push('/report/byUser')"
+                  >view all</v-btn
+                ></v-card-title
+              >
+              <v-divider></v-divider>
+              <div class="pa-2">
+                <div class="renderDashboard row" v-for="(item, i) in getSummarydata()" :key="i">
+                  <div class="col-6 font-weight-bold">{{ i }}</div>
+                  <div class="col-6 text-right">{{ item }}</div>
+                </div>
+              </div>
+            </v-card>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -26,43 +57,39 @@ export default {
   components: { VueApexCharts },
   data() {
     return {
-      series: [44, 55, 67, 83],
+      series: [{ name: 'จำนวนยอด', data: [] }],
       chartOptions: {
         chart: {
+          type: 'bar',
           height: 350,
-          type: 'radialBar',
-        },
-        plotOptions: {
-          radialBar: {
-            hollow: {
-              margin: 5,
-              size: '30%',
-              image: undefined,
-            },
-            dataLabels: {
-              name: {
-                fontSize: '22px',
-              },
-              value: {
-                fontSize: '16px',
-              },
-              total: {
-                show: true,
-                label: 'Total',
-                formatter: function (w) {
-                  // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
-                  return 249
-                },
-              },
-            },
+          toolbar: {
+            show: false,
           },
         },
 
-        stroke: {
-          lineCap: 'round',
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            columnWidth: '60%',
+            borderRadius: 15,
+          },
         },
-        colors: ['#3d128b', '#6835c5', '#9155fd', '#c48eff'],
-        labels: ['Apples', 'Oranges', 'Bananas', 'Berries'],
+        dataLabels: {
+          enabled: false,
+        },
+        stroke: {
+          curve: 'smooth',
+          show: true,
+          width: 2,
+          colors: ['transparent'],
+        },
+        yaxis: {
+          show: false,
+        },
+        fill: {
+          type: 'solid',
+          fillOpacity: 0.7,
+        },
       },
 
       fillter: {
@@ -82,6 +109,7 @@ export default {
   async beforeMount() {
     await this.getReportSummary()
     await this.getSummarydata()
+    await this.mapChartData()
   },
   methods: {
     ...mapActions('report', ['getAllByDashboard']),
@@ -92,6 +120,15 @@ export default {
       }
       return parameters
     },
+    mapChartData() {
+      this.series[0].data = []
+      let realtimeData = this.getSummarydata()
+      for (let key in realtimeData) {
+        this.series[0].data.push({ x: key, y: realtimeData[key] < 0 ? realtimeData[key] * -1 : realtimeData[key] })
+      }
+      this.$refs.realtimeChart.updateSeries(this.series, false, true)
+    },
+
     async getReportSummary() {
       try {
         if (this.dashboardData) {

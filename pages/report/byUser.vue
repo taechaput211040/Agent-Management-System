@@ -143,13 +143,13 @@
                 this.$route.query.senior_user &&
                 !this.$route.query.agent_user &&
                 !this.$route.query.username) ||
-              (this.isRoleLevel == 4 && !this.$route.query.agent_user && !this.$route.query.username) ||
-              (this.isRoleLevel == 5 && !this.$route.query.agent_user && !this.$route.query.username)
+              (this.isRoleLevel == 4 && !this.$route.query.agent_user && !this.$route.query.username)
             "
             :group_select="group_select"
             :provider_select="provider_select"
             :dateFilter="dateFilter"
           ></report-agent>
+          <!-- ||(this.isRoleLevel == 5 && !this.$route.query.agent_user && !this.$route.query.username) -->
           <!-- report member -->
           <report-member
             v-if="
@@ -163,7 +163,7 @@
                 this.$route.query.agent_user &&
                 !this.$route.query.username) ||
               (this.isRoleLevel == 4 && this.$route.query.agent_user && !this.$route.query.username) ||
-              (this.isRoleLevel == 5 && this.$route.query.agent_user && !this.$route.query.username)
+              (this.isRoleLevel == 5 && !this.$route.query.agent_user && !this.$route.query.username)
             "
             :group_select="group_select"
             :provider_select="provider_select"

@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar clipped-left fixed app>
+    <v-app-bar clipped-left class="elevation-0" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
       <v-spacer />

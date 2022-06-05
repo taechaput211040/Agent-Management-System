@@ -674,7 +674,6 @@ export default {
   async created() {
     this.onSearch()
   },
-  async fetch() {},
 
   methods: {
     async handlePageSizeChange(size) {
@@ -766,6 +765,8 @@ export default {
         const parameters = this.getFilterParameter(props)
         const { data: agent } = await this.getAgentByShare({
           ...parameters,
+          page: this.pagination.page,
+          limit: this.pagination.rowsPerPage,
           id: this.$route.query.share_user ? this.$route.query.share_user : undefined,
           senior_user: this.$route.query.senior_user ? this.$route.query.senior_user : undefined,
           role: this.isRoleLevel,

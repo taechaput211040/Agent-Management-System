@@ -14,28 +14,31 @@ export default {
     htmlAttrs: {
       lang: 'en',
     },
-    meta: [{
-        charset: 'utf-8'
+    meta: [
+      {
+        charset: 'utf-8',
       },
       {
         name: 'viewport',
-        content: 'width=device-width, initial-scale=1'
+        content: 'width=device-width, initial-scale=1',
       },
       {
         hid: 'description',
         name: 'description',
-        content: ''
+        content: '',
       },
       {
         name: 'format-detection',
-        content: 'telephone=no'
+        content: 'telephone=no',
       },
     ],
-    link: [{
-      rel: 'icon',
-      type: 'image/x-icon',
-      href: '/favicon.ico'
-    }],
+    link: [
+      {
+        rel: 'icon',
+        type: 'image/x-icon',
+        href: '/favicon.ico',
+      },
+    ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -76,7 +79,7 @@ export default {
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
     baseURL: '/',
-    proxy: true
+    proxy: true,
   },
 
   proxy: {
@@ -90,7 +93,7 @@ export default {
     '/api/V2/': {
       target: 'https://backend-v2.smart-exchange.io',
       pathRewrite: {
-        '^/apiV2/': ''
+        '^/apiV2/': '',
       },
     },
   },

@@ -232,11 +232,15 @@ export async function getUserByAgent(
         if (params.senior_user && params.agent_user) {
           url = `/v1alpha/report-transaction/share/${params.senior_user}/agent/${params.agent_user}`
         }
-      } else if (params.role == 4 || params.role == 5) {
+      } else if (params.role == 4) {
         if (params.agent_user) {
           url = `/v1alpha/report-transaction/agent/${params.agent_user}`
         }
+      } else if (params.role == 5) {
+        console.log('lv5')
+        url = `/v1alpha/report-transaction/agent/${params.agent_user}`
       }
+      console.log(url, 'url')
       let response = await this.$axios.get(url, {
         params: {
           page: params.page,
