@@ -93,8 +93,8 @@ export default {
       },
 
       fillter: {
-        start: '2022-03-31T17:00:00.000Z',
-        end: '2022-06-03T16:59:59.000Z',
+        start: new Date(new Date().setDate(new Date().getDate() - 30)),
+        end: new Date(),
       },
       dataObject: {
         datain: {
@@ -155,37 +155,37 @@ export default {
       let results = this.dashboardData?.docs?.reduce((initVal, item) => {
         return (initVal += item.memberWin + item.memberCom)
       }, 0)
-      return { member: results }
+      return { member: parseFloat(results).toFixed(2) }
     },
     sumAgent() {
       let results = this.dashboardData?.docs?.reduce((initVal, item) => {
         return (initVal += item.agentWin + item.agentCom)
       }, 0)
-      return { agent: results }
+      return { agent: parseFloat(results).toFixed(2) }
     },
     sumSenior() {
       let results = this.dashboardData?.docs?.reduce((initVal, item) => {
         return (initVal += item.seniorWin + item.shareCom)
       }, 0)
-      return { senior: results }
+      return { senior: parseFloat(results).toFixed(2)}
     },
     sumShare() {
       let results = this.dashboardData?.docs?.reduce((initVal, item) => {
         return (initVal += item.shareWin + item.shareCom)
       }, 0)
-      return { share: results }
+      return { share: parseFloat(results).toFixed(2) }
     },
     sumOwner() {
       let results = this.dashboardData?.docs?.reduce((initVal, item) => {
         return (initVal += item.ownerWin + item.ownerCom)
       }, 0)
-      return { owner: results }
+      return { owner: parseFloat(results).toFixed(2) }
     },
     sumSmartbet() {
       let results = this.dashboardData?.docs?.reduce((initVal, item) => {
         return (initVal += item.smartWin + item.smartCom)
       }, 0)
-      return { smart: results }
+      return { smart: parseFloat(results).toFixed(2) }
     },
   },
 }

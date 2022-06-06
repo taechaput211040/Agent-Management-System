@@ -335,12 +335,14 @@ export default {
       }
     },
     ...mapMutations('auth', ['set_logout', 'set_login']),
+    ...mapMutations('report', ['setdata_logout']),
     async logout() {
       try {
         let token = localStorage.getItem('key')
         if (token) {
           localStorage.clear()
           this.set_logout()
+          this.setdata_logout()
           this.$router.push('/login')
         }
       } catch (err) {

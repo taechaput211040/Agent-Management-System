@@ -49,8 +49,8 @@ export async function updateMarketsharebyProvider(
     code: undefined,
     username: undefined,
     percent: undefined,
-    commission: undefined,
-    option: undefined,
+    commission: 0,
+    option: 0,
   }
 ) {
   return new Promise(async (resolve, reject) => {

@@ -1,8 +1,8 @@
 export async function getAllByDashboard(
   { commit, state },
   params = {
-    start: 'undefined',
-    end: 'undefined',
+    start: undefined,
+    end: undefined,
     provider: undefined,
     typeCode: undefined,
   }
@@ -298,6 +298,7 @@ export async function getRoundBySenior(
         if (params.senior_user && params.username && !params.agent_user) {
           url = `/v1alpha/report-transaction/senior/${params.username}/round`
         } else {
+          console.log(params.agent_user, 'thisuser,')
           url = `/v1alpha/report-transaction/agent/${params.agent_user}/round/${params.username}`
         }
       } else if (params.role == 6) {

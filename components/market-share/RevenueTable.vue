@@ -182,9 +182,43 @@ export default {
   },
 
   methods: {
-    saveConfig(item) {
-      item.edit_status = !item.edit_status
-      console.log('save')
+    async saveConfig(item) {
+      let bodyConfig = {
+        code: item.code,
+        username: this.username,
+        percent: item.percent,
+        commission: 0,
+        option: 0,
+      }
+      this.$swal({
+        title: 'Are you sure you want to register downline?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await this.updateMarketsharebyProvider(bodyConfig)
+            item.edit_status = !item.edit_status
+            await this.getRevenueListByuser()
+          } catch (error) {
+            item.edit_status = !item.edit_status
+            this.$swal({
+              icon: 'error',
+              title: `${error.response.data.message}`,
+              showConfirmButton: false,
+              timer: 1500,
+            })
+            await this.getRevenueListByuser()
+          }
+        }
+      })
+      // console.log(item, 'item')
+
+      console.log(bodyConfig, 'save')
     },
 
     setPage() {
@@ -196,7 +230,7 @@ export default {
         rowsNumber: 0,
       }
     },
-    ...mapActions('marketshare', ['getRevenueProviderByUser']),
+    ...mapActions('marketshare', ['getRevenueProviderByUser', 'updateMarketsharebyProvider']),
     getParameterProvider() {
       let params = {
         username: this.username,
@@ -221,6 +255,7 @@ export default {
       }
       this.isLoading = false
     },
+
     async handlePageSizeChangeProvider(size) {
       this.paginationProvider.page = 1
       this.paginationProvider.rowsPerPage = size

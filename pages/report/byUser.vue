@@ -199,10 +199,7 @@
                 this.$route.query.username &&
                 !this.$route.query.roundId) ||
               (this.isRoleLevel == 4 && this.$route.query.username && !this.$route.query.roundId) ||
-              (this.isRoleLevel == 5 &&
-                this.$route.query.agent_user &&
-                this.$route.query.username &&
-                !this.$route.query.roundId) ||
+              (this.isRoleLevel == 5 && this.$route.query.username && !this.$route.query.roundId) ||
               (this.isRoleLevel == 6 && !this.$route.query.roundId)
             "
             :group_select="group_select"
@@ -236,12 +233,8 @@
                 this.$route.query.agent_user &&
                 this.$route.query.username &&
                 this.$route.query.roundId) ||
-              (this.isRoleLevel == 5 &&
-                this.$route.query.username &&
-                this.$route.query.roundId &&
-                this.isRoleLevel == 6 &&
-                this.$route.query.username &&
-                this.$route.query.roundId)
+              (this.isRoleLevel == 5 && this.$route.query.username && this.$route.query.roundId) ||
+              (this.isRoleLevel == 6 && this.$route.query.username && this.$route.query.roundId)
             "
             :group_select="group_select"
             :provider_select="provider_select"
