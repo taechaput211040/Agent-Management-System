@@ -18,11 +18,11 @@
           <div class="col-12">
             <v-card class="elevation-3 rounded-lg pa-3" height="100%">
               <h3>Credit</h3>
-              <h4>50000</h4>
+              <h4>{{ $store.state.account.credit }}</h4>
             </v-card>
           </div>
           <div class="col-12">
-            <v-card class="elevation-3 rounded-lg pa-3" >
+            <v-card class="elevation-3 rounded-lg pa-3">
               <v-card-title class="pa-1 mb-2 font-weight-bold"
                 >Total Summary <v-spacer></v-spacer
                 ><v-btn
@@ -167,7 +167,7 @@ export default {
       let results = this.dashboardData?.docs?.reduce((initVal, item) => {
         return (initVal += item.seniorWin + item.shareCom)
       }, 0)
-      return { senior: parseFloat(results).toFixed(2)}
+      return { senior: parseFloat(results).toFixed(2) }
     },
     sumShare() {
       let results = this.dashboardData?.docs?.reduce((initVal, item) => {
