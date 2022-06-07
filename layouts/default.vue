@@ -312,8 +312,13 @@ export default {
         // console.log("admin_token", token);
         localStorage.setItem('is_switch_admin', true)
         localStorage.setItem('admin_token', token)
-      } catch (err) {
-        console.log(err)
+      } catch (error) {
+        this.$swal({
+          icon: 'error',
+          title: `${error.response.data.message}`,
+          showConfirmButton: false,
+          timer: 1500,
+        })
       } finally {
         this.switch_auth = false
       }

@@ -22,7 +22,7 @@
             </v-card>
           </div>
           <div class="col-12">
-            <v-card class="elevation-3 rounded-lg pa-3" height="100%">
+            <v-card class="elevation-3 rounded-lg pa-3" >
               <v-card-title class="pa-1 mb-2 font-weight-bold"
                 >Total Summary <v-spacer></v-spacer
                 ><v-btn

@@ -286,8 +286,13 @@ export default {
       this.loadingpage = true
       this.getProvider()
       this.getGroup()
-    } catch (err) {
-      console.log(err)
+    } catch (error) {
+      this.$swal({
+        icon: 'error',
+        title: `${error.response.data.message}`,
+        showConfirmButton: false,
+        timer: 1500,
+      })
     }
   },
   methods: {

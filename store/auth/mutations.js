@@ -53,3 +53,4 @@ export function set_user(state, { credit = 0, key = '', role = -1, user_permissi
   localStorage.setItem('username', state.username)
   localStorage.setItem('user_permissions', state.user_permissions)
 }
+

@@ -42,7 +42,14 @@ export default {
         }
       )
       this.lotto = res.data
-    } catch (error) {}
+    } catch (error) {
+      this.$swal({
+        icon: 'error',
+        title: `${error.response.data.message}`,
+        showConfirmButton: false,
+        timer: 1500,
+      })
+    }
   },
 }
 </script>

@@ -69,7 +69,12 @@ export default {
           console.log('hi')
           await this.change_password(this.password)
         } catch (error) {
-          console.log(error)
+          this.$swal({
+            icon: 'error',
+            title: `${error.response.data.message}`,
+            showConfirmButton: false,
+            timer: 1500,
+          })
         }
       }
     },

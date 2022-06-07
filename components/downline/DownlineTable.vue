@@ -31,11 +31,16 @@
     <!-- row search + credit_balance -->
     <div class="mt-5">
       <div class="text-right pa-2">
-        <v-btn class="my-3" v-if="checkRole() !== 'MEMBER'" @click="handleCreateDownline()" color="primary" rounded
+        <v-btn
+          class="my-3"
+          v-if="$store.state.auth.role !== 'MEMBER'"
+          @click="handleCreateDownline()"
+          color="primary"
+          rounded
           ><v-icon>mdi-plus</v-icon> เพิ่ม Downline</v-btn
         >
       </div>
-      <v-card class=" pb-1 justify-center elevation-3 white rounded-lg classtable">
+      <v-card class="pb-1 justify-center elevation-3 white rounded-lg classtable">
         <v-data-table
           class="elevation-2"
           :headers="headers"
@@ -436,7 +441,12 @@ export default {
       try {
         this.formCredit.isMinus ? await this.withdrawCredit(this.formCredit) : await this.depositCredit(this.formCredit)
       } catch (error) {
-        console.log(error)
+        this.$swal({
+          icon: 'error',
+          title: `${error.response.data.message}`,
+          showConfirmButton: false,
+          timer: 1500,
+        })
       }
 
       this.handlcCloseCreditForm()

@@ -4,12 +4,10 @@
       <v-container class="fill-height" fluid>
         <v-row align="center" justify="center" dense>
           <v-col cols="12" sm="8" md="4" lg="4" id="card-login">
-            <v-card class=" elevation-8" color="#385F73" dark>
+            <v-card class="elevation-8" color="#385F73" dark>
               <v-card-text>
                 <v-form>
-                  <v-card-title class="mb-2 text--white"
-                    >LOGIN : SMARTBET AGENT
-                  </v-card-title>
+                  <v-card-title class="mb-2 text--white">LOGIN : SMARTBET AGENT </v-card-title>
                   <v-divider></v-divider>
                   <v-text-field
                     label="Enter your username"
@@ -27,15 +25,7 @@
                     type="password"
                     class="rounded-0"
                   ></v-text-field>
-                  <v-btn
-                    class="rounded-2"
-                    x-large
-                    block
-                    rounded
-                    dark
-                    @click.prevent="login()"
-                    >Login</v-btn
-                  >
+                  <v-btn class="rounded-2" x-large block rounded dark @click.prevent="login()">Login</v-btn>
                   <v-card-actions class="text--secondary">
                     <v-spacer></v-spacer>
                   </v-card-actions>
@@ -50,37 +40,42 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from "vuex";
+import { mapActions, mapMutations } from 'vuex'
 export default {
-  layout: "session",
+  layout: 'session',
   data() {
     return {
-      username: "",
-      password: "",
-      authendata: {}
-    };
+      username: '',
+      password: '',
+      authendata: {},
+    }
   },
   async beforeMount() {
-    this.checklogin();
+    this.checklogin()
   },
   methods: {
-    ...mapMutations("auth", ["set_login"]),
-    ...mapActions("auth", {
-      auth: "login"
+    ...mapMutations('auth', ['set_login']),
+    ...mapActions('auth', {
+      auth: 'login',
     }),
     async login() {
       try {
         const response = await this.auth({
           username: this.username,
-          password: this.password
-        });
-        this.set_login(response.data);
-        console.log(response.data);
+          password: this.password,
+        })
+        this.set_login(response.data)
+        console.log(response.data)
         if (response.data.key) {
-          this.$router.push("/");
+          this.$router.push('/')
         }
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        this.$swal({
+          icon: 'error',
+          title: `${error.response.data.message}`,
+          showConfirmButton: false,
+          timer: 1500,
+        })
       }
       // const tolog = this.$axios.defaults.headers.common['Authorization']
       // console.log(tolog);
@@ -90,13 +85,13 @@ export default {
       // };
     },
     checklogin() {
-      const token = localStorage.getItem("key");
+      const token = localStorage.getItem('key')
       if (token) {
-        this.$router.push("/");
+        this.$router.push('/')
       }
-    }
-  }
-};
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>

@@ -251,7 +251,12 @@ export default {
           return { ...object, edit_status: false }
         })
       } catch (error) {
-        console.log(error)
+        this.$swal({
+          icon: 'error',
+          title: `${error.response.data.message}`,
+          showConfirmButton: false,
+          timer: 1500,
+        })
       }
       this.isLoading = false
     },
