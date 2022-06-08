@@ -16,9 +16,14 @@
       <div class="col-sm-6 col-md-6 col-12 row">
         <div class="row pa-3">
           <div class="col-12">
-            <v-card class="elevation-3 rounded-lg pa-3" height="100%">
-              <h3>Credit</h3>
-              <h4>{{ $store.state.account.credit }}</h4>
+            <v-card color="#1F7087" dark height="100%">
+              <v-card-title class="text-h4" v-text="'Credit'"></v-card-title>
+              <v-card-subtitle v-text="''"></v-card-subtitle>
+              <v-card-text class="text-right">
+                <p class="text-h5 mt-6">
+                  {{ $store.state.account.credit | numberFormat }}
+                </p>
+              </v-card-text>
             </v-card>
           </div>
           <div class="col-12">
@@ -39,7 +44,7 @@
               <div class="pa-2">
                 <div class="renderDashboard row" v-for="(item, i) in getSummarydata()" :key="i">
                   <div class="col-6 font-weight-bold">{{ i }}</div>
-                  <div class="col-6 text-right">{{ item }}</div>
+                  <div class="col-6 text-right">{{ item | numberFormat }}</div>
                 </div>
               </div>
             </v-card>

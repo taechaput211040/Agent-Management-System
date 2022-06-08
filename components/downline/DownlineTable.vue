@@ -23,7 +23,7 @@
           <v-btn elevation="2" color=""> <v-icon left> mdi-magnify</v-icon> Search </v-btn>
         </v-col>
         <v-col cols="12" md="6" class="text-sm-right text-center">
-          <h4>เครดิตเอเย่นคงเหลือ : {{ remaining_credit }}</h4>
+          <h4>เครดิตเอเย่นคงเหลือ : {{ remaining_credit | numberFormat }}</h4>
         </v-col>
       </v-row>
     </v-card>
@@ -40,7 +40,7 @@
           ><v-icon>mdi-plus</v-icon> เพิ่ม Downline</v-btn
         >
       </div>
-      <v-card class="pb-1 justify-center elevation-3 white rounded-lg classtable">
+      <v-card class="pb-1 justify-center elevation-3 rounded-lg classtable">
         <v-data-table
           class="elevation-2"
           :headers="headers"
@@ -56,7 +56,7 @@
           </template>
           <template #[`item.credit`]="{ item, index }">
             <div class="pa-2">
-              <div v-if="showCreditamount == true">{{ item.credit }}</div>
+              <div v-if="showCreditamount == true">{{ item.credit | numberFormat }}</div>
               <v-btn @click="showcredit(item, index)" depressed color="warning" elevation="2" small
                 >ตรวจสอบเครดิต</v-btn
               >

@@ -31,7 +31,7 @@
     <!-- row search + credit_balance -->
     <div class="mt-5">
       <div class="pa-2"><v-btn color="error" small @click="backFunction()">back</v-btn></div>
-      <v-card class="mt-3 pb-1 justify-center elevation-3 white rounded-lg classtable">
+      <v-card class="mt-3 pb-1 justify-center elevation-3 wite rounded-lg classtable">
         <v-data-table
           class="elevation-2"
           :headers="headers"

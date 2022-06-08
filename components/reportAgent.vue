@@ -18,7 +18,7 @@
       >
       <h2 class="mt-3">Report Agent by Senior</h2>
       <template>
-        <v-card class="ma-3 justify-center white rounded-lg classtable">
+        <v-card class="ma-3 justify-center rounded-lg classtable">
           <v-data-table
             :headers="headerCustom"
             :items="reportdata.docs"
@@ -204,7 +204,7 @@
       <!-- v-if="isRoleLevel != 5" -->
       <h2 class="mt-3">Report Member by Senior</h2>
       <template>
-        <v-card class="ma-3 justify-center white rounded-lg classtable">
+        <v-card class="ma-3 justify-center rounded-lg classtable">
           <v-data-table
             :server-items-length="pagination.rowsNumber"
             :items-per-page.sync="pagination.rowsPerPage"

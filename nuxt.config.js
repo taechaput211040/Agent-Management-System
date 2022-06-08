@@ -14,8 +14,7 @@ export default {
     htmlAttrs: {
       lang: 'en',
     },
-    meta: [
-      {
+    meta: [{
         charset: 'utf-8',
       },
       {
@@ -32,20 +31,18 @@ export default {
         content: 'telephone=no',
       },
     ],
-    link: [
-      {
-        rel: 'icon',
-        type: 'image/x-icon',
-        href: '/favicon.ico',
-      },
-    ],
+    link: [{
+      rel: 'icon',
+      type: 'image/x-icon',
+      href: '/favicon.ico',
+    }, ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ['@/assets/main.scss'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['~/plugins/axios'],
+  plugins: ['~/plugins/axios', '~/plugins/formatter'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,

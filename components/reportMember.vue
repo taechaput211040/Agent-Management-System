@@ -9,7 +9,7 @@
     <div v-if="!loadingpage">
       <h2 class="mt-3">Report Member</h2>
       <template>
-        <div class="ma-3 justify-center white rounded-lg classtable">
+        <div class="ma-3 justify-center rounded-lg classtable">
           <v-data-table
             :server-items-length="pagination.rowsNumber"
             :options.sync="options"

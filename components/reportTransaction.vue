@@ -10,7 +10,7 @@
       <v-btn color="red" @click="$router.go(-1)" dark small class="mx-3">Back</v-btn>
       <h2 class="mt-3">Report Transaction</h2>
       <template>
-        <v-card class="ma-3 justify-center white rounded-lg classtable">
+        <v-card class="ma-3 justify-center rounded-lg classtable">
           <v-data-table
             :page.sync="pagination.page"
             :items-per-page="pagination.rowsPerPage"

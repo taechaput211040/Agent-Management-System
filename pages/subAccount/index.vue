@@ -11,7 +11,7 @@
           </v-col>
         </v-row>
 
-        <v-card class="pb-1 mt-5 justify-center elevation-3 white rounded-lg classtable">
+        <v-card class="pb-1 mt-5 justify-center elevation-3 rounded-lg classtable">
           <v-data-table :headers="headers" :items="exampleitem" hide-default-footer>
             <!-- index -->
             <template #[`item.no`]="{ index }">
@@ -78,14 +78,41 @@
                     <v-spacer></v-spacer>
                   </v-card-text>
                   <v-data-table hide-default-footer :items="item_menu" class="elevetion-1" :headers="headrSetting">
-                    <template #[`item.create_status`]>
-                      <v-checkbox></v-checkbox>
+                    <template #[`header.read`]>
+                      <v-checkbox
+                        v-model="selectedReadAll"
+                        :value="selected.filter((x) => x.endsWith('_read')).length > 0"
+                        :indeterminate="
+                          selected.filter((x) => x.endsWith('_read')).length > 0 &&
+                          selected.filter((x) => x.endsWith('_read')).length < item_menu.length
+                        "
+                        @change="handleReadAllPermission(selectedReadAll, item_menu)"
+                      ></v-checkbox>
                     </template>
-                    <template #[`item.edit_status`]>
-                      <v-checkbox></v-checkbox>
+                    <template #[`header.write`]>
+                      <v-checkbox
+                        v-model="selectedWriteAll"
+                        :value="selected.filter((x) => x.endsWith('_write')).length > 0"
+                        :indeterminate="
+                          selected.filter((x) => x.endsWith('_write')).length > 0 &&
+                          selected.filter((x) => x.endsWith('_write')).length < item_menu.length
+                        "
+                        @change="handleWriteAllPermission(selectedWriteAll, item_menu)"
+                      ></v-checkbox>
                     </template>
-                    <template #[`item.view_status`]>
-                      <v-checkbox></v-checkbox>
+                    <template #[`item.read`]="{ item }">
+                      <v-checkbox
+                        v-model="selected"
+                        :value="`${item.menu}_read`"
+                        @change="handleReadPermission(`${item.menu}_read`)"
+                      ></v-checkbox>
+                    </template>
+                    <template #[`item.write`]="{ item }">
+                      <v-checkbox
+                        v-model="selected"
+                        :value="`${item.menu}_write`"
+                        @change="handleWritePermission(`${item.menu}_write`)"
+                      ></v-checkbox>
                     </template>
                   </v-data-table>
                 </v-card>
@@ -130,26 +157,34 @@ export default {
         isClone: true,
         groups: [],
       },
-      item_menu: [{ menu: 'dashboard' }],
+      selected: [],
+      selectedReadAll: false,
+      selectedWriteAll: false,
+      item_menu: [
+        { displayName: 'Credit', menu: 'credit' },
+        { displayName: 'Dashboard', menu: 'dashboard' },
+        { displayName: 'Downline', menu: 'downline' },
+        { displayName: 'Lotto Management', menu: 'lotto-management' },
+        { displayName: 'Landing Management', menu: 'landing-management' },
+        { displayName: 'Member Page Management', menu: 'member-management' },
+        { displayName: 'Report', menu: 'report' },
+        { displayName: 'Check Outstanding', menu: 'check-outstanding' },
+        { displayName: 'Staff Logs', menu: 'staff-log' },
+      ],
       headrSetting: [
         {
-          text: 'menu',
-          value: 'menu',
+          text: 'Menu',
+          value: 'displayName',
           sortable: false,
         },
         {
-          text: 'create',
-          value: 'create_status',
+          text: 'View',
+          value: 'read',
           sortable: false,
         },
         {
-          text: 'edit',
-          value: 'edit_status',
-          sortable: false,
-        },
-        {
-          text: 'view',
-          value: 'view_status',
+          text: 'Edit',
+          value: 'write',
           sortable: false,
         },
       ],
@@ -206,6 +241,36 @@ export default {
   created() {},
   methods: {
     ...mapActions('account', ['create_SubAccont']),
+    handleReadAllPermission(state, items) {
+      if (state) {
+        this.selected = items.map((item) => {
+          return `${item.menu}_read`
+        })
+      } else {
+        this.selected = []
+      }
+    },
+    handleWriteAllPermission(state, items) {
+      if (state) {
+        this.selected = items
+          .map((item) => {
+            return [`${item.menu}_read`, `${item.menu}_write`]
+          })
+          .reduce((prev, curr) => [...prev, ...curr], [])
+      } else {
+        this.selected = this.selected.filter((selected) => !selected.endsWith('_write'))
+      }
+    },
+    handleReadPermission(value) {
+      const item = value.split('_')
+      this.selected = this.selected.filter((selected) => selected != `${item[0]}_write`)
+    },
+    handleWritePermission(value) {
+      const item = value.split('_')
+      if (this.selected.findIndex((selected) => selected == `${item[0]}_read`) < 0) {
+        this.selected.push(`${item[0]}_read`)
+      }
+    },
     showlog(dataHistory) {
       this.open_history = true
       this.history = dataHistory
@@ -218,9 +283,11 @@ export default {
       this.show = true
     },
     async handleSubmit() {
+      this.formCreate.groups = this.selected
+      console.log(this.formCreate)
       if (this.$refs.create.validate()) {
         try {
-          await this.create_SubAccont(this.formCreate)
+          // await this.create_SubAccont(this.formCreate)
         } catch (error) {
           this.$swal({
             icon: 'error',
@@ -235,6 +302,7 @@ export default {
       this.formCreate.role = this.$store.state.auth.role ? this.$store.state.auth.role : undefined
       this.formCreate.comPrefix = this.$store.state.account.profile.comPrefix
       this.formCreate.agentPrefix = this.$store.state.account.profile.agentPrefix
+      this.selected = this.$store.state.account.profile.groups
       this.modalAddSubAccount = true
     },
     async handleCloseDialog() {

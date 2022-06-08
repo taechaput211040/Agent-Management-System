@@ -7,7 +7,9 @@
       <v-btn icon @click.prevent="$vuetify.theme.dark = !$vuetify.theme.dark">
         <v-icon>{{ $vuetify.theme.dark ? 'mdi-brightness-4' : 'mdi-weather-night' }}</v-icon>
       </v-btn>
-      <v-chip rounded outlined class="mx-1">{{ $store.state.account.credit }}<v-icon right>mdi-cash</v-icon></v-chip>
+      <v-chip rounded outlined class="mx-1"
+        >{{ $store.state.account.credit | numberFormat }}<v-icon right>mdi-cash</v-icon></v-chip
+      >
 
       <!-- <v-speed-dial direction="bottom left" transition="slide-y-transition">
         <template v-slot:activator>
