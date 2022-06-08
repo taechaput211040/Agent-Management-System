@@ -81,6 +81,7 @@
                     <template #[`header.read`]>
                       <v-checkbox
                         v-model="selectedReadAll"
+                        label="ดู"
                         :value="selected.filter((x) => x.endsWith('_read')).length > 0"
                         :indeterminate="
                           selected.filter((x) => x.endsWith('_read')).length > 0 &&
@@ -92,13 +93,15 @@
                     <template #[`header.write`]>
                       <v-checkbox
                         v-model="selectedWriteAll"
+                        label="แก้ไข"
                         :value="selected.filter((x) => x.endsWith('_write')).length > 0"
                         :indeterminate="
                           selected.filter((x) => x.endsWith('_write')).length > 0 &&
                           selected.filter((x) => x.endsWith('_write')).length < item_menu.length
                         "
                         @change="handleWriteAllPermission(selectedWriteAll, item_menu)"
-                      ></v-checkbox>
+                      >
+                      </v-checkbox>
                     </template>
                     <template #[`item.read`]="{ item }">
                       <v-checkbox
@@ -164,6 +167,7 @@ export default {
         { displayName: 'Credit', menu: 'credit' },
         { displayName: 'Dashboard', menu: 'dashboard' },
         { displayName: 'Downline', menu: 'downline' },
+        { displayName: 'Member', menu: 'member' },
         { displayName: 'Lotto Management', menu: 'lotto-management' },
         { displayName: 'Landing Management', menu: 'landing-management' },
         { displayName: 'Member Page Management', menu: 'member-management' },
