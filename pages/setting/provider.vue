@@ -136,11 +136,10 @@ export default {
     ...mapActions('provider', ['load']),
   },
   async created() {
-    this.isLoading = true;
+    this.isLoading = true
     const { data } = await this.load()
     this.data = data
-    this.isLoading = false;
-    
+    this.isLoading = false
   },
 }
 </script>

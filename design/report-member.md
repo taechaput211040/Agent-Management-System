@@ -1,2 +1,3 @@
 # Check outstandings
- ![image](img/check-outstandings.jpg)
+
+![image](img/check-outstandings.jpg)

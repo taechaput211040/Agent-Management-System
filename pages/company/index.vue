@@ -7,8 +7,7 @@
           <v-card class="pa-6">
             <v-divider class="my-3"></v-divider>
             <v-row class="select-item py-2">
-              <v-col md="6" cols="12">
-                <h4 class="px-4">Company Name : sasadsad</h4> </v-col
+              <v-col md="6" cols="12"> <h4 class="px-4">Company Name : sasadsad</h4> </v-col
               ><v-divider vertical></v-divider>
               <v-col md="6" cols="12">
                 <h4 class="px-4">Phone : 0842002222</h4>
@@ -16,31 +15,16 @@
             </v-row>
             <v-divider class="my-3"></v-divider>
           </v-card>
-          <v-card class=" pa-2 mt-5  mb-2 classtable">
+          <v-card class="pa-2 mt-5 mb-2 classtable">
             <v-row class="ma-4">
               <v-col cols="8"> <h2>Company Management</h2></v-col>
             </v-row>
             <v-row class="mx-4"
-              ><v-col cols="4"
-                ><v-text-field
-                  outlined
-                  dense
-                  label="Filter Company Name"
-                ></v-text-field
-              ></v-col>
-              <v-col cols="2">
-                <v-select
-                  outlined
-                  dense
-                  label="Select Status"
-                ></v-select></v-col
+              ><v-col cols="4"><v-text-field outlined dense label="Filter Company Name"></v-text-field></v-col>
+              <v-col cols="2"> <v-select outlined dense label="Select Status"></v-select></v-col
             ></v-row>
 
-            <v-data-table
-              class="elevation-2 ma-4"
-              :headers="headers"
-              :items="exampleitem"
-            >
+            <v-data-table class="elevation-2 ma-4" :headers="headers" :items="exampleitem">
               <template #[`item.no`]="{ index }">
                 {{ index + 1 }}
               </template>
@@ -64,7 +48,7 @@
                   </v-icon>
                 </v-btn>
               </template> -->
-              <template #[`item.status`]="{ item}">
+              <template #[`item.status`]="{ item }">
                 <v-switch
                   v-model="item.status"
                   :false-value="0"
@@ -104,11 +88,7 @@
     </div>
 
     <div v-if="isLoading" class="text-center">
-      <v-progress-circular
-        :size="50"
-        color="primary"
-        indeterminate
-      ></v-progress-circular>
+      <v-progress-circular :size="50" color="primary" indeterminate></v-progress-circular>
     </div>
   </v-flex>
 </template>
@@ -118,26 +98,26 @@ export default {
     return {
       history: [],
       open_history: false,
-      selectedGame: "",
-      searchdata: "",
+      selectedGame: '',
+      searchdata: '',
       modal_add: false,
       form_member: {
-        role: "",
-        owner: "",
-        name: "",
+        role: '',
+        owner: '',
+        name: '',
         credit: null,
-        username: "",
-        password: "",
-        confrim: "",
-        company: "",
+        username: '',
+        password: '',
+        confrim: '',
+        company: '',
         game_member: [],
-        domain: "",
-        parent: ""
+        domain: '',
+        parent: '',
       },
       formCredit: {
         number: null,
         targetUser: null,
-        isMinus: false
+        isMinus: false,
       },
       targetUser: [],
 
@@ -147,95 +127,95 @@ export default {
 
       headers: [
         {
-          text: "No.",
-          align: "center",
-          value: "no",
-          class: "col-1",
-          divider: true
-        },
-        {
-          text: "Company Name",
-          value: "company",
-          align: "center",
-          divider: true
-        },
-        { text: "Owner Name", value: "owner", align: "center", divider: true },
-        { text: "Username", value: "username", align: "center", divider: true },
-        { text: "Phone", value: "phone", align: "center", divider: true },
-        {
-          text: "Credit",
-          value: "credit",
+          text: 'No.',
+          align: 'center',
+          value: 'no',
+          class: 'col-1',
           divider: true,
-          align: "center",
-          sortable: false
         },
         {
-          text: "Operation Code",
-          value: "operationCode",
+          text: 'Company Name',
+          value: 'company',
+          align: 'center',
           divider: true,
-          align: "center",
+        },
+        { text: 'Owner Name', value: 'owner', align: 'center', divider: true },
+        { text: 'Username', value: 'username', align: 'center', divider: true },
+        { text: 'Phone', value: 'phone', align: 'center', divider: true },
+        {
+          text: 'Credit',
+          value: 'credit',
+          divider: true,
+          align: 'center',
+          sortable: false,
+        },
+        {
+          text: 'Operation Code',
+          value: 'operationCode',
+          divider: true,
+          align: 'center',
 
-          sortable: false
+          sortable: false,
         },
         {
-          text: "Status",
-          value: "status",
-          align: "center",
+          text: 'Status',
+          value: 'status',
+          align: 'center',
           divider: true,
-          class: "col-1"
-        }
+          class: 'col-1',
+        },
       ],
       exampleitem: [
         {
-          company: "เอเย่น",
-          owner: "senior",
-          name: "agent",
-          username: "agenttest",
+          company: 'เอเย่น',
+          owner: 'senior',
+          name: 'agent',
+          username: 'agenttest',
           credit: 200,
-          phone: "0965555555",
+          phone: '0965555555',
           status: 1,
-          operationCode: "BBT"
+          operationCode: 'BBT',
         },
         {
-          company: "ซิเนียร์",
-          owner: "senior",
-          name: "agent",
-          username: "agenttest",
+          company: 'ซิเนียร์',
+          owner: 'senior',
+          name: 'agent',
+          username: 'agenttest',
           credit: 200,
-          phone: "0965555555",
+          phone: '0965555555',
           status: 1,
-          operationCode: "BBT"
-        }
-      ]
-    };
+          operationCode: 'BBT',
+        },
+      ],
+    }
   },
   methods: {
     showlog(dataHistory) {
-      this.open_history = true;
-      this.history = dataHistory;
+      this.open_history = true
+      this.history = dataHistory
     },
     async add() {
-      this.modal_add = true;
+      this.modal_add = true
     },
     addstatus(value) {
-      console.log(value);
+      console.log(value)
     },
     async showcredit(credit, i) {
-      this.show = true;
+      this.show = true
     },
     hanClickCredit(data, isMinus) {
-      this.formCredit.isMinus = isMinus;
-      this.targetUser = data;
-      this.modalCredit = true;
+      this.formCredit.isMinus = isMinus
+      this.targetUser = data
+      this.modalCredit = true
     },
     async handlcCloseCreditForm() {
       this.formCredit = {
         number: null,
         targetUser: null,
-        isMinus: false
-      };
-      this.modalCredit = false;
-    }
-  }
-};
+        isMinus: false,
+      }
+      this.modalCredit = false
+    },
+  },
+}
 </script>

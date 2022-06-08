@@ -10,7 +10,8 @@
         <div v-else class="pa-2">
           <img
             src="https://image.smart-ai-api.com/public/image-storage-betkub/images/20210811100859a9261ec6ff414acaaaa677c9ad7c83a7.png"
-            alt="John" class="mt-2"
+            alt="John"
+            class="mt-2"
             style="width: auto; height: 100%; max-width: 100%"
           />
         </div>

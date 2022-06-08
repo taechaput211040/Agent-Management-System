@@ -11,11 +11,7 @@
       </slot>
       <div class="d-flex" v-if="search">
         <v-select
-          :items="
-            headers
-              .filter((h) => h.search)
-              .map((h) => ({ value: h.value, text: h.text.toLowerCase() }))
-          "
+          :items="headers.filter((h) => h.search).map((h) => ({ value: h.value, text: h.text.toLowerCase() }))"
           class="mini-auto select-width body-2 mr-2"
           placeholder="Select Column"
           background-color="white"
@@ -74,11 +70,7 @@
       :selectable-key="selectKey"
       @item-selected="item_select"
     >
-      <template
-        v-for="(header, i) in headers"
-        :slot="`item.${header.value}`"
-        slot-scope="slotData"
-      >
+      <template v-for="(header, i) in headers" :slot="`item.${header.value}`" slot-scope="slotData">
         <slot v-if="header.to && !loading" :name="`item.${header.value}`">
           <nuxt-link :to="header.to(slotData.item)">
             {{
@@ -121,11 +113,7 @@
       </template>
 
       <template v-for="(header, i) in headers" :slot="`header.${header.value}`">
-        {{
-          header.format_header
-            ? header.format_header(items ? items : header.text)
-            : header.text
-        }}
+        {{ header.format_header ? header.format_header(items ? items : header.text) : header.text }}
         <v-menu
           v-if="header.search"
           :close-on-click="true"
@@ -148,12 +136,7 @@
                 <v-list-item :key="`${item}`" dense class="py-0" :value="item">
                   <template v-slot:default="{ active, toggle }">
                     <v-list-item-action>
-                      <v-checkbox
-                        :input-value="active"
-                        :true-value="item"
-                        @click="toggle"
-                        dense
-                      ></v-checkbox>
+                      <v-checkbox :input-value="active" :true-value="item" @click="toggle" dense></v-checkbox>
                     </v-list-item-action>
 
                     <v-list-item-content>
@@ -167,45 +150,31 @@
         </v-menu>
       </template>
 
-      <template
-        v-if="useCustomBodySelect"
-        #[`item.data-table-select`]="slotData"
-      >
+      <template v-if="useCustomBodySelect" #[`item.data-table-select`]="slotData">
         <slot name="item.data-table-select" v-bind="slotData" />
       </template>
 
-      <template
-        v-if="useCustomHeadSelect"
-        #[`header.data-table-select`]="slotData"
-      >
+      <template v-if="useCustomHeadSelect" #[`header.data-table-select`]="slotData">
         <slot name="header.data-table-select" v-bind="slotData" />
       </template>
 
       <template #[`item.no`]="slotData">
         <slot v-if="!loading" :name="`item.no`" v-bind="slotData">
-          {{
-            pagination_data.itemsPerPage * (pagination_data.page - 1) +
-            (slotData.index + 1)
-          }}
+          {{ pagination_data.itemsPerPage * (pagination_data.page - 1) + (slotData.index + 1) }}
         </slot>
         <v-skeleton-loader v-else type="text" />
       </template>
 
       <template #[`item.actions`]="slotData">
         <slot v-if="!loading" :name="`item.actions`" v-bind="slotData">
-          <action
-            :actions="actions"
-            @handleClick="$emit(`${$event}`, slotData)"
-          />
+          <action :actions="actions" @handleClick="$emit(`${$event}`, slotData)" />
         </slot>
         <v-skeleton-loader v-else type="text" />
       </template>
 
       <template #[`item.status`]="slotData">
         <slot v-if="!loading" :name="`item.status`" v-bind="slotData">
-          <v-icon :color="slotData.item.status.toLowerCase()" small
-            >mdi-circle</v-icon
-          >
+          <v-icon :color="slotData.item.status.toLowerCase()" small>mdi-circle</v-icon>
           {{ slotData.item.status }}
         </slot>
         <v-skeleton-loader v-else type="text" />
@@ -243,9 +212,7 @@
           type="number"
           v-if="pagination"
           v-model="pagination_data.itemsPerPage"
-          @input="
-            pageChange(pagination_data.page, pagination_data.itemsPerPage)
-          "
+          @input="pageChange(pagination_data.page, pagination_data.itemsPerPage)"
         />
       </div>
       <div>
@@ -255,11 +222,8 @@
           class=""
           v-if="pagination"
           color="primary"
-        
           :total-visible="totalVisible"
-          @input="
-            pageChange(pagination_data.page, pagination_data.itemsPerPage)
-          "
+          @input="pageChange(pagination_data.page, pagination_data.itemsPerPage)"
         ></v-pagination>
       </div>
       <div class="flex-grow-1">
@@ -432,21 +396,14 @@ export default {
       return arr
     },
     columnFilter: function (value, search, item) {
-      return (
-        String(item[this.search_column.value])
-          .toLowerCase()
-          .indexOf(search.toLowerCase()) !== -1
-      )
+      return String(item[this.search_column.value]).toLowerCase().indexOf(search.toLowerCase()) !== -1
     },
     defaultFilter: function (value, search) {
       return (
         value != null &&
         search != null &&
         typeof value !== 'boolean' &&
-        value
-          .toString()
-          .toLocaleLowerCase()
-          .indexOf(search.toLocaleLowerCase()) !== -1
+        value.toString().toLocaleLowerCase().indexOf(search.toLocaleLowerCase()) !== -1
       )
     },
     select: function (e) {

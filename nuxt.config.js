@@ -118,7 +118,19 @@ export default {
       },
     },
   },
-
+  // adding the below object made the compilation time go up again to
+  //"normal"
+  loaders: {
+    vue: {
+      prettify: false,
+    },
+  },
+  /*
+   ** You can extend webpack config here
+   */
+  extend(config, ctx) {
+    config.devtool = ctx.isClient ? 'eval-source-map' : 'inline-source-map'
+  },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
 }

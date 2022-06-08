@@ -1,7 +1,8 @@
 <template>
   <div>
     <h2>Landingpage Menagement</h2>
-    <iframe class="mt-3"
+    <iframe
+      class="mt-3"
       frameborder="none"
       width="100%"
       height="100vh"
