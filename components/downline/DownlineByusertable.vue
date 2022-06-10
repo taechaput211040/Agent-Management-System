@@ -38,10 +38,11 @@
           :items="itemRendering"
           :server-items-length="pagination.rowsNumber"
           :page.sync="pagination.page"
-          :options.sync="options"
           :items-per-page="pagination.rowsPerPage"
           hide-default-footer
         >
+          <!-- :options.sync="options" -->
+
           <template #[`item.no`]="{ index }">
             {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
           </template>
@@ -99,6 +100,7 @@
           <v-col cols="12" sm="10">
             <v-pagination
               v-model="pagination.page"
+              @input="changePage"
               :total-visible="7"
               :length="Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)"
             ></v-pagination>
@@ -264,21 +266,21 @@ export default {
       ],
     }
   },
-  watch: {
-    options: {
-      async handler() {
-        this.getDownlineData()
-      },
-    },
-  },
-  created() {
-    console.log(Object.keys(this.$route.query).length)
-    // this.getDownlineData()
+  // watch: {
+  //   options: {
+  //     async handler() {
+  //       this.getDownlineData()
+  //     },
+  //   },
+  // },
+  mounted() {
+    this.getDownlineData()
   },
   methods: {
     viewDownline(item) {
       console.log(item, 'itemrender')
       //   this.$router.push(`${this.$route.path}?username=${item.username}`)
+
       this.getDownlineData(item.username, item.role)
 
       if (!sessionStorage.getItem(`userPrev`) || JSON.parse(sessionStorage.getItem(`userPrev`)).length <= 0) {
@@ -351,6 +353,10 @@ export default {
     async handlePageSizeChange(size) {
       this.pagination.page = 1
       this.pagination.rowsPerPage = size
+      this.getDownlineData()
+    },
+    changePage(size) {
+      this.pagination.page = size
       this.getDownlineData()
     },
     async showcredit(item, index) {

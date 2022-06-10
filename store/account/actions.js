@@ -43,3 +43,49 @@ export async function create_SubAccont({ commit }, body) {
     }
   })
 }
+export async function checkPrefixAgent(
+  { commit },
+  params = {
+    search: undefined,
+    limit: undefined,
+    page: undefined,
+  }
+) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let data = await this.$axios.get('/v1alpha/user/prefix/agent', {
+        params: {
+          search: params.search,
+          limit: params.limit,
+          page: params.page,
+        },
+      })
+      resolve(data)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+export async function checkPrefixOwner(
+  { commit },
+  params = {
+    search: undefined,
+    limit: undefined,
+    page: undefined,
+  }
+) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let data = await this.$axios.get('/v1alpha/user/prefix/owner', {
+        params: {
+          search: params.search,
+          limit: params.limit,
+          page: params.page,
+        },
+      })
+      resolve(data)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}

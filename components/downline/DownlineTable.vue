@@ -56,8 +56,14 @@
           </template>
           <template #[`item.credit`]="{ item, index }">
             <div class="pa-2">
-              <div v-if="showCreditamount == true">{{ item.credit | numberFormat }}</div>
-              <v-btn @click="showcredit(item, index)" depressed color="warning" elevation="2" small
+              <div v-if="item.credit != null">{{ item.credit | numberFormat }}</div>
+              <v-btn
+                @click="showcredit(item, index)"
+                :loading="item.loadingBtn"
+                depressed
+                color="warning"
+                elevation="2"
+                small
                 >ตรวจสอบเครดิต</v-btn
               >
             </div>
@@ -146,7 +152,7 @@
         ></v-text-field>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="success" depressed @click="handlcSubmitcredit"> เติมเงิน </v-btn>
+          <v-btn color="success" depressed @click="handlcSubmitcredit" :loading="loadingSubmit"> เติมเงิน </v-btn>
           <v-btn color="error" depressed @click="handlcCloseCreditForm"> ยกเลิก </v-btn
           ><v-spacer></v-spacer> </v-card-actions
       ></v-card>
@@ -180,6 +186,7 @@ export default {
   components: { RevenueTable },
   data() {
     return {
+      loadingSubmit: false,
       dlProvider: false,
       showCreditamount: false,
       pageSizes: [5, 10, 15, 25],
@@ -390,6 +397,7 @@ export default {
         this.itemRendering = data.result.items.map((list) => ({
           ...list,
           credit: null,
+          loadingBtn: false,
         }))
       } catch (error) {
         console.log(error)
@@ -415,7 +423,7 @@ export default {
     },
 
     async showcredit(item, index) {
-      this.showCreditamount = true
+      item.loadingBtn = true
       try {
         let { data } = await this.checkCreditByuser(item.username)
         let credit = data.amount
@@ -423,6 +431,7 @@ export default {
       } catch (error) {
         console.log(error)
       }
+      item.loadingBtn = false
     },
     hanClickCredit(data, isMinus) {
       this.formCredit.isMinus = isMinus
@@ -438,6 +447,7 @@ export default {
       this.modalCredit = false
     },
     async handlcSubmitcredit() {
+      this.loadingSubmit = true
       try {
         this.formCredit.isMinus ? await this.withdrawCredit(this.formCredit) : await this.depositCredit(this.formCredit)
       } catch (error) {
@@ -448,6 +458,7 @@ export default {
           timer: 1500,
         })
       }
+      this.loadingSubmit = false
 
       this.handlcCloseCreditForm()
     },
