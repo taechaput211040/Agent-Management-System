@@ -21,39 +21,39 @@
           ></v-text-field>
         </div>
       </v-card-text>
-      <v-data-table
-        :search="search"
-        :server-items-length="paginationProvider.rowsNumber"
-        :page.sync="paginationProvider.page"
-        :items-per-page="paginationProvider.rowsPerPage"
-        :options.sync="options"
-        class="elevation-3"
-        :headers="headersProvider"
-        hide-default-footer
-        :items="rendering"
-      >
-        <template #[`item.commission`]="{ item }">
-          <v-text-field
-            dense
-            outlined
-            type="number"
-            v-model="item.commission"
-            hide-details="auto"
-            :disabled="!item.edit_status"
-          ></v-text-field>
-        </template>
-        <template #[`item.percent`]="{ item }">
-          <v-text-field
-            dense
-            outlined
-            :suffix="item.edit_status ? `limit : ${item.percent_limit}` : null"
-            v-model="item.percent"
-            hide-details="auto"
-            :disabled="!item.edit_status"
-            type="number"
-          ></v-text-field>
-        </template>
-        <!-- <template #[`item.percent_limit`]="{ item }">
+      <v-card>
+        <v-data-table
+          :search="search"
+          :server-items-length="paginationProvider.rowsNumber"
+          :page.sync="paginationProvider.page"
+          :items-per-page="paginationProvider.rowsPerPage"
+          :options.sync="options"
+          :headers="headersProvider"
+          hide-default-footer
+          :items="rendering"
+        >
+          <template #[`item.commission`]="{ item }">
+            <v-text-field
+              dense
+              outlined
+              type="number"
+              v-model="item.commission"
+              hide-details="auto"
+              :disabled="!item.edit_status"
+            ></v-text-field>
+          </template>
+          <template #[`item.percent`]="{ item }">
+            <v-text-field
+              dense
+              outlined
+              :suffix="item.edit_status ? `limit : ${item.percent_limit}` : null"
+              v-model="item.percent"
+              hide-details="auto"
+              :disabled="!item.edit_status"
+              type="number"
+            ></v-text-field>
+          </template>
+          <!-- <template #[`item.percent_limit`]="{ item }">
           <v-text-field
             dense
             type="number"
@@ -63,7 +63,7 @@
             :disabled="!item.edit_status"
           ></v-text-field>
         </template> -->
-        <!-- <template #[`item.option_limit`]="{ item }">
+          <!-- <template #[`item.option_limit`]="{ item }">
           <v-text-field
             dense
             outlined
@@ -74,13 +74,15 @@
           ></v-text-field>
         </template> -->
 
-        <template #[`item.actions`]="{ item }">
-          <v-btn color="primary" small v-if="!item.edit_status" @click="item.edit_status = !item.edit_status"
-            >edit</v-btn
-          >
-          <v-btn color="success" small v-else @click="saveConfig(item)">save</v-btn>
-        </template>
-      </v-data-table>
+          <template #[`item.actions`]="{ item }">
+            <v-btn color="primary" small v-if="!item.edit_status" @click="item.edit_status = !item.edit_status"
+              >edit</v-btn
+            >
+            <v-btn color="success" small v-else @click="saveConfig(item)">save</v-btn>
+          </template>
+        </v-data-table>
+      </v-card>
+
       <v-row align="baseline" class="mt-3">
         <v-col cols="12" sm="2">
           <v-select

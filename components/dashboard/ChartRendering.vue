@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="row justify-center mt-5">
-      <div class="col-sm-8 col-md-6 col-12">
-        <div class="elevation-3 rounded-lg pa-3">
+      <div class="col-sm-7 col-md-6 col-12">
+        <v-card class="rounded-lg pa-3">
           <v-card-title class="pa-1 mb-2">Total Summary <v-spacer></v-spacer></v-card-title>
           <VueApexCharts
             width="100%"
@@ -11,24 +11,29 @@
             :options="chartOptions"
             :series="series"
           ></VueApexCharts>
-        </div>
+        </v-card>
       </div>
-      <div class="col-sm-6 col-md-6 col-12 row">
-        <div class="row pa-3">
+      <div class="col-sm-5 col-md-6 col-12">
+        <div class="row pa-0">
           <div class="col-12">
-            <v-card color="#1F7087" dark height="100%">
-              <v-card-title class="text-h4" v-text="'Credit'"></v-card-title>
-              <v-card-subtitle v-text="''"></v-card-subtitle>
+            <v-card height="100%" class="rounded-lg">
+              <v-card-title class="justify">
+                <v-avatar color="rgb(145 85 253 / 28%)" rounded size="49"
+                  ><v-icon x-large color="#9155fd">mdi-currency-usd</v-icon></v-avatar
+                ><v-spacer></v-spacer>
+                <h3>Credit</h3>
+              </v-card-title>
+              <v-divider></v-divider>
               <v-card-text class="text-right">
-                <p class="text-h5 mt-6">
+                <h1 class="mt-5">
                   {{ $store.state.account.credit | numberFormat }}
-                </p>
+                </h1>
               </v-card-text>
             </v-card>
           </div>
           <div class="col-12">
-            <v-card class="elevation-3 rounded-lg pa-3">
-              <v-card-title class="pa-1 mb-2 font-weight-bold"
+            <v-card class="rounded-lg">
+              <v-card-title class="pa-4 font-weight-bold"
                 >Total Summary <v-spacer></v-spacer
                 ><v-btn
                   small
@@ -41,7 +46,16 @@
                 ></v-card-title
               >
               <v-divider></v-divider>
-              <div class="pa-2">
+              <div class="pa-4">
+                <div class="row">
+                  <div class="col-6 font-weight-bold purple--text">
+                    <v-chip color="rgb(145 85 253 / 28%)" label>Role</v-chip>
+                  </div>
+                  <div class="col-6 text-right font-weight-bold">
+                    <v-chip color="rgb(145 85 253 / 28%)" label>W/L+Com.</v-chip>
+                  </div>
+                </div>
+
                 <div class="renderDashboard row" v-for="(item, i) in getSummarydata()" :key="i">
                   <div class="col-6 font-weight-bold">{{ i }}</div>
                   <div class="col-6 text-right">{{ item | numberFormat }}</div>

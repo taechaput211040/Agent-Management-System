@@ -41,7 +41,7 @@
               </v-col>
             </v-row>
 
-            <v-data-table class="elevation-2 ma-4" :headers="headers" :items="exampleitem" hide-default-footer>
+            <v-data-table class="  ma-4" :headers="headers" :items="exampleitem" hide-default-footer>
               <template #[`item.no`]="{ index }">
                 {{ index + 1 }}
               </template>
@@ -110,7 +110,7 @@
             ><v-btn fab icon x-small @click="open_history = false"><v-icon>mdi-close-thick</v-icon></v-btn>
           </v-card-title>
         </v-card>
-        <v-data-table class="elevation-2 ma-2" :headers="headersHistory" hide-default-footer></v-data-table
+        <v-data-table class="  ma-2" :headers="headersHistory" hide-default-footer></v-data-table
       ></v-card>
     </v-dialog>
     <v-dialog full-width v-model="modal_add" persistent>

@@ -15,8 +15,7 @@
             label="ค้นหาอย่างน้อย3ตัวอักษร"
             hide-details="auto"
             required
-            ><v-btn slot="append" color="success" fab dark x-small> <v-icon>mdi-magnify</v-icon></v-btn></v-text-field
-          >
+          ></v-text-field>
         </v-col>
 
         <v-col cols="12" md="2">
@@ -31,9 +30,9 @@
     <!-- row search + credit_balance -->
     <div class="mt-5">
       <div class="pa-2"><v-btn color="error" small @click="backFunction()">back</v-btn></div>
-      <v-card class="mt-3 pb-1 justify-center elevation-3 wite rounded-lg classtable">
+      <v-card class="mt-3 pb-1 justify-center wite rounded-lg classtable">
         <v-data-table
-          class="elevation-2"
+          class=" "
           :headers="headers"
           :items="itemRendering"
           :server-items-length="pagination.rowsNumber"
@@ -56,11 +55,7 @@
               </v-btn>
             </div>
           </template>
-          <template #[`item.log`]="{}">
-            <v-btn class="mx-2" fab dark x-small color="teal">
-              <v-icon dark> mdi-format-list-bulleted-square </v-icon>
-            </v-btn>
-          </template>
+
           <template #[`item.view`]="{ item }">
             <v-btn class="mx-2" x-small color="primary" @click="viewDownline(item)">
               <span>View</span>
@@ -111,12 +106,13 @@
     <v-dialog v-model="open_history" width="800">
       <v-card class="pb-2">
         <v-card color="indigo darken-2" dark align-baseline>
-          <v-card-title class="text-h5"
-            >ประวัติการเติม<v-spacer></v-spacer
+          <v-card-title
+            ><h3>ประวัติการเติม</h3>
+            <v-spacer></v-spacer
             ><v-btn fab icon x-small @click="open_history = false"><v-icon>mdi-close-thick</v-icon></v-btn>
           </v-card-title>
         </v-card>
-        <v-data-table class="elevation-2 ma-2" :headers="headersHistory" hide-default-footer></v-data-table
+        <v-data-table class="ma-2" :headers="headersHistory" hide-default-footer></v-data-table
       ></v-card>
     </v-dialog>
   </div>
@@ -202,13 +198,6 @@ export default {
         {
           text: 'workspace',
           value: 'workspace',
-          align: 'center',
-          sortable: false,
-        },
-
-        {
-          text: 'Log',
-          value: 'log',
           align: 'center',
           sortable: false,
         },

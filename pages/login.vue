@@ -4,7 +4,7 @@
       <v-container class="fill-height" fluid>
         <v-row align="center" justify="center" dense>
           <v-col cols="12" sm="8" md="4" lg="4" id="card-login">
-            <v-card class="elevation-8" color="#385F73" dark>
+            <v-card color="#385F73" dark>
               <v-card-text>
                 <v-form>
                   <v-card-title class="mb-2 text--white">LOGIN : SMARTBET AGENT </v-card-title>

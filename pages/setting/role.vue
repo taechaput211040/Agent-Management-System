@@ -16,7 +16,7 @@
                 ></v-col
               >
             </v-row>
-            <v-data-table class="elevation-2" :headers="headers" :items="exampleitem">
+            <v-data-table class=" " :headers="headers" :items="exampleitem">
               <template #[`item.no`]="{ index }">
                 {{ index + 1 }}
               </template>

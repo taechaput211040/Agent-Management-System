@@ -1,5 +1,5 @@
 <template>
-  <v-card class="rounded-lg elevation-3 pa-3">
+  <v-card class="rounded-lg   pa-3">
     <div class="row">
       <v-col cols="9">
         <h4>{{ title }}</h4>

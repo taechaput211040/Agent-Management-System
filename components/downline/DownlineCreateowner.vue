@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <div class="d-flex align-center pa-2">
+    <div class="d-flex align-center pa-1">
       <v-btn color="error" class="mx-3" small @click="$router.go(-1)">back</v-btn>
       <h2>Add Owner</h2>
     </div>
@@ -9,7 +9,8 @@
     <v-form ref="formCreate" v-model="valid">
       <div class="pa-2">
         <div class="row pa-5">
-          <div class="col-12 col-sm-6 pa-2">
+          <div class="col-12 col-sm-6 pa-1">
+            <small class="font-weigh-bold">Username</small>
             <v-text-field
               hide-details="auto"
               label="username"
@@ -20,7 +21,8 @@
             >
             </v-text-field>
           </div>
-          <div class="col-12 col-sm-3 pa-2">
+          <div class="col-12 col-sm-6 pa-1">
+            <small class="font-weigh-bold error--text">**กรอกอย่างน้อย1ตัวอักษรเพื่อสุ่ม Prefix</small>
             <v-text-field
               hide-details="auto"
               v-model="formCreate.comPrefix"
@@ -37,48 +39,24 @@
               "
               required
               outlined
-              :rules="[(v) => !!v || 'Owner Prefix  is required']"
+              :rules="[(v) => !!v || 'กรอก Prefix อย่างน้อย 1 ตัวอักษร']"
               solo
             >
-              <v-tooltip bottom slot="append" v-if="formCreate.comPrefix.length == 1">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    :loading="loadingPrefix"
-                    @click="checkprefix(formCreate.comPrefix)"
-                    dark
-                    v-bind="attrs"
-                    v-on="on"
-                    color="primary"
-                    fab
-                    x-small
-                  >
-                    <v-icon>mdi-transition</v-icon></v-btn
-                  >
-                </template>
-                <span>Random Prefix</span>
-              </v-tooltip>
-              <v-tooltip bottom slot="append" v-if="formCreate.comPrefix.length == 2">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    :loading="loadingPrefix"
-                    @click="checkprefix(formCreate.comPrefix)"
-                    dark
-                    v-bind="attrs"
-                    v-on="on"
-                    color="primary"
-                    fab
-                    x-small
-                  >
-                    <v-icon>mdi-check-circle</v-icon></v-btn
-                  >
-                </template>
-                <span>Check Prefix</span>
-              </v-tooltip>
+              <template slot="append" v-if="formCreate.comPrefix.length == 1">
+                <v-btn :loading="loadingPrefix" @click="checkprefix(formCreate.comPrefix)" dark color="primary" small>
+                  Random</v-btn
+                >
+              </template>
+              <template slot="append" v-if="formCreate.comPrefix.length == 2">
+                <v-btn :loading="loadingPrefix" @click="checkprefix(formCreate.comPrefix)" dark color="primary" small>
+                  Check</v-btn
+                >
+              </template>
             </v-text-field>
           </div>
-          <div class="col-12 col-sm-3 pa-2"></div>
 
-          <div class="col-12 pa-2">
+          <div class="col-12 pa-1">
+            <small class="font-weigh-bold">Password</small>
             <v-text-field
               label="password"
               v-model="formCreate.password"
@@ -89,7 +67,8 @@
               :rules="[(v) => !!v || 'Password is required']"
             ></v-text-field>
           </div>
-          <div class="col-12 pa-2">
+          <div class="col-12 pa-1">
+            <small class="font-weigh-bold">Re-Password</small>
             <v-text-field
               label="Re-password"
               v-model="rePassword"
@@ -141,7 +120,6 @@ export default {
   methods: {
     ...mapActions('account', ['create_SubAccont', 'checkPrefixOwner']),
     async checkprefix(item) {
-      console.log(item.length, 'lengthPrefix')
       let parameters = {
         search: item.toLowerCase(),
         limit: 100,
@@ -151,16 +129,13 @@ export default {
       let result
       try {
         let { data } = await this.checkPrefixOwner(parameters)
-        console.log(data, 'listdata')
         result = data.docs
       } catch (error) {
         console.log(error)
       }
       this.loadingPrefix = false
-      console.log(result, 'rsulte')
       if (item.length == 1) {
         let randomIndex = Math.floor(Math.random() * parseInt(result.length + 1))
-        console.log(result[randomIndex], 'random')
         this.formCreate.comPrefix = result[randomIndex].prefix
       }
       if (item.length == 2) {
@@ -204,6 +179,7 @@ export default {
           cancelButtonText: 'Cancel',
         }).then(async (result) => {
           if (result.isConfirmed) {
+            // console.log(this.formCreate)
             try {
               await this.create_SubAccont(this.formCreate)
               this.$swal({

@@ -17,7 +17,7 @@
               >
             </v-row>
             <v-data-table
-              class="elevation-2"
+              class=" "
               :options.sync="options"
               :headers="headers"
               :items="dataList"

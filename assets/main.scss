@@ -246,3 +246,30 @@ span {
     margin: auto;
   }
 }
+.theme--dark.v-application {
+  background: #28243d !important;
+  color: rgba(231, 227, 252, 0.87) !important;
+}
+.theme--dark.v-card {
+  background-color: #312d4b !important;
+  color: rgba(231, 227, 252, 0.87) !important;
+}
+.theme--dark.v-navigation-drawer {
+  background: #1f1d31 !important;
+  color: hsla(0, 0%, 100%, 0.76) !important;
+}
+.theme--light.v-navigation-drawer,
+.theme--dark.v-app-bar.v-toolbar.v-sheet {
+  background-color: #1a1426 !important;
+}
+.v-application .v-avatar.v-avatar-light-bg {
+  background-color: transparent !important;
+}
+.theme--light.v-application {
+  background: #f4f5fa !important;
+  color: rgba(94, 86, 105, 0.87);
+}
+
+.v-card {
+  box-shadow: 0 2px 10px 0 rgb(94 86 105 / 10%) !important; 
+}

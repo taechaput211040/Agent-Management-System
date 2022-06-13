@@ -40,9 +40,9 @@
           ><v-icon>mdi-plus</v-icon> เพิ่ม Downline</v-btn
         >
       </div>
-      <v-card class="pb-1 justify-center elevation-3 rounded-lg classtable">
+      <v-card class="pb-1 justify-center rounded-lg classtable">
         <v-data-table
-          class="elevation-2"
+          class=" "
           :headers="headers"
           :items="itemRendering"
           :server-items-length="pagination.rowsNumber"
@@ -161,12 +161,16 @@
       <v-card class="pb-2">
         <v-card color="indigo darken-2" dark align-baseline>
           <v-card-title class="text-h5"
-            >ประวัติการเติม<v-spacer></v-spacer
+            ><h3>ประวัติการเติม</h3>
+            <v-spacer></v-spacer
             ><v-btn fab icon x-small @click="open_history = false"><v-icon>mdi-close-thick</v-icon></v-btn>
           </v-card-title>
         </v-card>
-        <v-data-table class="elevation-2 ma-2" :headers="headersHistory" hide-default-footer></v-data-table
-      ></v-card>
+        <v-data-table class="ma-2" :headers="headersHistory" :items="itemHistory">
+          <template #[`item.no`]="{ index }"> {{ index + 1 }} </template>
+          <template #[`item.credit`]="{ item }"> {{ item.credit | numberFormat }} </template></v-data-table
+        ></v-card
+      >
     </v-dialog>
     <v-dialog v-model="dlProvider" persistent max-width="900px"
       ><v-card class="pa-3">
@@ -186,6 +190,7 @@ export default {
   components: { RevenueTable },
   data() {
     return {
+      itemHistory: [],
       loadingSubmit: false,
       dlProvider: false,
       showCreditamount: false,
@@ -236,19 +241,25 @@ export default {
           value: 'no',
         },
         {
-          text: 'Deposit',
-          value: 'credit_type_display',
+          text: 'username',
+          value: 'username',
           sortable: false,
         },
         {
-          text: 'Withdrawal',
-          value: 'credit_type_display',
+          text: 'type',
+          value: 'type',
+          sortable: false,
+        },
+        {
+          text: 'Credit',
+          value: 'credit',
           sortable: false,
         },
         {
           text: 'Date/Time',
-          value: 'datetime_transaction',
+          value: 'createdAt',
           sortable: false,
+          width: '200px',
         },
       ],
       headers: [
@@ -387,7 +398,13 @@ export default {
       }
       return roletoRendering
     },
-    ...mapActions('downline', ['getDownlineMember', 'depositCredit', 'withdrawCredit', 'checkCreditByuser']),
+    ...mapActions('downline', [
+      'getDownlineMember',
+      'depositCredit',
+      'withdrawCredit',
+      'checkCreditByuser',
+      'getHistoryCredit',
+    ]),
     //  ...mapActions('marketshare', ['getRevenueProviderByUser']),
     async getDownlineData() {
       let parameters = this.getParameter()
@@ -417,7 +434,18 @@ export default {
       this.pagination.rowsPerPage = size
       this.getDownlineData()
     },
-    showlog(dataHistory) {
+    async showlog(dataHistory) {
+      let params = {
+        username: dataHistory.username ? dataHistory.username : undefined,
+      }
+      try {
+        let { data } = await this.getHistoryCredit(params)
+
+        this.itemHistory = data.result.docs
+      } catch (error) {
+        console.log(error)
+        console.log(itemHistory)
+      }
       this.open_history = true
       this.history = dataHistory
     },

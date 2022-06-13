@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar clipped-left class="elevation-0" fixed app>
+    <v-app-bar clipped-left class="elevation-1" color="white" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title v-text="title" />
       <v-spacer />
@@ -58,7 +58,7 @@
         </v-list>
       </v-menu>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer" :clipped="clipped" app fixed>
+    <v-navigation-drawer v-model="drawer" :clipped="clipped" app dark fixed>
       <v-list nav dense class="mt-5">
         <div v-for="(link, i) in navigationMenu" :key="i">
           <v-list-item

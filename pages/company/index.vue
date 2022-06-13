@@ -24,7 +24,7 @@
               <v-col cols="2"> <v-select outlined dense label="Select Status"></v-select></v-col
             ></v-row>
 
-            <v-data-table class="elevation-2 ma-4" :headers="headers" :items="exampleitem">
+            <v-data-table class="  ma-4" :headers="headers" :items="exampleitem">
               <template #[`item.no`]="{ index }">
                 {{ index + 1 }}
               </template>

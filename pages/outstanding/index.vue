@@ -2,7 +2,7 @@
   <div>
     <h2>Check Outstanding</h2>
 
-    <v-card class="elevation-3 mt-3">
+    <v-card class="  mt-3">
       <v-card-text class="pa-0 indigo lighten-3 white--text d-sm-flex d-block align-baseline">
         <h2 class="ml-2 pt-3">Outstanding List</h2>
         <v-spacer></v-spacer>

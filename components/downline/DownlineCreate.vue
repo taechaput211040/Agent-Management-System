@@ -9,10 +9,11 @@
     <v-form ref="formCreate" v-model="valid">
       <div class="pa-2">
         <div class="row pa-5">
-          <div class="col-12 col-sm-6 pa-2">
+          <div class="col-12 col-sm-6 pa-1">
+            Username
             <v-text-field
               hide-details="auto"
-              label="username"
+              placeholder="username"
               v-model="formCreate.username"
               :prefix="prefixRole"
               :rules="[(v) => !!v || 'Username  is required']"
@@ -21,61 +22,46 @@
             >
             </v-text-field>
           </div>
-          <div class="col-12 col-sm-3 pa-2">
+          <div class="col-12 col-sm-3 pa-1">
+            Agent Prefix
             <v-text-field
               hide-details="auto"
               v-model="formCreate.agentPrefix"
-              label="Agent Prefix"
+              placeholder="Agent Prefix"
               dense
               :filled="isRoleLevel >= 5"
               :disabled="isRoleLevel >= 5"
               max="2"
+              @keypress="(e) => rangeInput(e, 2, formCreate.agentPrefix)"
+              onkeypress="
+                return (
+                  (event.charCode >= 65 && event.charCode <= 90) ||
+                  (event.charCode >= 97 && event.charCode <= 122) ||
+                  (event.charCode >= 48 && event.charCode <= 57)
+                )
+              "
               required
               outlined
               :rules="[(v) => !!v || 'Agent Prefix  is required']"
-              solo
             >
-              <v-tooltip bottom slot="append" v-if="formCreate.agentPrefix.length == 1">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    :loading="loadingPrefix"
-                    @click="checkprefix(formCreate.agentPrefix)"
-                    dark
-                    v-bind="attrs"
-                    v-on="on"
-                    color="primary"
-                    fab
-                    x-small
-                  >
-                    <v-icon>mdi-transition</v-icon></v-btn
-                  >
-                </template>
-                <span>Random Prefix</span>
-              </v-tooltip>
-              <v-tooltip bottom slot="append" v-if="formCreate.agentPrefix.length == 2">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    :loading="loadingPrefix"
-                    @click="checkprefix(formCreate.agentPrefix)"
-                    dark
-                    v-bind="attrs"
-                    v-on="on"
-                    color="primary"
-                    fab
-                    x-small
-                  >
-                    <v-icon>mdi-check-circle</v-icon></v-btn
-                  >
-                </template>
-                <span>Check Prefix</span>
-              </v-tooltip>
+              <template slot="append" v-if="formCreate.agentPrefix.length == 1">
+                <v-btn :loading="loadingPrefix" @click="checkprefix(formCreate.agentPrefix)" dark color="primary" small>
+                  Random</v-btn
+                >
+              </template>
+              <template slot="append" v-if="formCreate.agentPrefix.length == 2">
+                <v-btn :loading="loadingPrefix" @click="checkprefix(formCreate.agentPrefix)" dark color="primary" small>
+                  Check</v-btn
+                >
+              </template>
             </v-text-field>
           </div>
-          <div class="col-12 col-sm-3 pa-2">
+          <div class="col-12 col-sm-3 pa-1">
+            Role
             <v-text-field
               hide-details="auto"
               filled
-              label="role"
+              placeholder="role"
               v-model="formCreate.role"
               :value="checkRole()"
               disabled
@@ -84,20 +70,22 @@
             ></v-text-field>
           </div>
 
-          <div class="col-12 pa-2">
+          <div class="col-12 pa-1">
+            Password
             <v-text-field
-              label="password"
+              placeholder="password"
               v-model="formCreate.password"
               type="password"
               hide-details="auto"
+              :rules="[(v) => !!v || 'Password is required']"
               dense
               outlined
-              :rules="[(v) => !!v || 'Password is required']"
             ></v-text-field>
           </div>
-          <div class="col-12 pa-2">
+          <div class="col-12 pa-1">
+            Re-Password
             <v-text-field
-              label="Re-password"
+              placeholder="Re-password"
               v-model="rePassword"
               type="password"
               :rules="[
@@ -179,12 +167,12 @@ export default {
       }
       this.loadingPrefix = false
       console.log(result, 'rsulte')
-      if (item.length == 1) {
+      if (item.length == 1 && result) {
         let randomIndex = Math.floor(Math.random() * parseInt(result.length + 1))
         console.log(result[randomIndex], 'random')
         this.formCreate.agentPrefix = result[randomIndex].prefix
       }
-      if (item.length == 2) {
+      if (item.length == 2 && result) {
         let searchwords = result.find((word) => word.prefix === item)
         if (searchwords)
           this.$swal({
@@ -205,40 +193,41 @@ export default {
       }
     },
     async registerDownline() {
-      if (this.$refs.formCreate.validate()) {
-        this.$swal({
-          title: 'Are you sure you want to register downline?',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Confirm',
-          cancelButtonText: 'Cancel',
-        }).then(async (result) => {
-          if (result.isConfirmed) {
-            try {
-              await this.create_SubAccont(this.formCreate)
-              this.$swal({
-                icon: 'success',
-                title: 'Registered Success',
-                showConfirmButton: false,
-                timer: 1500,
-              }).then(async (result) => {
-                if (result) {
-                  this.$router.push('/downline/downlineManagement')
-                }
-              })
-            } catch (error) {
-              this.$swal({
-                icon: 'error',
-                title: `${error.response.data.message}`,
-                showConfirmButton: false,
-                timer: 1500,
-              })
-            }
-          }
-        })
-      }
+      console.log(this.formCreate, 'formCreate')
+      // if (this.$refs.formCreate.validate()) {
+      //   this.$swal({
+      //     title: 'Are you sure you want to register downline?',
+      //     icon: 'warning',
+      //     showCancelButton: true,
+      //     confirmButtonColor: '#3085d6',
+      //     cancelButtonColor: '#d33',
+      //     confirmButtonText: 'Confirm',
+      //     cancelButtonText: 'Cancel',
+      //   }).then(async (result) => {
+      //     if (result.isConfirmed) {
+      //       try {
+      //         await this.create_SubAccont(this.formCreate)
+      //         this.$swal({
+      //           icon: 'success',
+      //           title: 'Registered Success',
+      //           showConfirmButton: false,
+      //           timer: 1500,
+      //         }).then(async (result) => {
+      //           if (result) {
+      //             this.$router.push('/downline/downlineManagement')
+      //           }
+      //         })
+      //       } catch (error) {
+      //         this.$swal({
+      //           icon: 'error',
+      //           title: `${error.response.data.message}`,
+      //           showConfirmButton: false,
+      //           timer: 1500,
+      //         })
+      //       }
+      //     }
+      //   })
+      // }
     },
     checkRole() {
       let role = this.$route.params.role ? this.$route.params.role : undefined
@@ -257,6 +246,14 @@ export default {
         roletoRendering = undefined
       }
       return roletoRendering
+    },
+    rangeInput(self, length, itemmodel) {
+      // console.log(itemmodel);
+      if (itemmodel == undefined) {
+        itemmodel = ''
+      } else if (/[0-9]|[A-z]/g.test(self.key) && itemmodel.length >= length) {
+        self.preventDefault()
+      }
     },
   },
 }

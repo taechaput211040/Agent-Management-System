@@ -11,7 +11,7 @@
           </v-col>
         </v-row>
 
-        <v-card class="pb-1 mt-5 justify-center elevation-3 rounded-lg classtable">
+        <v-card class="pb-1 mt-5 justify-center rounded-lg classtable">
           <v-data-table :headers="headers" :items="exampleitem" hide-default-footer>
             <!-- index -->
             <template #[`item.no`]="{ index }">
@@ -137,7 +137,7 @@
             ><v-btn fab icon x-small @click="open_history = false"><v-icon>mdi-close-thick</v-icon></v-btn>
           </v-card-title>
         </v-card>
-        <v-data-table class="elevation-2 ma-2" :headers="headersHistory" hide-default-footer></v-data-table
+        <v-data-table class="  ma-2" :headers="headersHistory" hide-default-footer></v-data-table
       ></v-card>
     </v-dialog>
 

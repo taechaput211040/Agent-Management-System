@@ -93,3 +93,28 @@ export async function getDownlineMemberByUser(
     }
   })
 }
+
+export async function getHistoryCredit(
+  { commit },
+  params = {
+    username: undefined,
+    page: undefined,
+    limit: undefined,
+    type: undefined,
+  }
+) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.get(`/v1alpha/credit/history/${params.username}`, {
+        params: {
+          page: params.page,
+          limit: params.limit,
+          type: params.type,
+        },
+      })
+      resolve(response)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
