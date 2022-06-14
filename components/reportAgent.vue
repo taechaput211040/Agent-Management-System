@@ -493,6 +493,7 @@
           <v-col cols="12" sm="10">
             <v-pagination
               v-model="pagination.page"
+              @input="handlePageChange(pagination.page)"
               :total-visible="7"
               :length="Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)"
             ></v-pagination>
@@ -679,6 +680,12 @@ export default {
     async handlePageSizeChange(size) {
       this.pagination_render.page = 1
       this.pagination_render.rowsPerPage = size
+      await this.onRequest({
+        pagination: this.pagination_render,
+      })
+    },
+    async handlePageChange(size) {
+      this.pagination_render.page = size
       await this.onRequest({
         pagination: this.pagination_render,
       })

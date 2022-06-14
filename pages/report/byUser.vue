@@ -103,7 +103,7 @@
           <!-- report admin -->
           <report-winlose
             ref="winlose"
-            v-if="this.isRoleLevel <= 2 && !this.$route.query.company && !this.$route.query.share_user"
+            v-if="this.isRoleLevel <= 1 && !this.$route.query.company && !this.$route.query.share_user"
             :group_select="group_select"
             :provider_select="provider_select"
             :dateFilter="dateFilter"
@@ -111,7 +111,10 @@
           <!-- report admin -->
           <!-- report owner -->
           <report-owner
-            v-if="this.isRoleLevel <= 2 && this.$route.query.company && !this.$route.query.share_user"
+            v-if="
+              (this.isRoleLevel <= 1 && this.$route.query.company && !this.$route.query.share_user) ||
+              (this.isRoleLevel == 2 && !this.$route.query.share_user)
+            "
             :group_select="group_select"
             :provider_select="provider_select"
             :dateFilter="dateFilter"

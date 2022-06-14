@@ -18,13 +18,14 @@ export function token(state) {
   return state.key
 }
 
-export function isRoleLevel(state) {
+export function isRoleLevel(state, getters, rootState) {
+  console.log(rootState, 'stateoffaccount')
   let level = -1
-  if (state.role === 'ADMIN') {
+  if (state.role === 'OWNER' && rootState.account.profile.isStaff) {
     level = 0
   } else if (state.role === 'STAFF') {
     level = 1
-  } else if (state.role === 'OWNER') {
+  } else if (state.role === 'OWNER' && !rootState.account.profile.isStaff) {
     level = 2
   } else if (state.role === 'SHAREHOLDER') {
     level = 3

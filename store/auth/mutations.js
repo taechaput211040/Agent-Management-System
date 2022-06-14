@@ -2,7 +2,6 @@ export function set_login(
   state,
   {
     groups = {},
-    isStaff = false,
     key = '',
     role = 'NONE',
     supervisor = 'NONE',
@@ -13,7 +12,6 @@ export function set_login(
   localStorage.clear()
 
   state.groups = groups
-  state.isStaff = isStaff
   state.key = key
   state.role = role
   state.supervisor = supervisor

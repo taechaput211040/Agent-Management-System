@@ -21,7 +21,7 @@
             >
             </v-text-field>
           </div>
-          <div class="col-12 col-sm-6 pa-1">
+          <div class="col-12 col-sm-6 col-md-2 pa-1">
             <small class="font-weigh-bold error--text">**กรอกอย่างน้อย1ตัวอักษรเพื่อสุ่ม Prefix</small>
             <v-text-field
               hide-details="auto"
@@ -106,7 +106,7 @@ export default {
       password: '',
       role: 'OWNER',
       comPrefix: '',
-      agentPrefix: '',
+      agentPrefix: undefined,
       isClone: false,
       groups: [],
     },

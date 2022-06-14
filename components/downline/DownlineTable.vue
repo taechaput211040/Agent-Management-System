@@ -386,7 +386,11 @@ export default {
       if (role === 'ADMIN') {
         roletoRendering = 'OWNER'
       } else if (role === 'OWNER') {
-        roletoRendering = 'SHAREHOLDER'
+        if (this.$store.state.account.profile.isStaff) {
+          roletoRendering = 'OWNER'
+        } else {
+          roletoRendering = 'SHAREHOLDER'
+        }
       } else if (role === 'SHAREHOLDER') {
         roletoRendering = 'SENIOR'
       } else if (role === 'SENIOR') {

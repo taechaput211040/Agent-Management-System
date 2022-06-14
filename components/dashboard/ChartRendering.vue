@@ -105,9 +105,22 @@ export default {
         yaxis: {
           show: false,
         },
+
         fill: {
           type: 'solid',
           fillOpacity: 0.7,
+          type: 'gradient',
+          colors:['#9155fd'],
+          gradient: {
+            shade: 'dark',
+            shadeIntensity: 0.5,
+            gradientToColors: ['#9155fd'],
+            inverseColors: true,
+            shadeIntensity: 1,
+            opacityFrom: 0.7,
+            opacityTo: 0.9,
+            stops: [0, 70, 100],
+          },
         },
       },
 

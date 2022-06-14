@@ -343,6 +343,7 @@ export default {
     },
     ...mapMutations('auth', ['set_logout', 'set_login']),
     ...mapMutations('report', ['setdata_logout']),
+    ...mapMutations('account', ['clear_account']),
     async logout() {
       try {
         let token = localStorage.getItem('key')
@@ -350,6 +351,7 @@ export default {
           localStorage.clear()
           this.set_logout()
           this.setdata_logout()
+          this.clear_account()
           this.$router.push('/login')
         }
       } catch (err) {

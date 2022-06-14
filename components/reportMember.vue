@@ -11,7 +11,7 @@
       <h2 class="mt-3">Report Member</h2>
       <template>
         <div class="ma-3 justify-center rounded-lg classtable">
-          <v-data-table 
+          <v-data-table
             :server-items-length="pagination.rowsNumber"
             :options.sync="options"
             :page.sync="pagination.page"
@@ -298,6 +298,7 @@
               <v-pagination
                 v-model="pagination.page"
                 :total-visible="7"
+                @input="handlePageChange(pagination.page)"
                 :length="Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)"
               ></v-pagination>
             </v-col>
@@ -414,13 +415,6 @@ export default {
   watch: {
     reportdata() {
       this.progressBar = false
-    },
-    options: {
-      async handler() {
-        await this.onRequest({
-          pagination: this.pagination,
-        })
-      },
     },
   },
   computed: {
@@ -560,6 +554,12 @@ export default {
     async handlePageSizeChange(size) {
       this.pagination.page = 1
       this.pagination.rowsPerPage = size
+      await this.onRequest({
+        pagination: this.pagination,
+      })
+    },
+    async handlePageChange(size) {
+      this.pagination.page = size
       await this.onRequest({
         pagination: this.pagination,
       })

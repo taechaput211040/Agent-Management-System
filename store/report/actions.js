@@ -29,13 +29,23 @@ export async function getAllReport(
     end: 'undefined',
     provider: undefined,
     typeCode: undefined,
+    isStaff: false,
   }
 ) {
   return new Promise(async (resolve, reject) => {
+    let url = ''
+    if (params.isStaff) {
+      url = '/v1alpha/report-transaction/'
+    } else {
+      url = '/v1alpha/report-transaction/owner'
+    }
     try {
-      let response = await this.$axios.get('/v1alpha/report-transaction/owner', {
+      let response = await this.$axios.get(url, {
         params: {
-          ...params,
+          start: params.start,
+          end: params.end,
+          provider: params.provider,
+          typeCode: params.typeCode,
         },
       })
       resolve(response)
@@ -56,11 +66,19 @@ export async function getOwnerByIdV2(
     typeCode: undefined,
     id: undefined,
     search: undefined,
+    role: undefined,
   }
 ) {
   return new Promise(async (resolve, reject) => {
+    let url = ''
+    console.log(params.role, 'role')
+    if (params.role == 2) {
+      url = `/v1alpha/report-transaction/owner`
+    } else {
+      url = `/v1alpha/report-transaction/owner/${params.id}`
+    }
     try {
-      let response = await this.$axios.get(`/v1alpha/report-transaction/owner/${params.id}`, {
+      let response = await this.$axios.get(url, {
         params: {
           page: params.page,
           limit: params.limit,

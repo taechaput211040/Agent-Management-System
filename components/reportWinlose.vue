@@ -29,7 +29,7 @@
         </div>
       </div>
       <template>
-        <v-card class="ma-3 pb-1 justify-center   rounded-lg classtable">
+        <v-card class="ma-3 pb-1 justify-center elevation-3 rounded-lg classtable">
           <v-data-table
             :server-items-length="pagination.rowsNumber"
             :items-per-page.sync="pagination.rowsPerPage"
@@ -50,8 +50,8 @@
               </div>
             </td>
             <template #[`item._id`]="{ item }">
-              <span class="cursor-pointer" @click="userendering(item._id.code)">
-                {{ providerMap(item._id) || item._id.share }}
+              <span class="cursor-pointer" @click="userendering(item._id.code ? item._id.code : item._id)">
+                {{ providerMap(item._id) || item._id.share || item._id }}
               </span>
               <v-btn class="mx-2" fab dark x-small color="grey darken-2">
                 <v-icon> mdi-content-copy </v-icon>
@@ -476,12 +476,14 @@ export default {
     },
     async onRequest(props) {
       this.isLoading = true
+      console.log(this.$store.state.auth, 'istaff')
       try {
         const parameters = this.getFilterParameter(props)
         const { data } = await this.getAllReport({
           ...parameters,
           page: this.pagination.page,
           limit: this.pagination.rowsPerPage,
+          isStaff: this.$store.state.account.profile.isStaff,
         })
 
         this.reportdata = data

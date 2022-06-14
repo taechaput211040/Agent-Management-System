@@ -8,7 +8,7 @@
     </div>
 
     <div v-if="!loadingpage">
-      <v-btn color="red" @click="$router.go(-1)" dark small class="mx-3">Back</v-btn>
+      <v-btn color="red" @click="$router.go(-1)" v-if="isRoleLevel != 2" dark small class="mx-3">Back</v-btn>
       <h2 class="mt-3">Report Company</h2>
       <div class="row pa-3">
         <div class="col-12 col-sm-4 col-md-4 col-lg-2 pa-2">
@@ -181,6 +181,7 @@
             </v-col>
             <v-col cols="12" sm="10">
               <v-pagination
+                @input="handlePageChange(pagination.page)"
                 v-model="pagination.page"
                 :total-visible="7"
                 :length="Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)"
@@ -356,6 +357,7 @@ export default {
     ...mapGetters('report', {
       datetime: 'getDateTime',
     }),
+    ...mapGetters('auth', ['isRoleLevel']),
   },
   async created() {},
   async fetch() {
@@ -401,6 +403,12 @@ export default {
     async handlePageSizeChange(size) {
       this.pagination_render.page = 1
       this.pagination_render.rowsPerPage = size
+      await this.onRequest({
+        pagination: this.pagination_render,
+      })
+    },
+    async handlePageChange(size) {
+      this.pagination_render.page = size
       await this.onRequest({
         pagination: this.pagination_render,
       })
@@ -493,6 +501,7 @@ export default {
           page: this.pagination.page,
           limit: this.pagination.rowsPerPage,
           id: this.$route.query.company ? this.$route.query.company : undefined,
+          role: this.isRoleLevel,
         })
 
         this.reportdata = data

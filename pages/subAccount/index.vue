@@ -77,6 +77,7 @@
                     <h2 class="ml-2 pt-3">User Permission</h2>
                     <v-spacer></v-spacer>
                   </v-card-text>
+
                   <v-data-table hide-default-footer :items="item_menu" class="elevetion-1" :headers="headrSetting">
                     <template #[`header.read`]>
                       <v-checkbox
@@ -137,7 +138,7 @@
             ><v-btn fab icon x-small @click="open_history = false"><v-icon>mdi-close-thick</v-icon></v-btn>
           </v-card-title>
         </v-card>
-        <v-data-table class="  ma-2" :headers="headersHistory" hide-default-footer></v-data-table
+        <v-data-table class="ma-2" :headers="headersHistory" hide-default-footer></v-data-table
       ></v-card>
     </v-dialog>
 
