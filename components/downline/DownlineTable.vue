@@ -15,12 +15,11 @@
             label="ค้นหาอย่างน้อย3ตัวอักษร"
             hide-details="auto"
             required
-            ><v-btn slot="append" color="success" fab dark x-small> <v-icon>mdi-magnify</v-icon></v-btn></v-text-field
-          >
+          ></v-text-field>
         </v-col>
 
         <v-col cols="12" md="2">
-          <v-btn elevation="2" color=""> <v-icon left> mdi-magnify</v-icon> Search </v-btn>
+          <v-btn elevation="2" @click="searchList()"> <v-icon left> mdi-magnify</v-icon> Search </v-btn>
         </v-col>
         <v-col cols="12" md="6" class="text-sm-right text-center">
           <h4>เครดิตเอเย่นคงเหลือ : {{ remaining_credit | numberFormat }}</h4>
@@ -32,6 +31,7 @@
     <div class="mt-5">
       <div class="text-right pa-2">
         <v-btn
+          :disabled="$store.state.auth.role == 'AGENT'"
           class="my-3"
           v-if="$store.state.auth.role !== 'MEMBER'"
           @click="handleCreateDownline()"
@@ -47,8 +47,8 @@
           :items="itemRendering"
           :server-items-length="pagination.rowsNumber"
           :page.sync="pagination.page"
-          :options.sync="options"
           :items-per-page="pagination.rowsPerPage"
+          :options.sync="options"
           hide-default-footer
         >
           <template #[`item.no`]="{ index }">
@@ -64,16 +64,16 @@
                 color="warning"
                 elevation="2"
                 small
-                >ตรวจสอบเครดิต</v-btn
+                >ตรวจสอบเครดิต <v-icon dark right> mdi-cash-check </v-icon></v-btn
               >
             </div>
           </template>
-          <template #[`item.edit`]="{ item }">
+          <template #[`item.edit`]="{ item, index }">
             <div class="d-flex justify-center">
-              <v-btn class="mx-2" fab dark x-small color="success" @click="hanClickCredit(item, false)">
-                <v-icon dark> mdi-plus </v-icon> </v-btn
-              ><v-btn class="mx-2" fab dark x-small color="error" @click="hanClickCredit(item, true)">
-                <v-icon dark> mdi-minus </v-icon>
+              <v-btn class="mx-2" dark small color="success" @click="hanClickCredit(item, false, index)">
+                เพิ่ม <v-icon dark right> mdi-cash-multiple </v-icon> </v-btn
+              ><v-btn class="mx-2" dark small color="error" @click="hanClickCredit(item, true, index)">
+                ตัด <v-icon dark right> mdi-cash-minus </v-icon>
               </v-btn>
             </div>
           </template>
@@ -141,7 +141,7 @@
 
     <v-dialog v-model="modalCredit" persistent max-width="400">
       <v-card class="pa-5">
-        {{ this.formCredit.isMinus ? 'ลบ' : 'เติม' }} Credit
+        {{ this.formCredit.isMinus ? 'ตัด' : 'เพิ่ม' }} Credit
         <v-text-field
           type="number"
           dense
@@ -152,25 +152,60 @@
         ></v-text-field>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="success" depressed @click="handlcSubmitcredit" :loading="loadingSubmit"> เติมเงิน </v-btn>
+          <v-btn color="success" depressed @click="handlcSubmitcredit" :loading="loadingSubmit">
+            {{ formCredit.isMinus ? 'ตัด' : 'เพิ่ม' }}
+          </v-btn>
           <v-btn color="error" depressed @click="handlcCloseCreditForm"> ยกเลิก </v-btn
           ><v-spacer></v-spacer> </v-card-actions
       ></v-card>
     </v-dialog>
     <v-dialog v-model="open_history" width="800">
-      <v-card class="pb-2">
+      <v-card class="pa-sm-3 pa-1">
         <v-card color="indigo darken-2" dark align-baseline>
           <v-card-title class="text-h5"
-            ><h3>ประวัติการเติม</h3>
+            ><h3 v-if="userHistory">Credit History : {{ userHistory.username || null }}</h3>
             <v-spacer></v-spacer
             ><v-btn fab icon x-small @click="open_history = false"><v-icon>mdi-close-thick</v-icon></v-btn>
           </v-card-title>
         </v-card>
-        <v-data-table class="ma-2" :headers="headersHistory" :items="itemHistory">
+        <v-data-table
+          class="ma-2"
+          :headers="headersHistory"
+          hide-default-footer
+          :server-items-length="paginationHistory.total"
+          :page.sync="paginationHistory.page"
+          :items-per-page="paginationHistory.limit"
+          :items="itemHistory"
+        >
           <template #[`item.no`]="{ index }"> {{ index + 1 }} </template>
-          <template #[`item.credit`]="{ item }"> {{ item.credit | numberFormat }} </template></v-data-table
-        ></v-card
-      >
+          <template #[`item.credit`]="{ item }"
+            ><div class="font-weight-bold" :class="item.credit > 0 ? 'success--text' : 'error--text'">
+              {{ item.credit | numberFormat }}
+            </div>
+          </template>
+          <template #[`item.createdAt`]="{ item }"> {{ item.createdAt | dateFormat }} </template></v-data-table
+        >
+        <v-row>
+          <v-col cols="12" sm="2" class="px-3">
+            <v-select
+              dense
+              hide-details="auto"
+              solo
+              v-model="paginationHistory.limit"
+              :items="pageSizes"
+              @change="handlePagesizeHistoryChange"
+              label="Items per Page"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" sm="10">
+            <v-pagination
+              v-model="paginationHistory.page"
+              :total-visible="7"
+              @input="changePageHistory(paginationHistory.page)"
+              :length="Math.ceil(paginationHistory.total / paginationHistory.limit)"
+            ></v-pagination> </v-col
+        ></v-row>
+      </v-card>
     </v-dialog>
     <v-dialog v-model="dlProvider" persistent max-width="900px"
       ><v-card class="pa-3">
@@ -190,6 +225,13 @@ export default {
   components: { RevenueTable },
   data() {
     return {
+      userHistory: undefined,
+      paginationHistory: {
+        page: 1,
+        total: 0,
+        limit: 15,
+      },
+      indexCredit: 0,
       itemHistory: [],
       loadingSubmit: false,
       dlProvider: false,
@@ -239,6 +281,7 @@ export default {
           text: 'No.',
           align: 'center',
           value: 'no',
+          sortable: false,
         },
         {
           text: 'username',
@@ -409,7 +452,7 @@ export default {
       'checkCreditByuser',
       'getHistoryCredit',
     ]),
-    //  ...mapActions('marketshare', ['getRevenueProviderByUser']),
+    ...mapActions('account', ['get_creditBalance']),
     async getDownlineData() {
       let parameters = this.getParameter()
       try {
@@ -433,27 +476,48 @@ export default {
       }
       return params
     },
-    async handlePageSizeChange(size) {
+    getParameterHistory(username) {
+      let params = {
+        page: this.paginationHistory.page,
+        limit: this.paginationHistory.limit,
+        username: username ? username : this.userHistory.username,
+        type: undefined,
+      }
+      return params
+    },
+    handlePageSizeChange(size) {
       this.pagination.page = 1
       this.pagination.rowsPerPage = size
       this.getDownlineData()
     },
+    handlePagesizeHistoryChange(size) {
+      this.paginationHistory.page = 1
+      this.paginationHistory.limit = size
+      this.getCreditLog()
+    },
+    changePageHistory(page) {
+      this.paginationHistory.page = page
+      this.getCreditLog()
+    },
     async showlog(dataHistory) {
-      let params = {
-        username: dataHistory.username ? dataHistory.username : undefined,
-      }
+      this.paginationHistory.page = 1
+      this.paginationHistory.limit = 15
+      console.log(dataHistory, 'data')
+      this.userHistory = dataHistory
+      this.getCreditLog()
+    },
+    async getCreditLog() {
+      let params = this.getParameterHistory(this.userHistory.username)
       try {
         let { data } = await this.getHistoryCredit(params)
 
         this.itemHistory = data.result.docs
+        this.paginationHistory.total = data.result.count
       } catch (error) {
         console.log(error)
-        console.log(itemHistory)
       }
       this.open_history = true
-      this.history = dataHistory
     },
-
     async showcredit(item, index) {
       item.loadingBtn = true
       try {
@@ -465,10 +529,11 @@ export default {
       }
       item.loadingBtn = false
     },
-    hanClickCredit(data, isMinus) {
+    hanClickCredit(data, isMinus, index) {
       this.formCredit.isMinus = isMinus
       this.formCredit.username = data.username
       this.modalCredit = true
+      this.indexCredit = index
     },
     async handlcCloseCreditForm() {
       this.formCredit = {
@@ -482,17 +547,13 @@ export default {
       this.loadingSubmit = true
       try {
         this.formCredit.isMinus ? await this.withdrawCredit(this.formCredit) : await this.depositCredit(this.formCredit)
+        await this.showcredit(this.formCredit, this.indexCredit)
       } catch (error) {
-        this.$swal({
-          icon: 'error',
-          title: `${error.response.data.message}`,
-          showConfirmButton: false,
-          timer: 1500,
-        })
+        console.log(error)
       }
       this.loadingSubmit = false
-
-      this.handlcCloseCreditForm()
+      await this.get_creditBalance()
+      await this.handlcCloseCreditForm()
     },
   },
 }

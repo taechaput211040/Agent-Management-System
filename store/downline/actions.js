@@ -118,3 +118,14 @@ export async function getHistoryCredit(
     }
   })
 }
+
+// export async function getMemberBysearch({ commit }, targetUser) {
+//   return new Promise(async (resolve, reject) => {
+//     try {
+//       let response = await this.$axios.get(`/v1alpha/credit/balance/${targetUser}`)
+//       resolve(response)
+//     } catch (error) {
+//       reject(error)
+//     }
+//   })
+// }

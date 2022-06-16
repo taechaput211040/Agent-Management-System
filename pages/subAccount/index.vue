@@ -12,13 +12,22 @@
         </v-row>
 
         <v-card class="pb-1 mt-5 justify-center rounded-lg classtable">
-          <v-data-table :headers="headers" :items="exampleitem" hide-default-footer>
+          <v-data-table :headers="headers" :items="itemList" hide-default-footer>
             <!-- index -->
             <template #[`item.no`]="{ index }">
               {{ index + 1 }}
             </template>
-            <template #[`item.status`]="{ item }">
-              <span style="color: #c2e164">{{ item.status ? 'Active' : 'Idle' }}</span>
+
+            <template #[`item.createdAt`]="{ item }">
+              {{ item.createdAt | dateFormat }}
+            </template>
+            <template #[`item.loginDatetime`]="{ item }">
+              <span v-if="item.loginDatetime">{{ item.loginDatetime | dateFormat }}</span>
+              <span v-else><v-chip small color="grey" dark> - </v-chip></span>
+            </template>
+            <template #[`item.isSuspend`]="{ item }">
+              <span v-if="item.isSuspend">{{ item.isSuspend }}</span>
+              <span v-else><v-chip small color="grey" dark> - </v-chip></span>
             </template>
           </v-data-table>
 
@@ -81,6 +90,7 @@
                   <v-data-table hide-default-footer :items="item_menu" class="elevetion-1" :headers="headrSetting">
                     <template #[`header.read`]>
                       <v-checkbox
+                        hide-details="auto"
                         v-model="selectedReadAll"
                         label="ดู"
                         :value="selected.filter((x) => x.endsWith('_read')).length > 0"
@@ -94,6 +104,7 @@
                     <template #[`header.write`]>
                       <v-checkbox
                         v-model="selectedWriteAll"
+                        hide-details="auto"
                         label="แก้ไข"
                         :value="selected.filter((x) => x.endsWith('_write')).length > 0"
                         :indeterminate="
@@ -106,6 +117,7 @@
                     </template>
                     <template #[`item.read`]="{ item }">
                       <v-checkbox
+                        hide-details="auto"
                         v-model="selected"
                         :value="`${item.menu}_read`"
                         @change="handleReadPermission(`${item.menu}_read`)"
@@ -113,6 +125,7 @@
                     </template>
                     <template #[`item.write`]="{ item }">
                       <v-checkbox
+                        hide-details="auto"
                         v-model="selected"
                         :value="`${item.menu}_write`"
                         @change="handleWritePermission(`${item.menu}_write`)"
@@ -230,22 +243,24 @@ export default {
           align: 'center',
           value: 'no',
           class: 'col-1',
-          divider: true,
         },
-        { text: 'Username', value: 'username', divider: true, align: 'center' },
+        { text: 'Username', value: 'username', align: 'center' },
 
-        { text: 'Created at', value: 'created', divider: true },
-        { text: 'Created by', value: 'created', divider: true },
-        { text: 'Login IP', value: 'ip', divider: true },
-        { text: 'Last Login', value: 'last_login', divider: true },
-        { text: 'Suppend', value: 'Suppend', align: 'center', divider: false },
+        { text: 'Created at', value: 'createdAt' },
+        { text: 'Login IP', value: 'ipAddress' },
+        { text: 'Last Login', value: 'loginDatetime' },
+        // { text: 'Last Login', value: 'last_login', divider: true },
+        { text: 'Suppend', value: 'isSuspend', align: 'center' },
       ],
-      exampleitem: [],
+      itemList: [],
     }
   },
   created() {},
+  async mounted() {
+    this.getSubaccount()
+  },
   methods: {
-    ...mapActions('account', ['create_SubAccont']),
+    ...mapActions('account', ['create_SubAccont', 'subaccontList']),
     handleReadAllPermission(state, items) {
       if (state) {
         this.selected = items.map((item) => {
@@ -264,6 +279,15 @@ export default {
           .reduce((prev, curr) => [...prev, ...curr], [])
       } else {
         this.selected = this.selected.filter((selected) => !selected.endsWith('_write'))
+      }
+    },
+    async getSubaccount() {
+      try {
+        let { data } = await this.subaccontList()
+        console.log(data, 'data')
+        this.itemList = data.docs
+      } catch (error) {
+        console.log(error)
       }
     },
     handleReadPermission(value) {
@@ -289,10 +313,24 @@ export default {
     },
     async handleSubmit() {
       this.formCreate.groups = this.selected
-      console.log(this.formCreate)
+
+      let body = {
+        username:
+          this.$store.state.account.profile.comPrefix +
+          this.$store.state.account.profile.agentPrefix +
+          this.formCreate.username,
+        comPrefix: undefined,
+        agentPrefix: undefined,
+        groups: this.formCreate.groups,
+        isClone: true,
+        role: this.$store.state.auth.role ? this.$store.state.auth.role : undefined,
+        password: this.formCreate.password,
+      }
       if (this.$refs.create.validate()) {
         try {
-          // await this.create_SubAccont(this.formCreate)
+          await this.create_SubAccont(body)
+          await this.getSubaccount()
+          this.modalAddSubAccount = false
         } catch (error) {
           this.$swal({
             icon: 'error',
@@ -304,9 +342,6 @@ export default {
       }
     },
     handleAdd() {
-      this.formCreate.role = this.$store.state.auth.role ? this.$store.state.auth.role : undefined
-      this.formCreate.comPrefix = this.$store.state.account.profile.comPrefix
-      this.formCreate.agentPrefix = this.$store.state.account.profile.agentPrefix
       this.selected = this.$store.state.account.profile.groups
       this.modalAddSubAccount = true
     },

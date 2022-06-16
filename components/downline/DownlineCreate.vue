@@ -22,7 +22,7 @@
             >
             </v-text-field>
           </div>
-          <div class="col-12 col-sm-3 pa-1">
+          <div class="col-12 col-sm-3 pa-1" v-if="$store.state.auth.role != 'OWNER'">
             Agent Prefix
             <v-text-field
               hide-details="auto"
@@ -137,12 +137,6 @@ export default {
     if (this.$store.state.account.profile) {
       this.prefixRole = this.$store.state.account.profile.comPrefix
       this.formCreate.comPrefix = this.$store.state.account.profile.comPrefix
-      if (this.isRoleLevel >= 5) {
-        this.formCreate.agentPrefix =
-          this.$store.state.account.profile.agentPrefix || this.$store.state.account.profile.agentPrefix != ''
-            ? this.$store.state.account.profile.agentPrefix
-            : null
-      }
     }
     this.formCreate.role = this.checkRole()
     console.log(this.isRoleLevel, 'use for check agent prefix')
@@ -194,40 +188,43 @@ export default {
     },
     async registerDownline() {
       console.log(this.formCreate, 'formCreate')
-      // if (this.$refs.formCreate.validate()) {
-      //   this.$swal({
-      //     title: 'Are you sure you want to register downline?',
-      //     icon: 'warning',
-      //     showCancelButton: true,
-      //     confirmButtonColor: '#3085d6',
-      //     cancelButtonColor: '#d33',
-      //     confirmButtonText: 'Confirm',
-      //     cancelButtonText: 'Cancel',
-      //   }).then(async (result) => {
-      //     if (result.isConfirmed) {
-      //       try {
-      //         await this.create_SubAccont(this.formCreate)
-      //         this.$swal({
-      //           icon: 'success',
-      //           title: 'Registered Success',
-      //           showConfirmButton: false,
-      //           timer: 1500,
-      //         }).then(async (result) => {
-      //           if (result) {
-      //             this.$router.push('/downline/downlineManagement')
-      //           }
-      //         })
-      //       } catch (error) {
-      //         this.$swal({
-      //           icon: 'error',
-      //           title: `${error.response.data.message}`,
-      //           showConfirmButton: false,
-      //           timer: 1500,
-      //         })
-      //       }
-      //     }
-      //   })
-      // }
+      if (this.$refs.formCreate.validate()) {
+        this.$swal({
+          title: 'Are you sure you want to register downline?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirm',
+          cancelButtonText: 'Cancel',
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            if (this.$store.state.auth.role == 'OWNER') {
+              this.formCreate.agentPrefix = undefined
+            }
+            try {
+              await this.create_SubAccont(this.formCreate)
+              this.$swal({
+                icon: 'success',
+                title: 'Registered Success',
+                showConfirmButton: false,
+                timer: 1500,
+              }).then(async (result) => {
+                if (result) {
+                  this.$router.push('/downline/downlineManagement')
+                }
+              })
+            } catch (error) {
+              this.$swal({
+                icon: 'error',
+                title: `${error.response.data.message}`,
+                showConfirmButton: false,
+                timer: 1500,
+              })
+            }
+          }
+        })
+      }
     },
     checkRole() {
       let role = this.$route.params.role ? this.$route.params.role : undefined

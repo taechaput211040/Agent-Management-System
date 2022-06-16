@@ -12,6 +12,11 @@ import DownlineCreateowner from '~/components/downline/DownlineCreateowner.vue'
 
 export default {
   components: { DownlineCreate, DownlineCreateowner },
+  mounted() {
+    if (this.$route.params.role === 'AGENT') {
+      this.$router.push('/downline/downlineManagement')
+    }
+  },
 }
 </script>
 

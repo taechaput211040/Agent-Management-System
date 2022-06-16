@@ -14,7 +14,8 @@ export default {
     htmlAttrs: {
       lang: 'en',
     },
-    meta: [{
+    meta: [
+      {
         charset: 'utf-8',
       },
       {
@@ -31,11 +32,13 @@ export default {
         content: 'telephone=no',
       },
     ],
-    link: [{
-      rel: 'icon',
-      type: 'image/x-icon',
-      href: '/favicon.ico',
-    }, ],
+    link: [
+      {
+        rel: 'icon',
+        type: 'image/x-icon',
+        href: '/favicon.ico',
+      },
+    ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -61,6 +64,7 @@ export default {
     '@nuxtjs/axios',
     'nuxt-element-ui',
     '@nuxtjs/dayjs',
+    'vue-sweetalert2/nuxt',
   ],
 
   dayjs: {

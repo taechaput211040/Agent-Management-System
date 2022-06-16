@@ -2,8 +2,14 @@
   <div>
     <div class="row justify-center mt-5">
       <div class="col-sm-7 col-md-6 col-12">
-        <v-card class="rounded-lg pa-3">
-          <v-card-title class="pa-1 mb-2">Total Summary <v-spacer></v-spacer></v-card-title>
+        <v-card class="rounded-lg">
+          <v-card-title class="py-3 mb-2">
+            <v-avatar color="rgb(145 85 253 / 28%)" rounded size="49"
+              ><v-icon x-large color="#9155fd">mdi-chart-timeline-variant</v-icon></v-avatar
+            ><v-spacer></v-spacer> 
+            <h3>Total Summary</h3>
+           </v-card-title>
+          <v-divider></v-divider>
           <VueApexCharts
             width="100%"
             ref="realtimeChart"
@@ -34,7 +40,7 @@
           <div class="col-12">
             <v-card class="rounded-lg">
               <v-card-title class="pa-4 font-weight-bold"
-                >Total Summary <v-spacer></v-spacer
+                >Report Summary<v-spacer></v-spacer
                 ><v-btn
                   small
                   text
@@ -110,7 +116,7 @@ export default {
           type: 'solid',
           fillOpacity: 0.7,
           type: 'gradient',
-          colors:['#9155fd'],
+          colors: ['#9155fd'],
           gradient: {
             shade: 'dark',
             shadeIntensity: 0.5,
