@@ -551,12 +551,18 @@ export default {
       try {
         this.formCredit.isMinus ? await this.withdrawCredit(this.formCredit) : await this.depositCredit(this.formCredit)
         await this.showcredit(this.formCredit, this.indexCredit)
+        this.$swal({
+          icon: 'success',
+          title: ` ${this.formCredit.isMinus ? 'ตัด' : 'เติม'}เครดิตสำเร็จ`,
+          showConfirmButton: false,
+          timer: 1500,
+        })
       } catch (error) {
         console.log(error)
       }
-      this.loadingSubmit = false
       await this.get_creditBalance()
       await this.handlcCloseCreditForm()
+      this.loadingSubmit = false
     },
   },
 }
