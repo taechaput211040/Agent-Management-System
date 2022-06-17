@@ -267,28 +267,31 @@ export default {
   },
   methods: {
     viewDownline(item) {
+      this.pagination.page = 1
       console.log(item, 'itemrender')
       //   this.$router.push(`${this.$route.path}?username=${item.username}`)
 
       this.getDownlineData(item.username, item.role)
 
       if (!sessionStorage.getItem(`userPrev`) || JSON.parse(sessionStorage.getItem(`userPrev`)).length <= 0) {
-        let form_path = [item.supervisor.username]
+        let form_path = [item.username]
         sessionStorage.setItem(`userPrev`, JSON.stringify(form_path))
       } else {
         let form_path = JSON.parse(sessionStorage.getItem('userPrev'))
-        form_path.push(item.supervisor.username)
+        form_path.push(item.username)
         sessionStorage.setItem(`userPrev`, JSON.stringify(form_path))
       }
     },
     backFunction() {
-      let form_path = JSON.parse(sessionStorage.getItem('userPrev'))
+      const form_path = JSON.parse(sessionStorage.getItem('userPrev'))
+      const prevUsers = form_path.slice(0, form_path.length - 1)
       if (!form_path || form_path.length <= 1) {
         this.$router.go(-1)
       } else {
-        let user = form_path.pop()
-        this.getDownlineData(user)
-        sessionStorage.setItem(`userPrev`, JSON.stringify(form_path))
+        this.pagination.page = 1
+        console.log(form_path[form_path.length - 1],'path')
+        this.getDownlineData(prevUsers[prevUsers.length - 1])
+        sessionStorage.setItem('userPrev', JSON.stringify(prevUsers))
       }
       console.log(form_path)
     },
@@ -318,7 +321,8 @@ export default {
         username: userid ? userid : this.$route.query.username,
         page: this.pagination.page,
         limit: this.pagination.rowsPerPage,
-        role: role ? this.checkRoleRender(role) : this.checkRoleRender(this.$route.query.role),
+        role: undefined,
+        // role ? this.checkRoleRender(role) : this.checkRoleRender(this.$route.query.role),
       }
       return params
     },

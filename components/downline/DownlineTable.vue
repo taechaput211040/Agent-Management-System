@@ -406,7 +406,10 @@ export default {
       },
     },
   },
-  created() {},
+  async mounted() {
+    sessionStorage.removeItem('pathPrev')
+    sessionStorage.removeItem('userPrev')
+  },
   methods: {
     CloseDl() {
       this.dlProvider = false
