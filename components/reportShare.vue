@@ -52,7 +52,7 @@
             </td>
             <template #[`item._id`]="{ item }">
               <div>
-                <span class="cursor-pointer" @click="renderingMember(item._id)">
+                <span class="cursor-pointer user_pointer" @click="renderingMember(item._id)">
                   {{ providerMap(item._id) || item._id }}
                 </span>
               </div>

@@ -24,6 +24,7 @@
                     prepend-inner-icon="mdi-lock"
                     type="password"
                     class="rounded-0"
+                    @keyup.enter="login()"
                   ></v-text-field>
                   <v-btn class="rounded-2" x-large block rounded dark @click.prevent="login()">Login</v-btn>
                   <v-card-actions class="text--secondary">

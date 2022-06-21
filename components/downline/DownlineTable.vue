@@ -177,7 +177,9 @@
           :items-per-page="paginationHistory.limit"
           :items="itemHistory"
         >
-          <template #[`item.no`]="{ index }"> {{ index + 1 }} </template>
+          <template #[`item.no`]="{ index }">
+            {{ paginationHistory.limit * (paginationHistory.page - 1) + (index + 1) }}
+          </template>
           <template #[`item.credit`]="{ item }"
             ><div class="font-weight-bold" :class="item.credit > 0 ? 'success--text' : 'error--text'">
               {{ item.credit | numberFormat }}
@@ -415,8 +417,8 @@ export default {
       this.dlProvider = false
     },
     settingProvider(item) {
-      this.targetUser = item.username
       this.dlProvider = true
+      this.targetUser = item.username
     },
     viewDownline(item) {
       this.$router.push(`${this.$route.fullPath}?username=${item.username}&role=${item.role}`)

@@ -33,7 +33,7 @@
             <v-progress-linear v-show="progressBar" slot="progress" color="red" indeterminate></v-progress-linear>
             <template #[`item._id`]="{ item }">
               <div class="text-center">
-                <span class="cursor-pointer" @click="seniorrendering(item._id)">
+                <span class="cursor-pointer user_pointer" @click="seniorrendering(item._id)">
                   {{ providerMap(item._id) || item._id }}
                 </span>
               </div>
@@ -218,7 +218,7 @@
           >
             <v-progress-linear v-show="progressBar" slot="progress" color="red" indeterminate></v-progress-linear>
             <template #[`item._id`]="{ item }">
-              <span @click="userendering(item._id)"> {{ item._id }}</span>
+              <span class="user_pointer" @click="userendering(item._id)"> {{ item._id }}</span>
             </template>
             <template #[`item.memberWin`]="{ item }">
               <div class="pa-1 card-detail rounded-lg my-2 elevation-2">

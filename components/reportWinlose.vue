@@ -50,12 +50,10 @@
               </div>
             </td>
             <template #[`item._id`]="{ item }">
-              <span class="cursor-pointer" @click="userendering(item._id.code ? item._id.code : item._id)">
-                {{ providerMap(item._id) || item._id.share || item._id }}
+              <span class="cursor-pointer user_pointer" @click="userendering(item._id.code ? item._id.code : item._id._id)">
+                {{ providerMap(item._id) || item._id.share || item._id.username }}
               </span>
-              <v-btn class="mx-2" fab dark x-small color="grey darken-2">
-                <v-icon> mdi-content-copy </v-icon>
-              </v-btn>
+            
             </template>
             <template #[`item.providerBet`]="{ item }">
               <span class="cursor-pointer">

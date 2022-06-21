@@ -24,7 +24,7 @@
           >
             <v-progress-linear v-show="progressBar" slot="progress" color="red" indeterminate></v-progress-linear>
             <template #[`item._id`]="{ item }">
-              <span @click="userendering(item.roundId)"> {{ item.username }}</span>
+              <span class="user_pointer" @click="userendering(item.roundId)"> {{ item.username }}</span>
             </template>
             <template #[`item.bet`]="{ item }">
               {{ numberFormat(item.bet) }}
@@ -32,9 +32,7 @@
             <template #[`item.payout`]="{ item }">
               {{ numberFormat(item.payout) }}
             </template>
-            <template #[`item.amount`]="{ item }">
-              {{ numberFormat(item.amount) }}
-            </template>
+            <template #[`item.amount`]="{ item }"> {{ item.amount ? item.amount : 0 }} </template>
             <template #[`item.roundId`]="{ item }">
               <span @click="userendering(item.roundId)"> {{ item.roundId }}</span>
             </template>
@@ -431,6 +429,7 @@ export default {
           cellClass: 'font-weight-bold',
           sortable: false,
           width: '100px',
+          cellClass: 'user_pointer',
         },
         {
           text: 'Username',
@@ -456,7 +455,7 @@ export default {
           cellClass: 'text-center',
         },
         {
-          text: 'Amount',
+          text: 'Count',
           value: 'amount',
           sortable: false,
           width: '50px',

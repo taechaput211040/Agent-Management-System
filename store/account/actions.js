@@ -53,6 +53,7 @@ export async function subaccontList(
   }
 ) {
   return new Promise(async (resolve, reject) => {
+    console.log(params, 'param')
     try {
       let data = await this.$axios.get('/v1alpha/user/sub-account/', {
         params: {
@@ -67,7 +68,6 @@ export async function subaccontList(
     }
   })
 }
-
 
 export async function checkPrefixAgent(
   { commit },

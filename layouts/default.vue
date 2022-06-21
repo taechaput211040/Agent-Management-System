@@ -31,7 +31,7 @@
           </v-btn>
         </template>
         <v-list>
-          <v-list-item @click.prevent="switchBackToAdmin">
+          <v-list-item @click.prevent="switchBackToAdmin" v-show="isStaff">
             <v-list-item-icon>
               <v-icon>mdi-shield-account</v-icon>
             </v-list-item-icon>
@@ -39,7 +39,7 @@
               <v-list-item-title>Back To Admin</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item @click.prevent="switch_auth = true">
+          <v-list-item @click.prevent="switch_auth = true" v-show="isStaff">
             <v-list-item-icon>
               <v-icon>mdi-account-switch</v-icon>
             </v-list-item-icon>
@@ -63,6 +63,7 @@
         <div v-for="(link, i) in navigationMenu" :key="i">
           <v-list-item
             v-if="!link.subLinks"
+            :disabled="link.status == 2"
             :to="link.to"
             class="v-list-item class-menu pa-1 font-weight-bold"
             active-class="bg-primary-grediaun"
@@ -71,6 +72,16 @@
               <v-icon>{{ link.icon }}</v-icon>
             </v-list-item-icon>
             <v-list-item-title v-text="link.title" />
+            <v-badge
+              color="error"
+              right
+              style="z-index: -1"
+              v-if="link.status == 2"
+              :disabled="link.status == 2"
+              icon="mdi-tools"
+              inline
+              overlap
+            ></v-badge>
           </v-list-item>
           <v-list-group
             color="deep-purple lighten-2"
@@ -89,12 +100,23 @@
               v-for="sublink in link.subLinks"
               :to="sublink.to"
               :key="sublink.text"
+              :disabled="sublink.status == 2"
               active-class="bg-primary-grediaun"
             >
               <v-list-item-icon>
                 <v-icon>{{ sublink.icon }}</v-icon>
               </v-list-item-icon>
               <v-list-item-title v-text="sublink.text" />
+              <v-badge
+                color="error"
+                right
+                style="z-index: -1"
+                v-if="sublink.status == 2"
+                :disabled="sublink.status == 2"
+                icon="mdi-tools"
+                inline
+                overlap
+              ></v-badge>
             </v-list-item>
           </v-list-group>
         </div>
@@ -140,6 +162,7 @@ export default {
   middleware: 'auth',
   data() {
     return {
+      isStaff: false,
       fillter: {
         start: '2022-03-31T17:00:00.000Z',
         end: '2022-06-03T16:59:59.000Z',
@@ -159,74 +182,88 @@ export default {
           title: 'Dashboard',
           to: '/',
           icon: 'mdi-view-dashboard',
+          status: 1,
         },
         {
           title: 'Account',
           to: '/account',
           icon: 'mdi-shield-account',
+          status: 1,
           subLinks: [
             {
               icon: 'mdi-account',
               text: 'Profile',
               to: '/account/profile',
+              status: 1,
             },
             {
               icon: 'mdi-key-variant',
               text: 'Change Password',
               to: '/account/changepassword',
+              status: 1,
             },
           ],
         },
         {
           title: 'Sub Account',
           to: '/subAccount',
-          icon: 'mdi-view-dashboard',
+          icon: 'mdi-text-account',
+          status: 1,
         },
         {
           title: 'Downline Management',
           to: '/downline/downlineManagement',
-          icon: 'mdi-view-dashboard',
+          icon: 'mdi-sitemap',
+          status: 1,
         },
         {
           title: 'Lotto Management',
           to: '/lotto',
-          icon: 'mdi-view-dashboard',
+          icon: 'mdi-slot-machine',
+          status: 1,
         },
         {
           title: 'Landing Page Management',
           to: '/landinpage',
-          icon: 'mdi-view-dashboard',
+          icon: 'mdi-page-layout-header',
+          status: 1,
         },
         {
           title: 'Member Page Management',
           to: '/mamberpage',
-          icon: 'mdi-view-dashboard',
+          icon: 'mdi-page-layout-body',
+          status: 1,
         },
         {
           title: 'Report',
-          icon: 'mdi-cog',
+          icon: 'mdi-chart-multiple',
+          status: 1,
           subLinks: [
             {
-              icon: 'mdi-finance',
+              icon: 'mdi-chart-donut',
               text: 'Report By provider',
               to: '/report/byProvider',
+              status: 1,
             },
             {
-              icon: 'mdi-finance',
+              icon: 'mdi-chart-timeline-variant-shimmer',
               text: 'Report By User',
               to: '/report/byUser',
+              status: 1,
             },
           ],
         },
         {
           title: 'Check Outstanding',
           to: '/outstanding',
-          icon: 'mdi-view-dashboard',
+          icon: 'mdi-set-center',
+          status: 2,
         },
         {
           title: 'Staff Logs',
           to: '/stafflog',
-          icon: 'mdi-view-dashboard',
+          icon: 'mdi-account-tie-outline',
+          status: 2,
         },
       ],
       miniVariant: false,
@@ -237,9 +274,9 @@ export default {
   },
   computed: {
     ...mapGetters('auth', ['token']),
-
+    ...mapState('account', ['profile']),
     navigationMenu() {
-      return this.items
+      return this.items.filter((x) => x.status != 0)
     },
   },
   async fetch() {
@@ -247,6 +284,9 @@ export default {
   },
   async created() {
     await this.get_profile()
+    if (this.profile) {
+      this.isStaff = this.profile.isStaff
+    }
 
     // await this.checkauthen();
     // const managementMenu = ['staff', 'company', 'shareholder', 'senior', 'agent', 'member'].map((x) => ({

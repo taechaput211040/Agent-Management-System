@@ -24,9 +24,6 @@
       <v-card>
         <v-data-table
           :search="search"
-          :server-items-length="paginationProvider.rowsNumber"
-          :page.sync="paginationProvider.page"
-          :items-per-page="paginationProvider.rowsPerPage"
           :options.sync="options"
           :headers="headersProvider"
           hide-default-footer
@@ -47,7 +44,7 @@
               dense
               outlined
               :suffix="item.edit_status ? `limit : ${item.percent_limit}` : null"
-              v-model="item.percent"
+              v-model.number="item.percent"
               hide-details="auto"
               :disabled="!item.edit_status"
               type="number"
@@ -86,20 +83,19 @@
       <v-row align="baseline" class="mt-3">
         <v-col cols="12" sm="2">
           <v-select
+            outlined
+            hide-details="auto "
             dense
-            hide-details="auto"
-            solo
-            v-model="paginationProvider.rowsPerPage"
+            v-model="options.itemsPerPage"
             :items="pageSizes"
-            @change="handlePageSizeChangeProvider"
-            label="Items per Page"
+            label="รายการต่อหน้า"
           ></v-select>
         </v-col>
         <v-col cols="12" sm="10">
           <v-pagination
-            v-model="paginationProvider.page"
+            v-model="options.page"
             :total-visible="7"
-            :length="Math.ceil(paginationProvider.rowsNumber / paginationProvider.rowsPerPage)"
+            :length="Math.ceil(rendering.length / options.itemsPerPage)"
           ></v-pagination>
         </v-col>
       </v-row>
@@ -138,7 +134,6 @@ export default {
           value: 'code',
           align: 'center',
           cellClass: 'font-weight-bold primary--text',
-          sortable: false,
           width: '200px',
         },
         {
@@ -171,12 +166,10 @@ export default {
       rendering: [],
     }
   },
+  mounted() {
+    this.getRevenueListByuser()
+  },
   watch: {
-    options: {
-      async handler() {
-        await this.getRevenueListByuser()
-      },
-    },
     username() {
       this.setPage()
       this.getRevenueListByuser()
@@ -193,7 +186,7 @@ export default {
         option: 0,
       }
       this.$swal({
-        title: 'Are you sure you want to register downline?',
+        title: 'Are you sure you want to set Marketshare',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -204,6 +197,12 @@ export default {
         if (result.isConfirmed) {
           try {
             await this.updateMarketsharebyProvider(bodyConfig)
+            this.$swal({
+              icon: 'success',
+              title: `Success`,
+              showConfirmButton: false,
+              timer: 1500,
+            })
             item.edit_status = !item.edit_status
             await this.getRevenueListByuser()
           } catch (error) {
@@ -236,8 +235,8 @@ export default {
     getParameterProvider() {
       let params = {
         username: this.username,
-        page: this.paginationProvider.page,
-        limit: this.paginationProvider.rowsPerPage,
+        page: 1,
+        limit: 300,
       }
       return params
     },
@@ -246,13 +245,13 @@ export default {
       let parameters = this.getParameterProvider()
       try {
         let { data } = await this.getRevenueProviderByUser(parameters)
-        this.paginationProvider.rowsNumber = data.result.count
         this.rendering = data.result.items
 
         this.rendering = this.rendering.map((object) => {
           return { ...object, edit_status: false }
         })
       } catch (error) {
+        this.rendering = []
         this.$swal({
           icon: 'error',
           title: `${error.response.data.message}`,
@@ -261,12 +260,6 @@ export default {
         })
       }
       this.isLoading = false
-    },
-
-    async handlePageSizeChangeProvider(size) {
-      this.paginationProvider.page = 1
-      this.paginationProvider.rowsPerPage = size
-      this.getRevenueListByuser()
     },
   },
 }

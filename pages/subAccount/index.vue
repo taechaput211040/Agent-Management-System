@@ -2,20 +2,42 @@
   <v-flex>
     <div v-if="!isLoading">
       <v-container>
-        <v-row class="select-item py-2">
-          <v-col cols="12" md="8">
-            <h3 class="mt-2">
-              Member Management - List : <span class="mx-3">Sub Account List</span>
-              <v-btn elevation="2" color="primary" @click="handleAdd"> New sub account </v-btn>
-            </h3>
-          </v-col>
-        </v-row>
+        <div class="d-block d-sm-flex">
+          <h3 class="mt-2">Member Management</h3>
+          <v-spacer></v-spacer>
+          <v-btn elevation="2" color="primary" v-show="!$store.state.account.profile.isClone" @click="handleAdd">
+            New sub-account</v-btn
+          >
+        </div>
 
         <v-card class="pb-1 mt-5 justify-center rounded-lg classtable">
-          <v-data-table :headers="headers" :items="itemList" hide-default-footer>
+          <v-row class="ma-3 justify-end" align="center">
+            <v-col cols="12" sm="4" class="ma-2">
+              <v-text-field
+                @keyup.enter="search()"
+                v-model="serchtext"
+                dense
+                solo-inverted
+                label="username"
+                hide-details="auto"
+                required
+              ></v-text-field>
+            </v-col>
+            <v-btn elevation="2" color="success" @click.stop="search()">
+              <v-icon left> mdi-magnify</v-icon> Search
+            </v-btn>
+          </v-row>
+          <v-data-table
+            :page.sync="pagination.page"
+            :items-per-page="pagination.itemPerpage"
+            :server-items-length="pagination.totalDocs"
+            :headers="headers"
+            :items="itemList"
+            hide-default-footer
+          >
             <!-- index -->
             <template #[`item.no`]="{ index }">
-              {{ index + 1 }}
+              {{ pagination.itemPerpage * (pagination.page - 1) + (index + 1) }}
             </template>
 
             <template #[`item.createdAt`]="{ item }">
@@ -30,6 +52,27 @@
               <span v-else><v-chip small color="grey" dark> - </v-chip></span>
             </template>
           </v-data-table>
+          <v-row align="baseline" class="mt-3">
+            <v-col cols="12" sm="2">
+              <v-select
+                outlined
+                hide-details="auto "
+                dense
+                v-model="pagination.itemPerpage"
+                @change="changeItemPerpage"
+                :items="pageSizes"
+                label="รายการต่อหน้า"
+              ></v-select>
+            </v-col>
+            <v-col cols="12" sm="10">
+              <v-pagination
+                v-model="pagination.page"
+                @input="changePage(pagination.page)"
+                :total-visible="7"
+                :length="Math.ceil(pagination.totalDocs / pagination.itemPerpage)"
+              ></v-pagination>
+            </v-col>
+          </v-row>
 
           <v-dialog v-model="modalAddSubAccount" persistent max-width="800">
             <v-form ref="create">
@@ -135,7 +178,7 @@
                 </v-card>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="success" depressed @click="handleSubmit"> บันทีก </v-btn>
+                  <v-btn color="success" :loading="loadingCreatebtn" depressed @click="handleSubmit"> บันทีก </v-btn>
                   <v-btn color="error" depressed @click="handleCloseDialog"> ยกเลิก </v-btn
                   ><v-spacer></v-spacer> </v-card-actions></v-card
             ></v-form>
@@ -165,6 +208,13 @@ import { mapActions } from 'vuex'
 export default {
   data() {
     return {
+      pageSizes: [5, 10, 15, 25],
+      pagination: {
+        itemPerpage: 15,
+        page: 1,
+        totalDocs: 0,
+      },
+      loadingCreatebtn: false,
       formCreate: {
         username: '',
         password: '',
@@ -244,7 +294,7 @@ export default {
           value: 'no',
           class: 'col-1',
         },
-        { text: 'Username', value: 'username', align: 'center' },
+        { text: 'Username', value: 'username', align: 'left' },
 
         { text: 'Created at', value: 'createdAt' },
         { text: 'Login IP', value: 'ipAddress' },
@@ -260,7 +310,20 @@ export default {
     this.getSubaccount()
   },
   methods: {
+    search() {
+      this.pagination.page = 1
+      this.getSubaccount()
+    },
     ...mapActions('account', ['create_SubAccont', 'subaccontList']),
+    changeItemPerpage(size) {
+      this.pagination.page = 1
+      this.pagination.itemPerpage = size
+      this.getSubaccount()
+    },
+    changePage(size) {
+      this.pagination.page = size
+      this.getSubaccount()
+    },
     handleReadAllPermission(state, items) {
       if (state) {
         this.selected = items.map((item) => {
@@ -281,11 +344,22 @@ export default {
         this.selected = this.selected.filter((selected) => !selected.endsWith('_write'))
       }
     },
+    getParameter() {
+      let param = {
+        search: this.serchtext || this.serchtext !== '' ? this.serchtext : undefined,
+        limit: this.pagination.itemPerpage,
+        page: this.pagination.page,
+      }
+
+      return param
+    },
     async getSubaccount() {
+      let parameters = this.getParameter()
       try {
-        let { data } = await this.subaccontList()
+        let { data } = await this.subaccontList(parameters)
         console.log(data, 'data')
         this.itemList = data.docs
+        this.pagination.totalDocs = data.totalDocs
       } catch (error) {
         console.log(error)
       }
@@ -313,7 +387,7 @@ export default {
     },
     async handleSubmit() {
       this.formCreate.groups = this.selected
-
+      this.loadingCreatebtn = true
       let body = {
         username:
           this.$store.state.account.profile.comPrefix +
@@ -330,7 +404,14 @@ export default {
         try {
           await this.create_SubAccont(body)
           await this.getSubaccount()
+          this.$swal({
+            icon: 'success',
+            title: `Create Sub-Account Success`,
+            showConfirmButton: false,
+            timer: 1500,
+          })
           this.modalAddSubAccount = false
+          this.loadingCreatebtn = false
         } catch (error) {
           this.$swal({
             icon: 'error',
@@ -338,6 +419,7 @@ export default {
             showConfirmButton: false,
             timer: 1500,
           })
+          this.loadingCreatebtn = false
         }
       }
     },
