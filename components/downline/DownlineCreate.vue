@@ -196,6 +196,7 @@ export default {
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
           confirmButtonText: 'Confirm',
+          allowOutsideClick: false,
           cancelButtonText: 'Cancel',
         }).then(async (result) => {
           if (result.isConfirmed) {
@@ -208,6 +209,7 @@ export default {
                 icon: 'success',
                 title: 'Registered Success',
                 showConfirmButton: false,
+                allowOutsideClick: false,
                 timer: 1500,
               }).then(async (result) => {
                 if (result) {

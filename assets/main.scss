@@ -24,11 +24,7 @@ span {
 .v-data-table > .v-data-table__wrapper > table > tfoot > tr > th {
   padding: 0px 5px !important;
 }
-@media (min-width: 1904px) {
-  .container {
-    // max-width: 1600px !important;
-  }
-}
+
 
 @media only screen and (min-width: 992px) {
   // .v-main {
@@ -276,3 +272,4 @@ span {
 .user_pointer{
   cursor: pointer;
 }
+

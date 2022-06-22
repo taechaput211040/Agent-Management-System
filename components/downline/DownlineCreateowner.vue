@@ -173,6 +173,7 @@ export default {
           title: 'Are you sure you want to register downline?',
           icon: 'warning',
           showCancelButton: true,
+          allowOutsideClick: false,
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
           confirmButtonText: 'Confirm',
@@ -185,6 +186,7 @@ export default {
               this.$swal({
                 icon: 'success',
                 title: 'Registered Success',
+                allowOutsideClick: false,
                 showConfirmButton: false,
                 timer: 1500,
               }).then(async (result) => {

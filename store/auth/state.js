@@ -5,6 +5,7 @@ export default function () {
     username: localStorage.getItem('username') || 'unknown',
     user_permissions: localStorage.getItem('user_permissions') || [],
     key: localStorage.getItem('key') || '',
+    isLoading: false,
     gameType: {
       SL: 'SLOT',
       LC: 'LIVE-CASINO',

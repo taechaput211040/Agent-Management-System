@@ -1,58 +1,69 @@
 <template>
-  <v-app dark>
-    <v-main>
-      <v-container class="fill-height" fluid>
-        <v-row align="center" justify="center" dense>
-          <v-col cols="12" sm="8" md="4" lg="4" id="card-login">
-            <v-card color="#385F73" dark>
-              <v-card-text>
-                <v-form>
-                  <v-card-title class="mb-2 text--white">LOGIN : SMARTBET AGENT </v-card-title>
-                  <v-divider></v-divider>
-                  <v-text-field
-                    label="Enter your username"
-                    required
-                    prepend-inner-icon="mdi-account"
-                    type="text"
-                    class="rounded-0"
-                    v-model="username"
-                  ></v-text-field>
-                  <v-text-field
-                    label="Enter your password"
-                    required
-                    v-model="password"
-                    prepend-inner-icon="mdi-lock"
-                    type="password"
-                    class="rounded-0"
-                    @keyup.enter="login()"
-                  ></v-text-field>
-                  <v-btn class="rounded-2" x-large block rounded dark @click.prevent="login()">Login</v-btn>
-                  <v-card-actions class="text--secondary">
-                    <v-spacer></v-spacer>
-                  </v-card-actions>
-                </v-form>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-main>
+  <v-app>
+    <loading-page v-if="isLoading"></loading-page>
+    <div class="row form">
+      <div class="d-none d-lg-block pa-5 col-lg-7 col overflow-hidden">
+        <div class="bg-left"></div>
+      </div>
+      <div class="d-flex align-center auth-bg col-lg-5 col-12">
+        <div class="row pa-md-5 pa-3">
+          <div class="mx-auto col-sm-8 col-md-6 col-lg-12 col-12">
+            <div class="elevation-0 pa-sm-6 white--text">
+              <v-form>
+                <v-card-title class="justify-center white--text"><h3>LOGIN : Smart Agent</h3> </v-card-title>
+                <v-text-field
+                  dark
+                  color="purple "
+                  label="Enter your username"
+                  required
+                  outlined
+                  prepend-inner-icon="mdi-account"
+                  type="text"
+                  v-model="username"
+                ></v-text-field>
+                <v-text-field
+                  dark
+                  color="purple"
+                  label="Enter your password"
+                  required
+                  outlined
+                  v-model="password"
+                  prepend-inner-icon="mdi-lock"
+                  type="password"
+                  @keyup.enter="login()"
+                ></v-text-field>
+                <v-btn class="login-Btn" color="#9155fd" x-large block dark @click.prevent="login()">Login</v-btn>
+                <v-card-actions class="text--secondary">
+                  <v-spacer></v-spacer>
+                </v-card-actions>
+              </v-form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </v-app>
 </template>
 
 <script>
 import { mapActions, mapMutations } from 'vuex'
+import loadingPage from '~/components/form/loadingPage.vue'
 export default {
+  components: { loadingPage },
   layout: 'session',
   data() {
     return {
+      isLoading: false,
       username: '',
       password: '',
-      authendata: {},
+      authendata: {}, 
     }
   },
   async beforeMount() {
     this.checklogin()
+  },
+  created() {
+    this.$vuetify.theme.dark = true
   },
   methods: {
     ...mapMutations('auth', ['set_login']),
@@ -60,6 +71,7 @@ export default {
       auth: 'login',
     }),
     async login() {
+      this.isLoading = true
       try {
         const response = await this.auth({
           username: this.username,
@@ -78,6 +90,7 @@ export default {
           timer: 1500,
         })
       }
+      this.isLoading = false
       // const tolog = this.$axios.defaults.headers.common['Authorization']
       // console.log(tolog);
       // const logindata = {
@@ -96,9 +109,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#card-login {
-  .v-card__text {
-    background: linear-gradient(135deg, #ce9ffc 0%, #7367f0 100%);
-  }
+.bg-left {
+  background-image: url('https://demos.themeselection.com/materio-vuetify-vuejs-admin-template/demo-1/img/group-dark.b632498a.png');
+  background-position: center center;
+  background-size: contain;
+  background-color: #28243d !important;
+  background-repeat: no-repeat;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding-right: 10px;
+  height: 100%;
+}
+.auth-bg {
+  background: #312d4b;
+}
+.login-Btn {
+  box-shadow: 0 0px 0px 0px #9155fd !important;
+}
+.login-Btn:hover {
+  box-shadow: 0 1px 20px 1px #9155fd !important;
 }
 </style>

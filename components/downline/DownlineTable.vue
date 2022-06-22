@@ -1,230 +1,240 @@
 <template>
   <div>
-    <!-- row member name -->
-    <v-card class="pa-3 mt-4">
-      <h3 class="my-3">
-        Member Management - List : <a class="px-5">{{ customer_name }}</a>
-      </h3>
+    <loading-page v-if="isLoading"></loading-page>
+    <div>
+      <!-- row member name -->
+      <v-card class="pa-3 mt-4">
+        <h3 class="my-3">
+          Member Management - List : <a class="px-5">{{ customer_name }}</a>
+        </h3>
 
-      <v-row>
-        <v-col cols="12" md="4">
-          <v-text-field
-            v-model="searchdata"
-            dense
-            solo-inverted
-            label="ค้นหาอย่างน้อย3ตัวอักษร"
-            hide-details="auto"
-            required
-          ></v-text-field>
-        </v-col>
-
-        <v-col cols="12" md="2">
-          <v-btn elevation="2" @click="searchList()"> <v-icon left> mdi-magnify</v-icon> Search </v-btn>
-        </v-col>
-        <v-col cols="12" md="6" class="text-sm-right text-center">
-          <h4>เครดิตเอเย่นคงเหลือ : {{ remaining_credit | numberFormat }}</h4>
-        </v-col>
-      </v-row>
-    </v-card>
-
-    <!-- row search + credit_balance -->
-    <div class="mt-5">
-      <div class="text-right pa-2">
-        <v-btn
-          :disabled="$store.state.auth.role == 'AGENT'"
-          class="my-3"
-          v-if="$store.state.auth.role !== 'MEMBER'"
-          @click="handleCreateDownline()"
-          color="primary"
-          rounded
-          ><v-icon>mdi-plus</v-icon> เพิ่ม Downline</v-btn
-        >
-      </div>
-      <v-card class="pb-1 justify-center rounded-lg classtable">
-        <v-data-table
-          class=" "
-          :headers="headers"
-          :items="itemRendering"
-          :server-items-length="pagination.rowsNumber"
-          :page.sync="pagination.page"
-          :items-per-page="pagination.rowsPerPage"
-          :options.sync="options"
-          hide-default-footer
-        >
-          <template #[`item.no`]="{ index }">
-            {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
-          </template>
-          <template #[`item.credit`]="{ item, index }">
-            <div class="pa-2">
-              <div v-if="item.credit != null">{{ item.credit | numberFormat }}</div>
-              <v-btn
-                @click="showcredit(item, index)"
-                :loading="item.loadingBtn"
-                depressed
-                color="warning"
-                elevation="2"
-                small
-                >ตรวจสอบเครดิต <v-icon dark right> mdi-cash-check </v-icon></v-btn
-              >
-            </div>
-          </template>
-          <template #[`item.edit`]="{ item, index }">
-            <div class="d-flex justify-center">
-              <v-btn class="mx-2" dark small color="success" @click="hanClickCredit(item, false, index)">
-                เพิ่ม <v-icon dark right> mdi-cash-multiple </v-icon> </v-btn
-              ><v-btn class="mx-2" dark small color="error" @click="hanClickCredit(item, true, index)">
-                ตัด <v-icon dark right> mdi-cash-minus </v-icon>
-              </v-btn>
-            </div>
-          </template>
-          <template #[`item.log`]="{ item }">
-            <v-btn class="mx-2" fab dark x-small color="teal" @click="showlog(item)">
-              <v-icon dark> mdi-format-list-bulleted-square </v-icon>
-            </v-btn>
-          </template>
-          <template #[`item.view`]="{ item }">
-            <v-btn class="mx-2" :disabled="item.role === 'MEMBER'" x-small color="primary" @click="viewDownline(item)">
-              <span>View</span>
-            </v-btn>
-          </template>
-          <template #[`item.setting`]="{ item }">
-            <v-btn
-              class="mx-2"
-              x-small
-              :disabled="item.role === 'MEMBER'"
-              color="success"
-              @click="settingProvider(item)"
-            >
-              <span>Edit</span>
-            </v-btn>
-          </template>
-          <template #[`item.action`]>
-            <v-btn class="mx-2" fab dark x-small color="purple" @click="modal_add = true">
-              <v-icon dark> mdi-pencil </v-icon>
-            </v-btn>
-            <v-btn class="mx-2" fab dark x-small color="blue-grey">
-              <v-icon dark> mdi-key </v-icon>
-            </v-btn>
-          </template>
-          <template #[`item.status`]="{ item }">
-            <span style="color: #c2e164">{{ item.status ? 'Active' : 'Idle' }}</span>
-          </template>
-          <template #[`item.suspend`]="{ item }">
-            <span style="color: #c2e164">{{ item.suspend ? 'Yes' : 'No' }}</span>
-          </template>
-          <template #[`item.lock`]="{ item }">
-            <span style="color: #c2e164">{{ item.lock ? 'Open' : 'Close' }}</span>
-          </template>
-        </v-data-table>
-        <v-row align="baseline" class="pa-3">
-          <v-col cols="12" sm="2">
-            <v-select
+        <v-row>
+          <v-col cols="12" md="4">
+            <v-text-field
+              v-model="searchdata"
               dense
+              solo-inverted
+              label="ค้นหาอย่างน้อย3ตัวอักษร"
               hide-details="auto"
-              solo
-              v-model="pagination.rowsPerPage"
-              :items="pageSizes"
-              @change="handlePageSizeChange"
-              label="Items per Page"
-            ></v-select>
+              required
+            ></v-text-field>
           </v-col>
-          <v-col cols="12" sm="10">
-            <v-pagination
-              v-model="pagination.page"
-              :total-visible="7"
-              :length="Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)"
-            ></v-pagination>
+
+          <v-col cols="12" md="2">
+            <v-btn elevation="2" @click="searchList()"> <v-icon left> mdi-magnify</v-icon> Search </v-btn>
+          </v-col>
+          <v-col cols="12" md="6" class="text-sm-right text-center">
+            <h4>เครดิตเอเย่นคงเหลือ : {{ remaining_credit | numberFormat }}</h4>
           </v-col>
         </v-row>
       </v-card>
-    </div>
 
-    <v-dialog v-model="modalCredit" persistent max-width="400">
-      <v-card class="pa-5">
-        {{ this.formCredit.isMinus ? 'ตัด' : 'เพิ่ม' }} Credit
-        <v-text-field
-          type="number"
-          dense
-          v-model.number="formCredit.amount"
-          required
-          autofocus
-          @keyup.enter="handlcSubmitcredit()"
-        ></v-text-field>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="success" depressed @click="handlcSubmitcredit" :loading="loadingSubmit">
-            {{ formCredit.isMinus ? 'ตัด' : 'เพิ่ม' }}
-          </v-btn>
-          <v-btn color="error" depressed @click="handlcCloseCreditForm"> ยกเลิก </v-btn
-          ><v-spacer></v-spacer> </v-card-actions
-      ></v-card>
-    </v-dialog>
-    <v-dialog v-model="open_history" width="800">
-      <v-card class="pa-sm-3 pa-1">
-        <v-card color="indigo darken-2" dark align-baseline>
-          <v-card-title class="text-h5"
-            ><h3 v-if="userHistory">Credit History : {{ userHistory.username || null }}</h3>
-            <v-spacer></v-spacer
-            ><v-btn fab icon x-small @click="open_history = false"><v-icon>mdi-close-thick</v-icon></v-btn>
-          </v-card-title>
+      <!-- row search + credit_balance -->
+      <div class="mt-5">
+        <div class="text-right pa-2">
+          <v-btn
+            :disabled="$store.state.auth.role == 'AGENT'"
+            class="my-3"
+            v-if="$store.state.auth.role !== 'MEMBER'"
+            @click="handleCreateDownline()"
+            color="primary"
+            rounded
+            ><v-icon>mdi-plus</v-icon> เพิ่ม Downline</v-btn
+          >
+        </div>
+        <v-card class="pb-1 justify-center rounded-lg classtable">
+          <v-data-table
+            class=" "
+            :headers="headers"
+            :items="itemRendering"
+            :server-items-length="pagination.rowsNumber"
+            :page.sync="pagination.page"
+            :items-per-page="pagination.rowsPerPage"
+            :options.sync="options"
+            hide-default-footer
+          >
+            <template #[`item.no`]="{ index }">
+              {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
+            </template>
+            <template #[`item.credit`]="{ item, index }">
+              <div class="pa-2">
+                <div v-if="item.credit != null">{{ item.credit | numberFormat }}</div>
+                <v-btn
+                  @click="showcredit(item, index)"
+                  :loading="item.loadingBtn"
+                  depressed
+                  color="warning"
+                  elevation="2"
+                  small
+                  >ตรวจสอบเครดิต <v-icon dark right> mdi-cash-check </v-icon></v-btn
+                >
+              </div>
+            </template>
+            <template #[`item.edit`]="{ item, index }">
+              <div class="d-flex justify-center">
+                <v-btn class="mx-2" dark small color="success" @click="hanClickCredit(item, false, index)">
+                  เพิ่ม <v-icon dark right> mdi-cash-multiple </v-icon> </v-btn
+                ><v-btn class="mx-2" dark small color="error" @click="hanClickCredit(item, true, index)">
+                  ตัด <v-icon dark right> mdi-cash-minus </v-icon>
+                </v-btn>
+              </div>
+            </template>
+            <template #[`item.log`]="{ item }">
+              <v-btn class="mx-2" fab dark x-small color="teal" @click="showlog(item)">
+                <v-icon dark> mdi-format-list-bulleted-square </v-icon>
+              </v-btn>
+            </template>
+            <template #[`item.view`]="{ item }">
+              <v-btn
+                class="mx-2"
+                :disabled="item.role === 'MEMBER'"
+                x-small
+                color="primary"
+                @click="viewDownline(item)"
+              >
+                <span>View</span>
+              </v-btn>
+            </template>
+            <template #[`item.setting`]="{ item }">
+              <v-btn
+                class="mx-2"
+                x-small
+                :disabled="item.role === 'MEMBER'"
+                color="success"
+                @click="settingProvider(item)"
+              >
+                <span>Edit</span>
+              </v-btn>
+            </template>
+            <template #[`item.action`]>
+              <v-btn class="mx-2" fab dark x-small color="purple" @click="modal_add = true">
+                <v-icon dark> mdi-pencil </v-icon>
+              </v-btn>
+              <v-btn class="mx-2" fab dark x-small color="blue-grey">
+                <v-icon dark> mdi-key </v-icon>
+              </v-btn>
+            </template>
+            <template #[`item.status`]="{ item }">
+              <span style="color: #c2e164">{{ item.status ? 'Active' : 'Idle' }}</span>
+            </template>
+            <template #[`item.suspend`]="{ item }">
+              <span style="color: #c2e164">{{ item.suspend ? 'Yes' : 'No' }}</span>
+            </template>
+            <template #[`item.lock`]="{ item }">
+              <span style="color: #c2e164">{{ item.lock ? 'Open' : 'Close' }}</span>
+            </template>
+          </v-data-table>
+          <v-row align="baseline" class="pa-3">
+            <v-col cols="12" sm="2">
+              <v-select
+                dense
+                hide-details="auto"
+                solo
+                v-model="pagination.rowsPerPage"
+                :items="pageSizes"
+                @change="handlePageSizeChange"
+                label="Items per Page"
+              ></v-select>
+            </v-col>
+            <v-col cols="12" sm="10">
+              <v-pagination
+                v-model="pagination.page"
+                :total-visible="7"
+                :length="Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)"
+              ></v-pagination>
+            </v-col>
+          </v-row>
         </v-card>
-        <v-data-table
-          class="ma-2"
-          :headers="headersHistory"
-          hide-default-footer
-          :server-items-length="paginationHistory.total"
-          :page.sync="paginationHistory.page"
-          :items-per-page="paginationHistory.limit"
-          :items="itemHistory"
-        >
-          <template #[`item.no`]="{ index }">
-            {{ paginationHistory.limit * (paginationHistory.page - 1) + (index + 1) }}
-          </template>
-          <template #[`item.credit`]="{ item }"
-            ><div class="font-weight-bold" :class="item.credit > 0 ? 'success--text' : 'error--text'">
-              {{ item.credit | numberFormat }}
-            </div>
-          </template>
-          <template #[`item.createdAt`]="{ item }"> {{ item.createdAt | dateFormat }} </template></v-data-table
-        >
-        <v-row>
-          <v-col cols="12" sm="2" class="px-3">
-            <v-select
-              dense
-              hide-details="auto"
-              solo
-              v-model="paginationHistory.limit"
-              :items="pageSizes"
-              @change="handlePagesizeHistoryChange"
-              label="Items per Page"
-            ></v-select>
-          </v-col>
-          <v-col cols="12" sm="10">
-            <v-pagination
-              v-model="paginationHistory.page"
-              :total-visible="7"
-              @input="changePageHistory(paginationHistory.page)"
-              :length="Math.ceil(paginationHistory.total / paginationHistory.limit)"
-            ></v-pagination> </v-col
-        ></v-row>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="dlProvider" persistent max-width="900px"
-      ><v-card class="pa-3">
-        <revenue-table :username="targetUser" ref="table"></revenue-table>
-        <v-card-actions class="justify-center">
-          <v-btn color="error" @click="CloseDl">ปิด</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+      </div>
+
+      <v-dialog v-model="modalCredit" persistent max-width="400">
+        <v-card class="pa-5">
+          {{ this.formCredit.isMinus ? 'ตัด' : 'เพิ่ม' }} Credit
+          <v-text-field
+            type="number"
+            dense
+            v-model.number="formCredit.amount"
+            required
+            autofocus
+            @keyup.enter="handlcSubmitcredit()"
+          ></v-text-field>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="success" depressed @click="handlcSubmitcredit" :loading="loadingSubmit">
+              {{ formCredit.isMinus ? 'ตัด' : 'เพิ่ม' }}
+            </v-btn>
+            <v-btn color="error" depressed @click="handlcCloseCreditForm"> ยกเลิก </v-btn
+            ><v-spacer></v-spacer> </v-card-actions
+        ></v-card>
+      </v-dialog>
+      <v-dialog v-model="open_history" width="800">
+        <v-card class="pa-sm-3 pa-1">
+          <v-card color="indigo darken-2" dark align-baseline>
+            <v-card-title class="text-h5"
+              ><h3 v-if="userHistory">Credit History : {{ userHistory.username || null }}</h3>
+              <v-spacer></v-spacer
+              ><v-btn fab icon x-small @click="open_history = false"><v-icon>mdi-close-thick</v-icon></v-btn>
+            </v-card-title>
+          </v-card>
+          <v-data-table
+            class="ma-2"
+            :headers="headersHistory"
+            hide-default-footer
+            :server-items-length="paginationHistory.total"
+            :page.sync="paginationHistory.page"
+            :items-per-page="paginationHistory.limit"
+            :items="itemHistory"
+          >
+            <template #[`item.no`]="{ index }">
+              {{ paginationHistory.limit * (paginationHistory.page - 1) + (index + 1) }}
+            </template>
+            <template #[`item.credit`]="{ item }"
+              ><div class="font-weight-bold" :class="item.credit > 0 ? 'success--text' : 'error--text'">
+                {{ item.credit | numberFormat }}
+              </div>
+            </template>
+            <template #[`item.createdAt`]="{ item }"> {{ item.createdAt | dateFormat }} </template></v-data-table
+          >
+          <v-row>
+            <v-col cols="12" sm="2" class="px-3">
+              <v-select
+                dense
+                hide-details="auto"
+                solo
+                v-model="paginationHistory.limit"
+                :items="pageSizes"
+                @change="handlePagesizeHistoryChange"
+                label="Items per Page"
+              ></v-select>
+            </v-col>
+            <v-col cols="12" sm="10">
+              <v-pagination
+                v-model="paginationHistory.page"
+                :total-visible="7"
+                @input="changePageHistory(paginationHistory.page)"
+                :length="Math.ceil(paginationHistory.total / paginationHistory.limit)"
+              ></v-pagination> </v-col
+          ></v-row>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="dlProvider" persistent max-width="900px"
+        ><v-card class="pa-3">
+          <revenue-table :username="targetUser" ref="table"></revenue-table>
+          <v-card-actions class="justify-center">
+            <v-btn color="error" @click="CloseDl">ปิด</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import LoadingPage from '../form/loadingPage.vue'
 import RevenueTable from '../market-share/RevenueTable.vue'
 export default {
-  components: { RevenueTable },
+  components: { RevenueTable, LoadingPage },
   data() {
     return {
       userHistory: undefined,
@@ -413,6 +423,10 @@ export default {
     sessionStorage.removeItem('userPrev')
   },
   methods: {
+    searchList() {
+      this.pagination.page = 1
+      this.getDownlineData()
+    },
     CloseDl() {
       this.dlProvider = false
     },
@@ -459,6 +473,7 @@ export default {
     ]),
     ...mapActions('account', ['get_creditBalance']),
     async getDownlineData() {
+      this.isLoading = true
       let parameters = this.getParameter()
       try {
         let { data } = await this.getDownlineMember(parameters)
@@ -471,6 +486,7 @@ export default {
       } catch (error) {
         console.log(error)
       }
+      this.isLoading = false
     },
     getParameter() {
       let rowUseRender = this.checkRole()
@@ -478,6 +494,7 @@ export default {
         page: this.pagination.page,
         limit: this.pagination.rowsPerPage,
         role: rowUseRender,
+        search: this.searchdata.length <= 0 || !this.searchdata ? undefined : this.searchdata,
       }
       return params
     },
@@ -512,6 +529,7 @@ export default {
       this.getCreditLog()
     },
     async getCreditLog() {
+      this.isLoading = true
       let params = this.getParameterHistory(this.userHistory.username)
       try {
         let { data } = await this.getHistoryCredit(params)
@@ -521,6 +539,7 @@ export default {
       } catch (error) {
         console.log(error)
       }
+      this.isLoading = false
       this.open_history = true
     },
     async showcredit(item, index) {

@@ -4,6 +4,7 @@ export async function getDownlineMember(
     page: undefined,
     limit: undefined,
     role: undefined,
+    search: undefined,
   }
 ) {
   return new Promise(async (resolve, reject) => {
@@ -13,6 +14,7 @@ export async function getDownlineMember(
           page: params.page,
           limit: params.limit,
           role: params.role,
+          search: params.search,
         },
       })
       resolve(response)
@@ -76,6 +78,7 @@ export async function getDownlineMemberByUser(
     page: undefined,
     limit: undefined,
     role: undefined,
+    search: undefined,
   }
 ) {
   return new Promise(async (resolve, reject) => {
@@ -85,6 +88,7 @@ export async function getDownlineMemberByUser(
           page: params.page,
           limit: params.limit,
           role: params.role,
+          search: params.search,
         },
       })
       resolve(response)

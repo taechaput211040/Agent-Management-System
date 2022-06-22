@@ -1,6 +1,7 @@
 <template>
   <v-flex>
-    <div v-if="!isLoading">
+    <loading-page v-if="isLoading"></loading-page>
+    <div>
       <v-container>
         <div class="d-block d-sm-flex">
           <h3 class="mt-2">Member Management</h3>
@@ -197,15 +198,13 @@
         <v-data-table class="ma-2" :headers="headersHistory" hide-default-footer></v-data-table
       ></v-card>
     </v-dialog>
-
-    <div v-if="isLoading" class="text-center">
-      <v-progress-circular :size="50" color="primary" indeterminate></v-progress-circular>
-    </div>
   </v-flex>
 </template>
 <script>
 import { mapActions } from 'vuex'
+import loadingPage from '~/components/form/loadingPage.vue'
 export default {
+  components: { loadingPage },
   data() {
     return {
       pageSizes: [5, 10, 15, 25],
@@ -354,6 +353,7 @@ export default {
       return param
     },
     async getSubaccount() {
+      this.isLoading = true
       let parameters = this.getParameter()
       try {
         let { data } = await this.subaccontList(parameters)
@@ -363,6 +363,7 @@ export default {
       } catch (error) {
         console.log(error)
       }
+      this.isLoading = false
     },
     handleReadPermission(value) {
       const item = value.split('_')
@@ -417,6 +418,7 @@ export default {
             icon: 'error',
             title: `${error.response.data.message}`,
             showConfirmButton: false,
+            allowOutsideClick: false,
             timer: 1500,
           })
           this.loadingCreatebtn = false

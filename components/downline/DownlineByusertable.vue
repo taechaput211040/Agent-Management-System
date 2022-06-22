@@ -1,128 +1,134 @@
 <template>
   <div>
-    <!-- row member name -->
-    <v-card class="pa-3 mt-4">
-      <h3 class="my-3">
-        Member Management - List : <a class="px-5">{{ customer_name }}</a>
-      </h3>
+    <loading-page v-if="isLoading"></loading-page>
+    <div>
+      <!-- row member name -->
+      <v-card class="pa-3 mt-4">
+        <h3 class="my-3">
+          Member Management - List : <a class="px-5">{{ customer_name }}</a>
+        </h3>
 
-      <v-row>
-        <v-col cols="12" md="4">
-          <v-text-field
-            v-model="searchdata"
-            dense
-            solo-inverted
-            label="ค้นหาอย่างน้อย3ตัวอักษร"
-            hide-details="auto"
-            required
-          ></v-text-field>
-        </v-col>
-
-        <v-col cols="12" md="2">
-          <v-btn elevation="2" color=""> <v-icon left> mdi-magnify</v-icon> Search </v-btn>
-        </v-col>
-        <v-col cols="12" md="6" class="text-sm-right text-center">
-          <h4>เครดิตเอเย่นคงเหลือ : {{ remaining_credit }}</h4>
-        </v-col>
-      </v-row>
-    </v-card>
-
-    <!-- row search + credit_balance -->
-    <div class="mt-5">
-      <div class="pa-2"><v-btn color="error" small @click="backFunction()">back</v-btn></div>
-      <v-card class="mt-3 pb-1 justify-center wite rounded-lg classtable">
-        <v-data-table
-          class=" "
-          :headers="headers"
-          :items="itemRendering"
-          :server-items-length="pagination.rowsNumber"
-          :page.sync="pagination.page"
-          :items-per-page="pagination.rowsPerPage"
-          hide-default-footer
-        >
-          <!-- :options.sync="options" -->
-
-          <template #[`item.no`]="{ index }">
-            {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
-          </template>
-
-          <template #[`item.edit`]="{ item }">
-            <div class="d-flex justify-center">
-              <v-btn class="mx-2" fab dark x-small color="success" @click="hanClickCredit(item, false)">
-                <v-icon dark> mdi-plus </v-icon> </v-btn
-              ><v-btn class="mx-2" fab dark x-small color="error" @click="hanClickCredit(item, true)">
-                <v-icon dark> mdi-minus </v-icon>
-              </v-btn>
-            </div>
-          </template>
-
-          <template #[`item.view`]="{ item }">
-            <v-btn class="mx-2" x-small color="primary" @click="viewDownline(item)">
-              <span>View</span>
-            </v-btn>
-          </template>
-
-          <template #[`item.action`]>
-            <v-btn class="mx-2" fab dark x-small color="purple" @click="modal_add = true">
-              <v-icon dark> mdi-pencil </v-icon>
-            </v-btn>
-            <v-btn class="mx-2" fab dark x-small color="blue-grey">
-              <v-icon dark> mdi-key </v-icon>
-            </v-btn>
-          </template>
-          <template #[`item.status`]="{ item }">
-            <span style="color: #c2e164">{{ item.status ? 'Active' : 'Idle' }}</span>
-          </template>
-          <template #[`item.suspend`]="{ item }">
-            <span style="color: #c2e164">{{ item.suspend ? 'Yes' : 'No' }}</span>
-          </template>
-          <template #[`item.lock`]="{ item }">
-            <span style="color: #c2e164">{{ item.lock ? 'Open' : 'Close' }}</span>
-          </template>
-        </v-data-table>
-        <v-row align="baseline" class="pa-3">
-          <v-col cols="12" sm="2">
-            <v-select
+        <v-row>
+          <v-col cols="12" md="4">
+            <v-text-field
+              v-model="searchdata"
               dense
+              solo-inverted
+              label="ค้นหาอย่างน้อย3ตัวอักษร"
               hide-details="auto"
-              solo
-              v-model="pagination.rowsPerPage"
-              :items="pageSizes"
-              @change="handlePageSizeChange"
-              label="Items per Page"
-            ></v-select>
+              required
+            ></v-text-field>
           </v-col>
-          <v-col cols="12" sm="10">
-            <v-pagination
-              v-model="pagination.page"
-              @input="changePage"
-              :total-visible="7"
-              :length="Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)"
-            ></v-pagination>
-          </v-col> </v-row
-      ></v-card>
-    </div>
 
-    <v-dialog v-model="open_history" width="800">
-      <v-card class="pb-2">
-        <v-card color="indigo darken-2" dark align-baseline>
-          <v-card-title
-            ><h3>ประวัติการเติม</h3>
-            <v-spacer></v-spacer
-            ><v-btn fab icon x-small @click="open_history = false"><v-icon>mdi-close-thick</v-icon></v-btn>
-          </v-card-title>
-        </v-card>
-        <v-data-table class="ma-2" :headers="headersHistory" hide-default-footer></v-data-table
-      ></v-card>
-    </v-dialog>
+          <v-col cols="12" md="2">
+            <v-btn elevation="2" @click="searchList()" color=""> <v-icon left> mdi-magnify</v-icon> Search </v-btn>
+          </v-col>
+          <v-col cols="12" md="6" class="text-sm-right text-center">
+            <h4>เครดิตเอเย่นคงเหลือ : {{ remaining_credit }}</h4>
+          </v-col>
+        </v-row>
+      </v-card>
+
+      <!-- row search + credit_balance -->
+      <div class="mt-5">
+        <div class="pa-2"><v-btn color="error" small @click="backFunction()">back</v-btn></div>
+        <v-card class="mt-3 pb-1 justify-center wite rounded-lg classtable">
+          <v-data-table
+            class=" "
+            :headers="headers"
+            :items="itemRendering"
+            :server-items-length="pagination.rowsNumber"
+            :page.sync="pagination.page"
+            :items-per-page="pagination.rowsPerPage"
+            hide-default-footer
+          >
+            <!-- :options.sync="options" -->
+
+            <template #[`item.no`]="{ index }">
+              {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
+            </template>
+
+            <template #[`item.edit`]="{ item }">
+              <div class="d-flex justify-center">
+                <v-btn class="mx-2" fab dark x-small color="success" @click="hanClickCredit(item, false)">
+                  <v-icon dark> mdi-plus </v-icon> </v-btn
+                ><v-btn class="mx-2" fab dark x-small color="error" @click="hanClickCredit(item, true)">
+                  <v-icon dark> mdi-minus </v-icon>
+                </v-btn>
+              </div>
+            </template>
+
+            <template #[`item.view`]="{ item }">
+              <v-btn class="mx-2" x-small color="primary" @click="viewDownline(item)">
+                <span>View</span>
+              </v-btn>
+            </template>
+
+            <template #[`item.action`]>
+              <v-btn class="mx-2" fab dark x-small color="purple" @click="modal_add = true">
+                <v-icon dark> mdi-pencil </v-icon>
+              </v-btn>
+              <v-btn class="mx-2" fab dark x-small color="blue-grey">
+                <v-icon dark> mdi-key </v-icon>
+              </v-btn>
+            </template>
+            <template #[`item.status`]="{ item }">
+              <span style="color: #c2e164">{{ item.status ? 'Active' : 'Idle' }}</span>
+            </template>
+            <template #[`item.suspend`]="{ item }">
+              <span style="color: #c2e164">{{ item.suspend ? 'Yes' : 'No' }}</span>
+            </template>
+            <template #[`item.lock`]="{ item }">
+              <span style="color: #c2e164">{{ item.lock ? 'Open' : 'Close' }}</span>
+            </template>
+          </v-data-table>
+          <v-row align="baseline" class="pa-3">
+            <v-col cols="12" sm="2">
+              <v-select
+                dense
+                hide-details="auto"
+                solo
+                v-model="pagination.rowsPerPage"
+                :items="pageSizes"
+                @change="handlePageSizeChange"
+                label="Items per Page"
+              ></v-select>
+            </v-col>
+            <v-col cols="12" sm="10">
+              <v-pagination
+                v-model="pagination.page"
+                @input="changePage"
+                :total-visible="7"
+                :length="Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)"
+              ></v-pagination>
+            </v-col> </v-row
+        ></v-card>
+      </div>
+
+      <v-dialog v-model="open_history" width="800">
+        <v-card class="pb-2">
+          <v-card color="indigo darken-2" dark align-baseline>
+            <v-card-title
+              ><h3>ประวัติการเติม</h3>
+              <v-spacer></v-spacer
+              ><v-btn fab icon x-small @click="open_history = false"><v-icon>mdi-close-thick</v-icon></v-btn>
+            </v-card-title>
+          </v-card>
+          <v-data-table class="ma-2" :headers="headersHistory" hide-default-footer></v-data-table
+        ></v-card>
+      </v-dialog>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import loadingPage from '../form/loadingPage.vue'
 export default {
+  components: { loadingPage },
   data() {
     return {
+      isLoading: false,
       showCreditamount: false,
       pageSizes: [5, 10, 15, 25],
       options: {},
@@ -266,8 +272,13 @@ export default {
     this.getDownlineData()
   },
   methods: {
+    searchList() {
+      this.pagination.page = 1
+      this.getDownlineData()
+    },
     viewDownline(item) {
       this.pagination.page = 1
+      this.searchdata = ''
       console.log(item, 'itemrender')
       //   this.$router.push(`${this.$route.path}?username=${item.username}`)
 
@@ -289,7 +300,7 @@ export default {
         this.$router.go(-1)
       } else {
         this.pagination.page = 1
-        console.log(form_path[form_path.length - 1],'path')
+        console.log(form_path[form_path.length - 1], 'path')
         this.getDownlineData(prevUsers[prevUsers.length - 1])
         sessionStorage.setItem('userPrev', JSON.stringify(prevUsers))
       }
@@ -301,6 +312,7 @@ export default {
 
     ...mapActions('downline', ['getDownlineMemberByUser', 'depositCredit', 'withdrawCredit', 'checkCreditByuser']),
     async getDownlineData(userid, role) {
+      this.isLoading = true
       let parameters = this.getParameter(userid, role)
       try {
         let { data } = await this.getDownlineMemberByUser(parameters)
@@ -315,6 +327,7 @@ export default {
         this.itemRendering = []
         this.pagination.rowsNumber = 0
       }
+      this.isLoading = false
     },
     getParameter(userid, role) {
       let params = {
@@ -322,6 +335,7 @@ export default {
         page: this.pagination.page,
         limit: this.pagination.rowsPerPage,
         role: undefined,
+        search: this.searchdata.length <= 0 || !this.searchdata ? undefined : this.searchdata,
         // role ? this.checkRoleRender(role) : this.checkRoleRender(this.$route.query.role),
       }
       return params

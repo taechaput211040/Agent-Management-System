@@ -191,6 +191,7 @@ export default {
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
+        allowOutsideClick: false,
         confirmButtonText: 'Confirm',
         cancelButtonText: 'Cancel',
       }).then(async (result) => {

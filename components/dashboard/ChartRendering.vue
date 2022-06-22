@@ -1,14 +1,15 @@
 <template>
   <div>
+    <loading-page v-if="isLoading"></loading-page>
     <div class="row justify-center mt-5">
       <div class="col-sm-7 col-md-6 col-12">
         <v-card class="rounded-lg">
           <v-card-title class="py-3 mb-2">
             <v-avatar color="rgb(145 85 253 / 28%)" rounded size="49"
               ><v-icon x-large color="#9155fd">mdi-chart-timeline-variant</v-icon></v-avatar
-            ><v-spacer></v-spacer> 
+            ><v-spacer></v-spacer>
             <h3>Total Summary</h3>
-           </v-card-title>
+          </v-card-title>
           <v-divider></v-divider>
           <VueApexCharts
             width="100%"
@@ -78,10 +79,12 @@
 <script>
 import VueApexCharts from 'vue-apexcharts'
 import { mapState, mapActions } from 'vuex'
+import LoadingPage from '../form/loadingPage.vue'
 export default {
-  components: { VueApexCharts },
+  components: { VueApexCharts,LoadingPage },
   data() {
     return {
+      isLoading: false,
       series: [{ name: 'จำนวนยอด', data: [] }],
       chartOptions: {
         chart: {
@@ -145,9 +148,11 @@ export default {
     ...mapState('report', ['dashboardData']),
   },
   async beforeMount() {
+    this.isLoading = true
     await this.getReportSummary()
     await this.getSummarydata()
     await this.mapChartData()
+    this.isLoading = await false
   },
   methods: {
     ...mapActions('report', ['getAllByDashboard']),

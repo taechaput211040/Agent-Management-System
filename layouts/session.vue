@@ -1,8 +1,8 @@
 <template>
   <v-app dark>
-    <v-container>
+    <div class="show">
       <nuxt />
-    </v-container>
+    </div>
   </v-app>
 </template>
 
@@ -10,4 +10,9 @@
 export default {}
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.show {
+  height: 100vh;
+  overflow: hidden;
+}
+</style>

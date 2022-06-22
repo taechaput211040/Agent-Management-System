@@ -65,17 +65,39 @@ export default {
     ...mapActions('auth', ['change_password']),
     async changePassword() {
       if (this.$refs.form.validate()) {
-        try {
-          console.log('hi')
-          await this.change_password(this.password)
-        } catch (error) {
-          this.$swal({
-            icon: 'error',
-            title: `${error.response.data.message}`,
-            showConfirmButton: false,
-            timer: 1500,
-          })
-        }
+        this.$swal({
+          title: 'Are you sure you want to change password?',
+          icon: 'warning',
+          showCancelButton: true,
+          allowOutsideClick: false,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirm',
+          cancelButtonText: 'Cancel',
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            try {
+              console.log('hi')
+              await this.change_password(this.password)
+              this.$refs.form.reset()
+              this.password = ''
+              this.repassword = ''
+              this.$swal({
+                icon: 'success',
+                title: `Change Password Success`,
+                showConfirmButton: false,
+                timer: 1500,
+              })
+            } catch (error) {
+              this.$swal({
+                icon: 'error',
+                title: `${error.response.data.message}`,
+                showConfirmButton: false,
+                timer: 1500,
+              })
+            }
+          }
+        })
       }
     },
   },
