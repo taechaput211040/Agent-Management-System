@@ -4,7 +4,7 @@
     <div>
       <v-container>
         <div class="d-block d-sm-flex">
-          <h3 class="mt-2">Member Management</h3>
+          <h3 class="mt-2">Sub Account Management</h3>
           <v-spacer></v-spacer>
           <v-btn elevation="2" color="primary" v-show="!$store.state.account.profile.isClone" @click="handleAdd">
             New sub-account</v-btn
@@ -28,6 +28,7 @@
               <v-icon left> mdi-magnify</v-icon> Search
             </v-btn>
           </v-row>
+          <v-divider></v-divider>
           <v-data-table
             :page.sync="pagination.page"
             :items-per-page="pagination.itemPerpage"

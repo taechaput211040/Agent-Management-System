@@ -490,7 +490,7 @@ export default {
           text: 'ถือสู้',
           value: 'shares',
           sortable: false,
-          width: '100px',
+          width: '120px',
           class: 'text-center',
           cellClass: 'text-center',
         },

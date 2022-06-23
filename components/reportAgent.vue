@@ -23,8 +23,8 @@
             :headers="headerCustom"
             :items="reportdata.docs"
             :server-items-length="pagination.rowsNumber"
-            :items-per-page.sync="pagination.rowsPerPage"
-            :page.sync="pagination.page"
+            :items-per-page.sync="paginationAgentbyshare.rowsPerPage"
+            :page.sync="paginationAgentbyshare.page"
             :options.sync="options"
             hide-default-footer
             :loading="isLoading"
@@ -32,7 +32,7 @@
           >
             <v-progress-linear v-show="progressBar" slot="progress" color="red" indeterminate></v-progress-linear>
             <template #[`item._id`]="{ item }">
-              <div class="text-center">
+              <div>
                 <span class="cursor-pointer user_pointer" @click="seniorrendering(item._id)">
                   {{ providerMap(item._id) || item._id }}
                 </span>
@@ -59,7 +59,7 @@
                   <v-chip label x-small color="purple" dark class="px-1">com</v-chip>
                   {{ numberFormat(item.memberCom) }}
                 </div>
-                <div class="grey--text">
+                <div :class="bgFunc(numberFormat(item.memberCom + item.memberWin))">
                   <v-chip label x-small color="black" dark class="px-1">W/L+com</v-chip>
                   {{ numberFormat(item.memberCom + item.memberWin) }}
                 </div>
@@ -75,7 +75,7 @@
                   <v-chip label x-small color="purple" dark class="px-1">com</v-chip>
                   {{ numberFormat(item.agentCom) }}
                 </div>
-                <div class="grey--text">
+                <div :class="bgFunc(numberFormat(item.agentCom + item.agentWin))">
                   <v-chip label x-small color="black" dark class="px-1">W/L+com</v-chip>
                   {{ numberFormat(item.agentCom + item.agentWin) }}
                 </div>
@@ -91,7 +91,7 @@
                   <v-chip label x-small color="purple" dark class="px-1">com</v-chip>
                   {{ numberFormat(item.seniorCom) }}
                 </div>
-                <div class="grey--text">
+                <div :class="bgFunc(numberFormat(item.seniorCom + item.seniorWin))">
                   <v-chip label x-small color="black" dark class="px-1">W/L+com</v-chip>
                   {{ numberFormat(item.seniorCom + item.seniorWin) }}
                 </div>
@@ -107,7 +107,7 @@
                   <v-chip label x-small color="purple" dark class="px-1">com</v-chip>
                   {{ numberFormat(item.shareCom) }}
                 </div>
-                <div class="grey--text">
+                <div :class="bgFunc(numberFormat(item.shareCom + item.shareWin))">
                   <v-chip label x-small color="black" dark class="px-1">W/L+com</v-chip>
                   {{ numberFormat(item.shareCom + item.shareWin) }}
                 </div>
@@ -127,7 +127,15 @@
                   <v-chip label x-small color="purple" dark class="px-1">com</v-chip>
                   {{ numberFormat(item.ownerCom + item.shareCom + item.smartCom) }}
                 </div>
-                <div class="grey--text">
+                <div
+                  :class="
+                    bgFunc(
+                      numberFormat(
+                        item.ownerCom + item.ownerWin + item.smartCom + item.smartWin + item.shareCom + item.shareWin
+                      )
+                    )
+                  "
+                >
                   <v-chip label x-small color="black" dark class="px-1">W/L+com</v-chip>
                   {{
                     numberFormat(
@@ -149,7 +157,22 @@
                   <v-chip label x-small color="purple" dark class="px-1">com</v-chip>
                   {{ numberFormat(item.ownerCom + item.shareCom + item.smartCom + item.seniorCom) }}
                 </div>
-                <div class="grey--text">
+                <div
+                  :class="
+                    bgFunc(
+                      numberFormat(
+                        item.ownerCom +
+                          item.ownerWin +
+                          item.smartCom +
+                          item.smartWin +
+                          item.shareCom +
+                          item.shareWin +
+                          item.seniorWin +
+                          item.seniorCom
+                      )
+                    )
+                  "
+                >
                   <v-chip label x-small color="black" dark class="px-1">W/L+com</v-chip>
                   {{
                     numberFormat(
@@ -175,7 +198,7 @@
                   <v-chip label x-small color="purple" dark class="px-1">com</v-chip>
                   {{ numberFormat(item.ownerCom) }}
                 </div>
-                <div class="grey--text">
+                <div :class="bgFunc(numberFormat(item.ownerCom + item.ownerWin))">
                   <v-chip label x-small color="black" dark class="px-1">W/L+com</v-chip>
                   {{ numberFormat(item.ownerCom + item.ownerWin) }}
                 </div>
@@ -192,13 +215,34 @@
                   <v-chip label x-small color="purple" dark class="px-1">com</v-chip>
                   {{ numberFormat(item.smartCom) }}
                 </div>
-                <div class="grey--text">
+                <div :class="bgFunc(numberFormat(item.smartCom + item.smartWin))">
                   <v-chip label x-small color="black" dark class="px-1">W/L+com</v-chip>
                   {{ numberFormat(item.smartCom + item.smartWin) }}
                 </div>
               </div>
             </template>
           </v-data-table>
+          <v-row align="baseline" class="ma-3">
+            <v-col cols="12" sm="2">
+              <v-select
+                dense
+                solo
+                v-model="paginationAgentbyshare.rowsPerPage"
+                hide-details="auto"
+                :items="pageSizes"
+                @change="handlePageSizeChangeAgent"
+                label="Items per Page"
+              ></v-select>
+            </v-col>
+            <v-col cols="12" sm="10">
+              <v-pagination
+                v-model="paginationAgentbyshare.page"
+                @input="handlePageChangeAgent(paginationAgentbyshare.page)"
+                :total-visible="7"
+                :length="Math.ceil(paginationAgentbyshare.rowsNumber / paginationAgentbyshare.rowsPerPage)"
+              ></v-pagination>
+            </v-col>
+          </v-row>
         </v-card>
       </template>
       <!-- v-if="isRoleLevel != 5" -->
@@ -547,6 +591,13 @@ export default {
         rowsPerPage: 15,
         rowsNumber: 0,
       },
+      paginationAgentbyshare: {
+        sortBy: 'desc',
+        descending: false,
+        page: 1,
+        rowsPerPage: 15,
+        rowsNumber: 0,
+      },
       reportdata: [],
       isArray: false,
       providerList: [],
@@ -556,60 +607,50 @@ export default {
         {
           text: 'Username',
           value: '_id',
-          width: '250px',
+          width: '200px',
+          sortable: false,
           cellClass: ' font-weight-bold',
         },
         {
           text: 'สมาชิก',
           value: 'memberWin',
-          sortable: true,
+          sortable: false,
           cellClass: 'text-center',
         },
         {
           text: 'เอเย่น',
           value: 'agentWin',
-          sortable: true,
+          sortable: false,
           cellClass: 'text-center',
         },
         {
           text: 'ซิเนียร์',
           value: 'seniorWin',
-          sortable: true,
+          sortable: false,
           cellClass: 'text-center',
         },
         {
           text: 'หุ้นส่วน',
           value: 'shareWin',
-          sortable: true,
+          sortable: false,
           cellClass: 'text-center',
         },
         {
           text: 'คอมปะนี',
           value: 'ownerWin',
-          sortable: true,
+          sortable: false,
           cellClass: 'text-center',
         },
         {
           text: 'SMART BET',
           value: 'smartWin',
-          sortable: true,
+          sortable: false,
           cellClass: 'text-center',
         },
       ],
     }
   },
-  watch: {
-    reportdata() {
-      this.progressBar = false
-    },
-    options: {
-      async handler() {
-        await this.onRequest({
-          pagination: this.pagination_render,
-        })
-      },
-    },
-  },
+  watch: {},
   computed: {
     headerCustom() {
       if (this.isRoleLevel === 4) {
@@ -690,6 +731,15 @@ export default {
         pagination: this.pagination_render,
       })
     },
+    handlePageChangeAgent(size) {
+      this.paginationAgentbyshare.page = size
+      this.getAgentlist()
+    },
+    handlePageSizeChangeAgent(size) {
+      this.paginationAgentbyshare.page = 1
+      this.paginationAgentbyshare.rowsPerPage = size
+      this.getAgentlist()
+    },
     async userendering(username) {
       if (this.isRoleLevel == 4) {
         this.$router.push(`${this.$route.fullPath}?username=${username}`)
@@ -726,9 +776,8 @@ export default {
 
     async onSearch() {
       this.progressBar = true
-      await this.onRequest({
-        pagination: this.pagination,
-      })
+      this.getAgentlist()
+      await this.onRequest()
     },
     getDateTime(date, time) {
       let dateFormat = 'YYYY-MM-DD'
@@ -766,18 +815,31 @@ export default {
         end: new Date(end).toISOString(),
       }
     },
-    async onRequest(props) {
+    async getAgentlist(props) {
       this.isLoading = true
       try {
         const parameters = this.getFilterParameter(props)
         const { data: agent } = await this.getAgentByShare({
           ...parameters,
-          page: this.pagination.page,
-          limit: this.pagination.rowsPerPage,
+          page: this.paginationAgentbyshare.page,
+          limit: this.paginationAgentbyshare.rowsPerPage,
           id: this.$route.query.share_user ? this.$route.query.share_user : undefined,
           senior_user: this.$route.query.senior_user ? this.$route.query.senior_user : undefined,
           role: this.isRoleLevel,
         })
+        this.reportdata = agent
+        this.paginationAgentbyshare.rowsNumber = agent.pageInfo.total
+        this.isLoading = false
+      } catch (error) {
+        console.log(error)
+        this.isLoading = false
+      }
+    },
+    async onRequest(props) {
+      this.isLoading = true
+      try {
+        const parameters = this.getFilterParameter(props)
+
         const { data: senior } = await this.getSeniorByShare({
           ...parameters,
           page: this.pagination.page,
@@ -787,8 +849,7 @@ export default {
           role: this.isRoleLevel,
         })
         this.reportsenior = senior
-        this.reportdata = agent
-        this.pagination.rowsNumber = senior.pageInfo.total ? senior.pageInfo.total : agent.pageInfo.total
+        this.pagination.rowsNumber = senior.pageInfo.total
         this.isLoading = false
       } catch (ex) {
         console.log(ex)

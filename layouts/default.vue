@@ -2,14 +2,21 @@
   <v-app>
     <v-app-bar clipped-left class="elevation-1" color="white" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title v-text="title" />
+
+      <img
+        src="https://smart-binary.cloud/storage/smartagent/logo_smartbet.png"
+        class="img_logo"
+        @click="$router.push('/')"
+      />
       <v-spacer />
-      <v-btn icon @click.prevent="$vuetify.theme.dark = !$vuetify.theme.dark">
-        <v-icon>{{ $vuetify.theme.dark ? 'mdi-brightness-4' : 'mdi-weather-night' }}</v-icon>
-      </v-btn>
-      <v-chip rounded outlined class="mx-1"
-        >{{ $store.state.account.credit | numberFormat }}<v-icon right>mdi-cash</v-icon></v-chip
-      >
+      <div class="d-none d-sm-block">
+        <v-btn icon @click.prevent="$vuetify.theme.dark = !$vuetify.theme.dark">
+          <v-icon>{{ $vuetify.theme.dark ? 'mdi-brightness-4' : 'mdi-weather-night' }}</v-icon>
+        </v-btn>
+        <v-chip rounded outlined class="mx-1"
+          >{{ $store.state.account.credit | numberFormat }}<v-icon right>mdi-cash</v-icon></v-chip
+        >
+      </div>
 
       <!-- <v-speed-dial direction="bottom left" transition="slide-y-transition">
         <template v-slot:activator>
@@ -59,6 +66,19 @@
       </v-menu>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" :clipped="clipped" app dark fixed>
+      <v-card class="d-block d-sm-none elevation-3 mx-3 mt-3">
+        <v-card-text>
+          <div style="justify-content: space-between; display: flex">
+            <v-chip rounded outlined class="ma-1">User : {{ $store.state.auth.username }}</v-chip>
+
+            <v-btn class="ma-1" icon @click.prevent="$vuetify.theme.dark = !$vuetify.theme.dark">
+              <v-icon class="mx-2">{{ $vuetify.theme.dark ? 'mdi-brightness-4' : 'mdi-weather-night' }}</v-icon>
+            </v-btn>
+          </div>
+
+          <v-chip rounded outlined class="ma-1">Credit : {{ $store.state.account.credit | numberFormat }}</v-chip>
+        </v-card-text>
+      </v-card>
       <v-list nav dense class="mt-5">
         <div v-for="(link, i) in navigationMenu" :key="i">
           <v-list-item
@@ -84,7 +104,7 @@
             ></v-badge>
           </v-list-item>
           <v-list-group
-            color="deep-purple lighten-2"
+            color="deep-purple lighten-2 "
             v-else
             :key="link.title"
             no-action
@@ -119,6 +139,14 @@
               ></v-badge>
             </v-list-item>
           </v-list-group>
+        </div>
+        <div class="pa-1">
+          <v-list-item @click="logout()" class="pa-0">
+            <v-list-item-icon>
+              <v-icon>mdi-logout</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Logout </v-list-item-title>
+          </v-list-item>
         </div>
       </v-list>
     </v-navigation-drawer>
@@ -243,7 +271,7 @@ export default {
               icon: 'mdi-chart-donut',
               text: 'Report By provider',
               to: '/report/byProvider',
-              status: 1,
+              status: 2,
             },
             {
               icon: 'mdi-chart-timeline-variant-shimmer',
@@ -385,6 +413,7 @@ export default {
     ...mapMutations('report', ['setdata_logout']),
     ...mapMutations('account', ['clear_account']),
     async logout() {
+      console.log('logout')
       try {
         let token = localStorage.getItem('key')
         if (token) {

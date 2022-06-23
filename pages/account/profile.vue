@@ -1,6 +1,6 @@
 <template>
   <v-flex>
-    <div v-if="!isLoading">
+    <div>
       <!-- <pre>{{ data }}</pre> -->
       <div>
         <h2>User Profile</h2>
@@ -34,19 +34,17 @@
         </div>
       </div>
     </div>
-
-    <div v-if="isLoading" class="text-center">
-      <v-progress-circular :size="50" color="primary" indeterminate></v-progress-circular>
-    </div>
+    <loading-page v-if="isLoading"></loading-page>
   </v-flex>
 </template>
 <script>
 import { mapActions } from 'vuex'
+import LoadingPage from '~/components/form/loadingPage.vue'
 import MarketshareTable from '~/components/market-share/MarketshareTable.vue'
 import ProviderShare from '~/components/market-share/ProviderShare.vue'
 import RevenueTable from '~/components/market-share/RevenueTable.vue'
 export default {
-  components: { RevenueTable, MarketshareTable, ProviderShare },
+  components: { RevenueTable, MarketshareTable, ProviderShare, LoadingPage },
   data() {
     return {
       search: '',

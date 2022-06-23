@@ -10,7 +10,7 @@
 
         <v-spacer></v-spacer>
         <div class="col-12 col-sm-4 col-md-3 py-2">
-          <v-text-field
+          <!-- <v-text-field
             v-model="search"
             label="seacrh"
             append-icon="mdi-magnify"
@@ -18,13 +18,15 @@
             solo
             rounded
             hide-details="auto"
-          ></v-text-field>
+          ></v-text-field> -->
         </div>
       </v-card-text>
       <v-card>
         <v-data-table
           :search="search"
-          :options.sync="options"
+          :page.sync="paginationProvider.page"
+          :items-per-page.sync="paginationProvider.rowsPerPage"
+          :server-items-length="paginationProvider.rowsNumber"
           :headers="headersProvider"
           hide-default-footer
           :items="rendering"
@@ -79,23 +81,24 @@
           </template>
         </v-data-table>
       </v-card>
-
       <v-row align="baseline" class="mt-3">
         <v-col cols="12" sm="2">
           <v-select
             outlined
+            @change="changePageSize"
             hide-details="auto "
             dense
-            v-model="options.itemsPerPage"
+            v-model="paginationProvider.rowsPerPage"
             :items="pageSizes"
             label="รายการต่อหน้า"
           ></v-select>
         </v-col>
         <v-col cols="12" sm="10">
           <v-pagination
-            v-model="options.page"
+            @input="pagechange(paginationProvider.page)"
+            v-model="paginationProvider.page"
             :total-visible="7"
-            :length="Math.ceil(rendering.length / options.itemsPerPage)"
+            :length="Math.ceil(paginationProvider.rowsNumber / paginationProvider.rowsPerPage)"
           ></v-pagination>
         </v-col>
       </v-row>
@@ -177,6 +180,15 @@ export default {
   },
 
   methods: {
+    changePageSize(size) {
+      this.paginationProvider.page = 1
+      this.paginationProvider.rowsPerPage = size
+      this.getRevenueListByuser()
+    },
+    pagechange(value) {
+      this.paginationProvider.page = value
+      this.getRevenueListByuser()
+    },
     async saveConfig(item) {
       let bodyConfig = {
         code: item.code,
@@ -236,8 +248,8 @@ export default {
     getParameterProvider() {
       let params = {
         username: this.username,
-        page: 1,
-        limit: 300,
+        page: this.paginationProvider.page,
+        limit: this.paginationProvider.rowsPerPage,
       }
       return params
     },
@@ -247,7 +259,7 @@ export default {
       try {
         let { data } = await this.getRevenueProviderByUser(parameters)
         this.rendering = data.result.items
-
+        this.paginationProvider.rowsNumber = data.result.count
         this.rendering = this.rendering.map((object) => {
           return { ...object, edit_status: false }
         })

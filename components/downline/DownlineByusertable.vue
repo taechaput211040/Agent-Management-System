@@ -140,7 +140,7 @@ export default {
         rowsNumber: 0,
       },
       items: ['Foo', 'Bar', 'Fizz', 'Buzz'],
-      customer_name: this.$store.state.auth.username,
+      customer_name: '',
       remaining_credit: this.$store.state.account.credit,
       history: [],
       open_history: false,
@@ -270,6 +270,7 @@ export default {
   // },
   mounted() {
     this.getDownlineData()
+    this.customer_name = this.$route.query.username
   },
   methods: {
     searchList() {
@@ -292,6 +293,7 @@ export default {
         form_path.push(item.username)
         sessionStorage.setItem(`userPrev`, JSON.stringify(form_path))
       }
+      this.customer_name = item.username
     },
     backFunction() {
       const form_path = JSON.parse(sessionStorage.getItem('userPrev'))
@@ -303,6 +305,7 @@ export default {
         console.log(form_path[form_path.length - 1], 'path')
         this.getDownlineData(prevUsers[prevUsers.length - 1])
         sessionStorage.setItem('userPrev', JSON.stringify(prevUsers))
+        this.customer_name = prevUsers[prevUsers.length - 1]
       }
       console.log(form_path)
     },

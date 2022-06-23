@@ -3,7 +3,7 @@
     <div class="row">
       <v-col cols="9">
         <h4>{{ title }}</h4>
-        <h3 :class="bgFunc(value)">{{ value !== NaN ? value : 0 }}</h3>
+        <h3 :class="bgFunc(value)">{{ value == NaN ? 0 : value }}</h3>
       </v-col>
       <v-col cols="3" class="pa-0" align-self="center"
         ><v-icon x-large v-if="icon">{{ icon }}</v-icon>
