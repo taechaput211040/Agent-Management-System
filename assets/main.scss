@@ -25,7 +25,6 @@ span {
   padding: 0px 5px !important;
 }
 
-
 @media only screen and (min-width: 992px) {
   // .v-main {
   //   padding: 64px 0px 56px 68px !important;
@@ -267,15 +266,28 @@ span {
 }
 
 .v-card {
-  box-shadow: 0 2px 10px 0 rgb(94 86 105 / 10%) !important; 
+  box-shadow: 0 2px 10px 0 rgb(94 86 105 / 10%) !important;
 }
-.user_pointer{
+.user_pointer {
   cursor: pointer;
 }
 
-.img_logo{
+.img_logo {
   max-width: 100%;
   width: 64px;
   height: auto;
   cursor: pointer;
+}
+.apexcharts-xaxis {
+  text {
+    font-family: inherit;
+    background: white;
+    color: #c7c7c7;
+    fill: #9b76e1;
+    font-size: 15px;
+    font-weight: bold;
+  }
+}
+.apexcharts-tooltip.apexcharts-theme-light{
+  color: black !important;
 }

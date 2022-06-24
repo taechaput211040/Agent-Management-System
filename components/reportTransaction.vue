@@ -381,7 +381,8 @@ export default {
           text: 'id',
           value: 'id',
           cellClass: 'font-weight-bold',
-          width: '280px',
+          width: '200px',
+          sortable: false,
         },
         {
           text: 'ชื่อเกม',
@@ -395,7 +396,7 @@ export default {
           value: 'betId',
           sortable: false,
           class: 'text-center',
-          width: '100px',
+          width: '150px',
         },
         {
           text: 'ค่ายเกม',

@@ -81,7 +81,7 @@ import VueApexCharts from 'vue-apexcharts'
 import { mapState, mapActions } from 'vuex'
 import LoadingPage from '../form/loadingPage.vue'
 export default {
-  components: { VueApexCharts,LoadingPage },
+  components: { VueApexCharts, LoadingPage },
   data() {
     return {
       isLoading: false,
@@ -114,7 +114,11 @@ export default {
         yaxis: {
           show: false,
         },
-
+        tooltip: {
+          style: {
+            color: 'white',
+          },
+        },
         fill: {
           type: 'solid',
           fillOpacity: 0.7,

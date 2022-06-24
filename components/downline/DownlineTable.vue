@@ -87,7 +87,7 @@
             <template #[`item.view`]="{ item }">
               <v-btn
                 class="mx-2"
-                :disabled="item.role === 'MEMBER'"
+                :disabled="item.role === 'MEMBER' || item.username == customer_name"
                 x-small
                 color="primary"
                 @click="viewDownline(item)"
@@ -99,7 +99,7 @@
               <v-btn
                 class="mx-2"
                 x-small
-                :disabled="item.role === 'MEMBER'"
+                 :disabled="item.role === 'MEMBER' || item.username == customer_name"
                 color="success"
                 @click="settingProvider(item)"
               >
