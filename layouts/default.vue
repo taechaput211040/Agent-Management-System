@@ -242,7 +242,7 @@ export default {
           title: 'Downline Management',
           to: '/downline/downlineManagement',
           icon: 'mdi-sitemap',
-          status: 1,
+          status: 2,
         },
         {
           title: 'Lotto Management',

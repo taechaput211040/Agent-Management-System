@@ -7,8 +7,10 @@
           <v-card-title class="py-3 mb-2">
             <v-avatar color="rgb(145 85 253 / 28%)" rounded size="49"
               ><v-icon x-large color="#9155fd">mdi-chart-timeline-variant</v-icon></v-avatar
-            ><v-spacer></v-spacer>
-            <h3>Total Summary</h3>
+            >
+            <h3 class="mx-2">: Current month</h3>
+            <v-spacer></v-spacer>
+            <h3>Summary</h3>
           </v-card-title>
           <v-divider></v-divider>
           <VueApexCharts
@@ -41,7 +43,7 @@
           <div class="col-12">
             <v-card class="rounded-lg">
               <v-card-title class="pa-4 font-weight-bold"
-                >Report Summary<v-spacer></v-spacer
+                >Report Summary : Current month<v-spacer></v-spacer
                 ><v-btn
                   small
                   text
@@ -171,7 +173,7 @@ export default {
       this.series[0].data = []
       let realtimeData = this.getSummarydata()
       for (let key in realtimeData) {
-        this.series[0].data.push({ x: key, y: realtimeData[key] < 0 ? realtimeData[key] * -1 : realtimeData[key] })
+        this.series[0].data.push({ x: key, y: realtimeData[key] < 0 ? realtimeData[key] : realtimeData[key] })
       }
       this.$refs.realtimeChart.updateSeries(this.series, false, true)
     },
