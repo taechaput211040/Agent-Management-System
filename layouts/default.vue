@@ -254,13 +254,13 @@ export default {
           title: 'Landing Page Management',
           to: '/landinpage',
           icon: 'mdi-page-layout-header',
-          status: 1,
+          status: 0,
         },
         {
           title: 'Member Page Management',
           to: '/mamberpage',
           icon: 'mdi-page-layout-body',
-          status: 1,
+          status: 0,
         },
         {
           title: 'Report',

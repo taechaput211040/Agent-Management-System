@@ -151,15 +151,15 @@
               <div class="pa-1 card-detail rounded-lg my-2 elevation-2">
                 <div class="cursor-pointer" :class="bgFunc(numberFormat(item.smartWin))">
                   <v-chip label x-small color="primary" dark class="px-1">W/L</v-chip>
-                  {{ numberFormat(item.smartWin) }}
+                  {{ numberFormat(item.smartWin + item.providerWin) }}
                 </div>
                 <div class="purple--text">
                   <v-chip label x-small color="purple" dark class="px-1">com</v-chip>
-                  {{ numberFormat(item.smartCom) }}
+                  {{ numberFormat(item.smartCom + item.providerCom) }}
                 </div>
-                <div :class="bgFunc(numberFormat(item.smartCom + item.smartWin))">
+                <div :class="bgFunc(numberFormat(item.smartCom + item.smartWin + item.providerWin + item.providerCom))">
                   <v-chip label x-small color="black" dark class="px-1">W/L+com</v-chip>
-                  {{ numberFormat(item.smartCom + item.smartWin) }}
+                  {{ numberFormat(item.smartCom + item.smartWin + item.providerWin + item.providerCom) }}
                 </div>
               </div>
             </template>
@@ -394,7 +394,7 @@ export default {
     },
     sumSmartbet() {
       let results = this.reportdata?.docs?.reduce((initVal, item) => {
-        return (initVal += item.smartWin + item.smartCom)
+        return (initVal += item.smartWin + item.smartCom + item.providerWin + item.providerCom)
       }, 0)
       return this.numberFormat(results)
     },

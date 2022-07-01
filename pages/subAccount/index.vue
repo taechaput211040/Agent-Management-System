@@ -233,8 +233,6 @@ export default {
         { displayName: 'Downline', menu: 'downline' },
         { displayName: 'Member', menu: 'member' },
         { displayName: 'Lotto Management', menu: 'lotto-management' },
-        { displayName: 'Landing Management', menu: 'landing-management' },
-        { displayName: 'Member Page Management', menu: 'member-management' },
         { displayName: 'Report', menu: 'report' },
         { displayName: 'Check Outstanding', menu: 'check-outstanding' },
         { displayName: 'Staff Logs', menu: 'staff-log' },

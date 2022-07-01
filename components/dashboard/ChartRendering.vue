@@ -232,7 +232,7 @@ export default {
     },
     sumSmartbet() {
       let results = this.dashboardData?.docs?.reduce((initVal, item) => {
-        return (initVal += item.smartWin + item.smartCom)
+        return (initVal += item.smartWin + item.smartCom + item.providerWin + item.providerCom)
       }, 0)
       return { smart: parseFloat(results).toFixed(2) }
     },

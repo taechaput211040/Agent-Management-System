@@ -10,7 +10,15 @@
           <div class="mx-auto col-sm-8 col-md-6 col-lg-12 col-12">
             <div class="elevation-0 pa-sm-6 white--text">
               <v-form>
-                <v-card-title class="justify-center white--text"><h3>LOGIN : Smart Agent</h3> </v-card-title>
+                <!-- <div class="justify-center text-center">
+                  <img
+                    src="https://smart-binary.cloud/storage/b2kbet/logo/logo_b2kbet_silver.png"
+                    class="img_logo"
+                                     />
+                </div> -->
+                <v-card-title class="justify-center white--text">
+                  <h3>LOGIN : Smart Agent</h3>
+                </v-card-title>
                 <v-text-field
                   dark
                   color="purple "
@@ -56,7 +64,7 @@ export default {
       isLoading: false,
       username: '',
       password: '',
-      authendata: {}, 
+      authendata: {},
     }
   },
   async beforeMount() {

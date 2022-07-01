@@ -9,8 +9,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - smart-office',
-    title: 'smart-office',
+    title: 'Agent Back Office',
     htmlAttrs: {
       lang: 'en',
     },
@@ -32,13 +31,7 @@ export default {
         content: 'telephone=no',
       },
     ],
-    link: [
-      {
-        rel: 'icon',
-        type: 'image/x-icon',
-        href: '/favicon.ico',
-      },
-    ],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -100,7 +93,7 @@ export default {
   //   },
   // },
   server: {
-    port: process.env.APP_PORT || 3000, // default: 3000
+    port: process.env.APP_PORT || 3005, // default: 3000
   },
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
