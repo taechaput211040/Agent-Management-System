@@ -5,7 +5,7 @@
 
       <img
         src="https://smart-binary.cloud/storage/smartagent/logo_smartbet.png"
-        class="img_logo"
+        class="img_logo_bar"
         @click="$router.push('/')"
       />
       <v-spacer />
@@ -245,6 +245,12 @@ export default {
           status: 2,
         },
         {
+          title: 'Member Management',
+          to: '/member',
+          icon: 'mdi-human-male-male',
+          status: 1,
+        },
+        {
           title: 'Lotto Management',
           to: '/lotto',
           icon: 'mdi-slot-machine',
@@ -302,9 +308,12 @@ export default {
   },
   computed: {
     ...mapGetters('auth', ['token']),
+    ...mapState('auth', ['role']),
     ...mapState('account', ['profile']),
     navigationMenu() {
-      return this.items.filter((x) => x.status != 0)
+      let menu = this.items.filter((x) => x.status != 0)
+      if (this.role === 'SENIOR' || this.role === 'AGENT') return menu
+      return menu.filter((x) => x.title != 'Member Management')
     },
   },
   async fetch() {

@@ -12,6 +12,7 @@ import group from './group'
 import report from './report'
 import marketshare from './marketshare'
 import downline from './downline'
+import member from './member'
 Vue.use(VueSweetalert2)
 Vue.use(Vuex)
 Vue.use(ElementUI, {
@@ -28,6 +29,7 @@ export default function (/* { ssrContext } */) {
       report,
       marketshare,
       downline,
+      member,
     },
 
     // enable strict mode (adds overhead!)

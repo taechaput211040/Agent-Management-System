@@ -1,86 +1,102 @@
 <template>
-  <v-flex>
-    <div v-if="!isLoading">
+  <div>
+    <div>
       <v-row>
         <v-container>
-          <h1 class="text-center mt-2">Member Management</h1>
-
-          <v-card class="pa-6">
-            <v-row class="select-item py-2">
-              <h2 class="px-4">รายงานผลประกอบการ</h2>
-            </v-row>
-            <v-divider class="my-3"></v-divider>
-            <v-row class="select-item py-2">
-              <v-col md="4" cols="12"> <h4 class="px-4">Company Name : sasadsad</h4> </v-col
-              ><v-divider vertical></v-divider>
-              <v-col md="4" cols="12"> <h4 class="px-4">Owner Name : asdsadsa</h4> </v-col
-              ><v-divider vertical></v-divider>
-              <v-col md="4" cols="12">
-                <h4 class="px-4">Phone : 0842002222</h4>
-              </v-col>
-            </v-row>
-            <v-divider class="my-3"></v-divider>
-          </v-card>
+          <h2 class="mt-2">Member Management</h2>
 
           <v-card class="pa-2 mt-5 mb-2 classtable">
-            <v-row class="ma-4">
-              <v-col cols="8"> <h2>Member Management</h2></v-col>
-              <v-col cols="4">
-                <v-row align="baseline">
-                  <v-col cols="8"
-                    ><v-text-field v-model="searchdata" solo-inverted label="ค้นหาอย่างน้อย3ตัวอักษร" required
-                      ><v-btn slot="append" color="success" fab dark x-small>
-                        <v-icon>mdi-magnify</v-icon></v-btn
-                      ></v-text-field
-                    ></v-col
-                  >
-                  <v-col cols="4">
-                    <v-btn depressed color="primary" @click="add()"> <v-icon>mdi-plus</v-icon>Add Member</v-btn></v-col
-                  >
-                </v-row>
-              </v-col>
-            </v-row>
+            <div class="d-sm-flex d-block align-baseline pa-2">
+              <v-btn depressed color="primary" @click="add()"> <v-icon>mdi-plus</v-icon>Add Member</v-btn>
+              <v-spacer></v-spacer>
+              <div class="col-12 col-sm-4 col-md-4 pa-0 my-1">
+                <v-text-field
+                  v-model="searchdata"
+                  hide-details="auto"
+                  dense
+                  solo-inverted
+                  label="ค้นหาอย่างน้อย3ตัวอักษร"
+                  required
+                  ><v-btn @click="searchbyuser()" slot="append" color="success" fab dark x-small>
+                    <v-icon>mdi-magnify</v-icon></v-btn
+                  ></v-text-field
+                >
+              </div>
+            </div>
 
-            <v-data-table class="  ma-4" :headers="headers" :items="exampleitem" hide-default-footer>
+            <v-data-table
+              class="ma-4"
+              :server-items-length="pagination.rowsNumber"
+              :items-per-page.sync="pagination.rowsPerPage"
+              :page.sync="pagination.page"
+              :headers="headers"
+              :items="itemList"
+              hide-default-footer
+            >
               <template #[`item.no`]="{ index }">
-                {{ index + 1 }}
+                {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
               </template>
-              <template #[`item.credit`]="{ item, index }">
-                <span v-if="show == true">{{ item.credit }}</span>
-                <v-btn depressed color="warning" elevation="2" small @click="showcredit(item.credit, index)"
+              <template #[`item.credit`]="{ item }">
+                {{ item.creditBalance }}
+                <v-btn color="warning" :loading="item.loading" elevation="2" small @click="getBalance(item)"
                   >ตรวจสอบเครดิต</v-btn
                 >
               </template>
               <template #[`item.edit`]="{ item }">
-                <v-btn class="mx-2" fab dark x-small color="success" @click="hanClickCredit(item, false)">
-                  <v-icon dark> mdi-plus </v-icon> </v-btn
-                ><v-btn class="mx-2" fab dark x-small color="error" @click="hanClickCredit(item, true)">
-                  <v-icon dark> mdi-minus </v-icon>
-                </v-btn>
+                <div class="d-flex justify-center">
+                  <v-btn class="mx-2" fab dark x-small color="success" @click="hanClickCredit(item, false)">
+                    <v-icon dark> mdi-plus </v-icon> </v-btn
+                  ><v-btn class="mx-2" fab dark x-small color="error" @click="hanClickCredit(item, true)">
+                    <v-icon dark> mdi-minus </v-icon>
+                  </v-btn>
+                </div>
               </template>
               <template #[`item.log`]="{ item }">
                 <v-btn class="mx-2" fab dark x-small color="teal" @click="showlog(item)">
                   <v-icon dark> mdi-format-list-bulleted-square </v-icon>
                 </v-btn>
               </template>
-              <template #[`item.action`]>
-                <v-btn class="mx-2" fab dark x-small color="purple" @click="modal_add = true">
-                  <v-icon dark> mdi-pencil </v-icon>
-                </v-btn>
-                <v-btn class="mx-2" fab dark x-small color="blue-grey">
-                  <v-icon dark> mdi-key </v-icon>
-                </v-btn>
+              <template #[`item.action`]="{ item }">
+                <div class="d-flex justify-center">
+                  <v-btn class="mx-2" fab dark x-small color="purple" @click="openDlUpdate(item)">
+                    <v-icon dark> mdi-pencil </v-icon>
+                  </v-btn>
+                  <v-btn class="mx-2" fab dark x-small color="warning" @click="openChangePassDl(item.id)">
+                    <v-icon dark> mdi-lock-reset </v-icon>
+                  </v-btn>
+                  <v-btn class="mx-2" fab dark x-small color="blue-grey" @click="lockAccount(item)">
+                    <v-icon dark> mdi-lock </v-icon>
+                  </v-btn>
+                </div>
               </template>
               <template #[`item.status`]="{ item }">
-                <v-switch
-                  v-model="item.status"
-                  :false-value="0"
-                  :true-value="1"
-                  @click="addstatus(item.status)"
-                  flat
-                ></v-switch>
-              </template>
-            </v-data-table>
+                <v-chip color="success" small v-if="item.status == 1"
+                  ><v-icon left>mdi-circle-medium</v-icon> on</v-chip
+                >
+                <v-chip small color="success" v-else><v-icon left>mdi-circle-medium</v-icon>off</v-chip></template
+              ></v-data-table
+            >
+            <v-row align="baseline" class="ma-3">
+              <v-col cols="12" sm="2">
+                <v-select
+                  dense
+                  hide-details="auto"
+                  solo
+                  v-model="pagination.rowsPerPage"
+                  :items="pageSizes"
+                  @change="handlePageSizeChange"
+                  label="Items per Page"
+                ></v-select>
+              </v-col>
+              <v-col cols="12" sm="10">
+                <v-pagination
+                  @input="handlePageChange(pagination.page)"
+                  v-model="pagination.page"
+                  :total-visible="7"
+                  :length="Math.ceil(pagination.rowsNumber / pagination.rowsPerPage)"
+                ></v-pagination>
+              </v-col>
+            </v-row>
             <v-dialog v-model="modalCredit" persistent max-width="400">
               <v-card class="pa-5">
                 {{ this.formCredit.isMinus ? 'ลบ' : 'เติม' }} Credit
@@ -93,8 +109,21 @@
                 ></v-text-field>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="success" depressed @click="handlcCloseCreditForm"> เติมเงิน </v-btn>
+                  <v-btn color="success" depressed @click="submitTransaction" :loading="transactionBtn">
+                    {{ this.formCredit.isMinus ? 'ลบ' : 'เติม' }}
+                  </v-btn>
                   <v-btn color="error" depressed @click="handlcCloseCreditForm"> ยกเลิก </v-btn
+                  ><v-spacer></v-spacer> </v-card-actions
+              ></v-card>
+            </v-dialog>
+            <v-dialog v-model="changepassDl" persistent max-width="400">
+              <v-card class="pa-5">
+                เปลี่ยนรหัสผ่าน
+                <v-text-field type="password" v-model="formChangePassword.password" autofocus></v-text-field>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="success" depressed @click="changePassword()"> เปลี่ยนรหัสผ่าน </v-btn>
+                  <v-btn color="error" depressed @click="changepassDl = false"> ยกเลิก </v-btn
                   ><v-spacer></v-spacer> </v-card-actions
               ></v-card>
             </v-dialog>
@@ -110,77 +139,190 @@
             ><v-btn fab icon x-small @click="open_history = false"><v-icon>mdi-close-thick</v-icon></v-btn>
           </v-card-title>
         </v-card>
-        <v-data-table class="  ma-2" :headers="headersHistory" hide-default-footer></v-data-table
+        <v-data-table class="ma-2" :headers="headersHistory" hide-default-footer></v-data-table
       ></v-card>
     </v-dialog>
-    <v-dialog full-width v-model="modal_add" persistent>
+    <v-dialog width="800" v-model="modal_add" persistent>
       <v-card class="pa-4">
-        <v-form ref="form" v-model="valid">
-          <v-text-field label="Role" filled disabled></v-text-field>
-          <v-text-field label="Owner" filled disabled></v-text-field>
-          <v-text-field label="Name" dense outlined></v-text-field>
-          <v-text-field label="Credit" type="number" dense outlined></v-text-field>
-          <v-text-field label="Username" dense outlined></v-text-field>
-          <v-text-field label="Password" dense outlined></v-text-field>
-          <v-text-field label="Confirm" dense outlined></v-text-field>
+        <h2 class="text-center my-2">Add Member</h2>
+        <v-form ref="form">
+          <v-text-field
+            v-model="formRegister.name"
+            :rules="[(v) => !!v || 'กรุณากรอกชื่อ']"
+            label="Name"
+            dense
+            outlined
+          ></v-text-field>
+          <v-text-field
+            v-model="formRegister.lastname"
+            :rules="[(v) => !!v || 'กรุณากรอกนามสกุล']"
+            label="lastname"
+            dense
+            outlined
+          ></v-text-field>
+          <v-text-field
+            v-model="formRegister.username"
+            :rules="[
+              (v) => !!v || 'กรุณากรอก username',
+              (v) => (v && v.length >= 8) || 'กรุณากรอกชื่ออย่างน้อย 8 ตัวอักษร',
+            ]"
+            label="Username"
+            dense
+            outlined
+          ></v-text-field>
+          <v-text-field
+            v-model="formRegister.password"
+            label="Password"
+            type="password"
+            :rules="[
+              (v) => !!v || 'กรุณากรอก password',
+              (v) => (v && v.length >= 8) || 'กรุณากรอก password อย่างน้อย 8 ตัวอักษร',
+            ]"
+            dense
+            outlined
+          ></v-text-field>
+          <v-text-field
+            :rules="[
+              (v) => !!v || 'กรุณากรอกเบอร์มือถือ',
+              (v) => (v && v.length >= 10 && v.length < 16) || 'กรุณากรอก กรุณากรอกเบอร์มือถือ 10 ถึง 15 ตัว',
+            ]"
+            v-model="formRegister.phone"
+            label="phone number"
+            dense
+            outlined
+          ></v-text-field>
+          <v-autocomplete
+            :rules="[(v) => !!v || 'กรุณาเลือกธนาคาร']"
+            v-model="formRegister.bankName"
+            label="bank"
+            :items="bankList"
+            dense
+            outlined
+          ></v-autocomplete>
+          <v-text-field
+            :rules="[
+              (v) => !!v || 'กรุณากรอกเลขบัญชีธนาคาร',
+              (v) => (v && v.length >= 10 && v.length < 13) || 'กรุณากรอกเลขบัญชีธนาคาร 10 ถึง 13 ตัว',
+            ]"
+            v-model="formRegister.bankAcc"
+            label="bank number"
+            dense
+            :disabled="!formRegister.bank"
+            outlined
+          ></v-text-field>
+          <v-text-field v-model="formRegister.recomander" label="recomander" dense outlined></v-text-field>
         </v-form>
-
-        <v-card elevation="2">
-          <h4 class="text-center py-2">เลือกค่ายเกม</h4>
-          <div class="row mb-5 px-2">
-            <div class="col-2 p-1">
-              <div class="card_game">
-                <v-checkbox v-model="selectedGame" label="John" value="John"></v-checkbox>
-                <el-input-number controls-position="right" :min="0" :max="10"></el-input-number>
-              </div>
-            </div>
-            <div class="col-2 p-1">
-              <div class="card_game">
-                <v-checkbox v-model="selectedGame" label="John" value="John"></v-checkbox>
-                <el-input-number controls-position="right" :min="0" :max="10"></el-input-number>
-              </div>
-            </div>
-          </div>
-        </v-card>
 
         <v-card-actions align="right">
           <v-spacer></v-spacer>
-          <v-btn push rounded color="success">Submit </v-btn>
+          <v-btn push rounded color="success" :loading="btn_loadingUpdate" @click="submitRegister()">Submit </v-btn>
           <v-btn push rounded color="error" @click="modal_add = false">Cancel</v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog width="800" v-model="modal_edit" persistent>
+      <v-card class="pa-4">
+        <h2 class="text-center my-2">Edit Member</h2>
+        <v-form ref="formEdit">
+          <v-text-field
+            v-model="formEdit.name"
+            :rules="[(v) => !!v || 'กรุณากรอกชื่อ']"
+            label="Name"
+            dense
+            outlined
+          ></v-text-field>
+          <v-text-field
+            v-model="formEdit.lastname"
+            :rules="[(v) => !!v || 'กรุณากรอกนามสกุล']"
+            label="lastname"
+            dense
+            outlined
+          ></v-text-field>
+          <v-text-field v-model="formEdit.username" disabled label="Username" dense outlined></v-text-field>
+          <v-text-field
+            :rules="[
+              (v) => !!v || 'กรุณากรอกเบอร์มือถือ',
+              (v) => (v && v.length >= 10 && v.length < 16) || 'กรุณากรอก กรุณากรอกเบอร์มือถือ 10 ถึง 15 ตัว',
+            ]"
+            v-model="formEdit.phone"
+            label="phone number"
+            dense
+            outlined
+          ></v-text-field>
+          <v-autocomplete
+            :rules="[(v) => !!v || 'กรุณาเลือกธนาคาร']"
+            v-model="formEdit.bankName"
+            label="bank"
+            :items="bankList"
+            dense
+            outlined
+          ></v-autocomplete>
+          <v-text-field
+            :rules="[
+              (v) => !!v || 'กรุณากรอกเบอร์มือถือ',
+              (v) => (v && v.length >= 10 && v.length < 13) || 'กรุณากรอกเลขบัญชีธนาคาร 10 ถึง 13 ตัว',
+            ]"
+            v-model="formEdit.bankAcc"
+            label="bank number"
+            dense
+            outlined
+          ></v-text-field>
+          <v-text-field v-model="formEdit.recomander" label="recomander" dense outlined></v-text-field>
+        </v-form>
 
-    <div v-if="isLoading" class="text-center">
-      <v-progress-circular :size="50" color="primary" indeterminate></v-progress-circular>
-    </div>
-  </v-flex>
+        <v-card-actions align="right">
+          <v-spacer></v-spacer>
+          <v-btn push rounded :loading="btn_loadingUpdate" color="success" @click="submitUpdate()">Update </v-btn>
+          <v-btn push rounded color="error" @click="modal_edit = false">Cancel</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <loading-page v-if="isLoading"></loading-page>
+  </div>
 </template>
 <script>
+import { mapActions, mapGetters, mapState } from 'vuex'
+import loadingPage from '~/components/form/loadingPage.vue'
 export default {
+  components: { loadingPage },
   data() {
     return {
+      btn_loadingUpdate: false,
+      modal_edit: false,
+      transactionBtn: false,
+      loadingBtn: false,
+      changepassDl: false,
+      formChangePassword: {
+        password: '',
+      },
+      formEdit: {},
+      pageSizes: [5, 10, 15, 25],
+      pagination: {
+        page: 1,
+        rowsPerPage: 15,
+        rowsNumber: 0,
+      },
+      search: null,
+      bankList: [],
       history: [],
       open_history: false,
       selectedGame: '',
       searchdata: '',
       modal_add: false,
-      form_member: {
-        role: '',
-        owner: '',
-        name: '',
-        credit: null,
+      formRegister: {
         username: '',
         password: '',
-        confrim: '',
-        company: '',
-        game_member: [],
-        domain: '',
-        parent: '',
+        phone: '',
+        bankName: null,
+        bankAcc: '',
+        recomander: '',
+        name: '',
+        lastname: '',
       },
       formCredit: {
-        number: null,
+        number: 0,
         targetUser: null,
         isMinus: false,
       },
@@ -194,24 +336,23 @@ export default {
           text: 'No.',
           align: 'center',
           value: 'no',
-          divider: true,
         },
         {
           text: 'Deposit',
           value: 'credit_type_display',
-          divider: true,
+
           sortable: false,
         },
         {
           text: 'Withdrawal',
           value: 'credit_type_display',
-          divider: true,
+
           sortable: false,
         },
         {
           text: 'Date/Time',
           value: 'datetime_transaction',
-          divider: true,
+
           sortable: false,
         },
       ],
@@ -221,16 +362,14 @@ export default {
           align: 'center',
           value: 'no',
           class: 'col-1',
-          divider: true,
+          sortable: false,
         },
-        { text: 'Role', value: 'role', divider: true },
-        { text: 'Owner', value: 'owner', divider: true },
-        { text: 'Name', value: 'name', divider: true },
-        { text: 'Username', value: 'username', divider: true },
+        { text: 'Owner', value: 'company', sortable: false },
+        { text: 'Name', value: 'name', sortable: false },
+        { text: 'Username', value: 'username', sortable: false },
         {
           text: 'Credit',
           value: 'credit',
-          divider: true,
           align: 'center',
           sortable: false,
           class: 'col-1',
@@ -238,7 +377,6 @@ export default {
         {
           text: '+ / -',
           value: 'edit',
-          divider: true,
           align: 'center',
           class: 'col-1',
           sortable: false,
@@ -246,21 +384,19 @@ export default {
         {
           text: 'Log',
           value: 'log',
-          divider: true,
           align: 'center',
           sortable: false,
         },
-        { text: 'Phone', value: 'phone', divider: true },
-        { text: 'Status', value: 'status', align: 'center', divider: true },
+        { text: 'Phone', value: 'phone', sortable: false },
+        { text: 'Status', value: 'status', sortable: false },
         {
           text: 'Action',
           value: 'action',
-          divider: true,
           align: 'center',
-
           sortable: false,
         },
       ],
+      itemList: [],
       exampleitem: [
         {
           role: 'เอเย่น',
@@ -283,7 +419,239 @@ export default {
       ],
     }
   },
+  async beforeMount() {
+    await this.getBank()
+    await this.getMember()
+  },
+  computed: {
+    ...mapState('account', ['profile']),
+    ...mapState('auth', ['username']),
+  },
   methods: {
+    ...mapActions('member', [
+      'getMemberList',
+      'createMember',
+      'creditBalance',
+      'topUpCredit',
+      'searchByUsername',
+      'editMember',
+    ]),
+    manageForm() {
+      this.formRegister = {
+        username: '',
+        password: '',
+        phone: '',
+        bank: null,
+        bankNo: '',
+        recomander: '',
+        name: '',
+        lastname: '',
+      }
+    },
+    getParameter() {
+      let param = {
+        company: this.profile.comPrefix ? this.profile.comPrefix : undefined,
+        agent: this.profile.agentPrefix ? this.profile.agentPrefix : undefined,
+        search: this.search ? this.search : undefined,
+        page: this.pagination.page,
+        take: this.pagination.rowsPerPage,
+      }
+      return param
+    },
+    async getBalance(item) {
+      item.loading = true
+      try {
+        let { data } = await this.creditBalance(item.username)
+        item.creditBalance = data.credit
+      } catch (error) {
+        console.log(error)
+      }
+      item.loading = false
+    },
+    async getMember() {
+      this.isLoading = true
+      let parameters = this.getParameter()
+      try {
+        let { data } = await this.getMemberList(parameters)
+        this.itemList = data.data
+        this.itemList.forEach((item) => ((item.creditBalance = null), (item.loading = false)))
+        console.log(this.itemList)
+        this.pagination.rowsNumber = data.meta.itemCount
+      } catch (error) {
+        console.log(error)
+      }
+      this.isLoading = false
+    },
+    async handlePageSizeChange(size) {
+      this.pagination.page = 1
+      this.pagination.rowsPerPage = size
+      this.getMember()
+    },
+    async handlePageChange(size) {
+      this.pagination.page = size
+      this.getMember()
+    },
+    async submitTransaction() {
+      this.transactionBtn = true
+      let body = {
+        username: this.formCredit.targetUser,
+        amount: this.formCredit.number,
+      }
+      let method = ''
+      try {
+        if (!this.formCredit.isMinus) {
+          method = 'deposit'
+        } else {
+          method = 'withdraw'
+        }
+        body = {
+          ...body,
+          method,
+        }
+        await this.topUpCredit(body)
+        this.transactionBtn = false
+        this.handlcCloseCreditForm()
+      } catch (error) {
+        console.log(error)
+        this.transactionBtn = false
+      }
+    },
+    async openDlUpdate(item) {
+      this.formEdit = Object.assign({}, item)
+      this.modal_edit = true
+    },
+    async submitUpdate() {
+      let body = {
+        ...this.formEdit,
+        operator: this.username,
+      }
+      if (this.$refs.formEdit.validate()) {
+        this.$swal({
+          title: 'Are you sure you want to register downline?',
+          icon: 'warning',
+          showCancelButton: true,
+          allowOutsideClick: false,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirm',
+          cancelButtonText: 'Cancel',
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            this.btn_loadingUpdate = true
+            // console.log(this.formCreate)
+            try {
+              await this.editMember(body)
+              this.$swal({
+                icon: 'success',
+                title: 'Registered Success',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                timer: 1500,
+              }).then(async (result) => {
+                if (result) {
+                  this.modal_edit = false
+                  this.btn_loadingUpdate = false
+                  await this.getMember()
+                }
+              })
+            } catch (error) {
+              console.log(error)
+              this.modal_edit = false
+            }
+          }
+        })
+      }
+    },
+    lockAccount(item) {
+      let body = {
+        id: item.id,
+        status: !item.status,
+      }
+      this.$swal({
+        title: 'Are you sure you want to Lock Member?',
+        icon: 'warning',
+        showCancelButton: true,
+        allowOutsideClick: false,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          // console.log(this.formCreate)
+          try {
+            await this.editMember(body)
+            this.$swal({
+              icon: 'success',
+              title: 'Lock Success',
+              allowOutsideClick: false,
+              showConfirmButton: false,
+              timer: 1500,
+            }).then(async (result) => {
+              if (result) {
+                await this.getMember()
+              }
+            })
+          } catch (error) {
+            console.log(error)
+          }
+        }
+      })
+    },
+    async submitRegister() {
+      let body = {
+        ...this.formRegister,
+        operator: this.username,
+      }
+      if (this.$refs.form.validate()) {
+        this.$swal({
+          title: 'Are you sure you want to register Member?',
+          icon: 'warning',
+          showCancelButton: true,
+          allowOutsideClick: false,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirm',
+          cancelButtonText: 'Cancel',
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            this.btn_loadingUpdate = true
+            // console.log(this.formCreate)
+            try {
+              await this.createMember(body)
+              this.$swal({
+                icon: 'success',
+                title: 'Registered Success',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                timer: 1500,
+              }).then(async (result) => {
+                if (result) {
+                  this.manageForm()
+                  this.modal_edit = false
+                  await this.getMember()
+                }
+              })
+            } catch (error) {
+              this.$swal({
+                icon: 'error',
+                title: `${error.response.data.message}`,
+                showConfirmButton: false,
+                timer: 1500,
+              })
+            }
+            this.btn_loadingUpdate = false
+          }
+        })
+      }
+    },
+    async searchbyuser() {
+      await this.searchByUsername(this.searchdata)
+    },
+    async getBank() {
+      let { data: bank } = await this.$axios.get('bank.json')
+      this.bankList = bank
+    },
     showlog(dataHistory) {
       this.open_history = true
       this.history = dataHistory
@@ -294,17 +662,33 @@ export default {
     addstatus(value) {
       console.log(value)
     },
-    async showcredit(credit, i) {
-      this.show = true
-    },
     hanClickCredit(data, isMinus) {
       this.formCredit.isMinus = isMinus
-      this.targetUser = data
+      this.formCredit.targetUser = data.username
       this.modalCredit = true
+    },
+    closedchangePassword() {
+      this.formChangePassword = {
+        id: null,
+        password: '',
+      }
+    },
+    async changePassword() {
+      try {
+        await this.editMember(this.formChangePassword)
+        this.closedchangePassword = false
+      } catch (error) {
+        this.closedchangePassword = false
+        console.log(error)
+      }
+    },
+    openChangePassDl(id) {
+      this.changepassDl = true
+      this.formChangePassword.id = id
     },
     async handlcCloseCreditForm() {
       this.formCredit = {
-        number: null,
+        number: 0,
         targetUser: null,
         isMinus: false,
       }
