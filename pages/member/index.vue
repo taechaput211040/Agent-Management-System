@@ -4,7 +4,6 @@
       <v-row>
         <v-container>
           <h2 class="mt-2">Member Management</h2>
-
           <v-card class="pa-2 mt-5 mb-2 classtable">
             <div class="d-sm-flex d-block align-baseline pa-2">
               <v-btn depressed color="primary" @click="add()"> <v-icon>mdi-plus</v-icon>Add Member</v-btn>
@@ -17,13 +16,13 @@
                   solo-inverted
                   label="ค้นหาอย่างน้อย3ตัวอักษร"
                   required
-                  ><v-btn @click="searchbyuser()" slot="append" color="success" fab dark x-small>
+                  ><v-btn @click="checkRendering()" slot="append" color="success" fab dark x-small>
                     <v-icon>mdi-magnify</v-icon></v-btn
                   ></v-text-field
                 >
               </div>
             </div>
-
+            {{ pagination }}
             <v-data-table
               class="ma-4"
               :server-items-length="pagination.rowsNumber"
@@ -38,7 +37,7 @@
               </template>
               <template #[`item.credit`]="{ item }">
                 {{ item.creditBalance }}
-                <v-btn color="warning" :loading="item.loading" elevation="2" small @click="getBalance(item)"
+                <v-btn color="warning" :loading="loadingBtn" elevation="2" small @click="getBalance(item)"
                   >ตรวจสอบเครดิต</v-btn
                 >
               </template>
@@ -64,8 +63,11 @@
                   <v-btn class="mx-2" fab dark x-small color="warning" @click="openChangePassDl(item.id)">
                     <v-icon dark> mdi-lock-reset </v-icon>
                   </v-btn>
-                  <v-btn class="mx-2" fab dark x-small color="blue-grey" @click="lockAccount(item)">
+                  <v-btn class="mx-2" v-if="item.status" fab dark x-small color="blue-grey" @click="lockAccount(item)">
                     <v-icon dark> mdi-lock </v-icon>
+                  </v-btn>
+                  <v-btn class="mx-2" v-else fab dark x-small color="success" @click="lockAccount(item)">
+                    <v-icon dark> mdi-lock-open </v-icon>
                   </v-btn>
                 </div>
               </template>
@@ -73,7 +75,7 @@
                 <v-chip color="success" small v-if="item.status == 1"
                   ><v-icon left>mdi-circle-medium</v-icon> on</v-chip
                 >
-                <v-chip small color="success" v-else><v-icon left>mdi-circle-medium</v-icon>off</v-chip></template
+                <v-chip small color="error" v-else><v-icon left>mdi-circle-medium</v-icon>off</v-chip></template
               ></v-data-table
             >
             <v-row align="baseline" class="ma-3">
@@ -207,7 +209,7 @@
             v-model="formRegister.bankAcc"
             label="bank number"
             dense
-            :disabled="!formRegister.bank"
+            :disabled="!formRegister.bankName"
             outlined
           ></v-text-field>
           <v-text-field v-model="formRegister.recomander" label="recomander" dense outlined></v-text-field>
@@ -421,7 +423,7 @@ export default {
   },
   async beforeMount() {
     await this.getBank()
-    await this.getMember()
+    await this.checkRendering()
   },
   computed: {
     ...mapState('account', ['profile']),
@@ -435,6 +437,7 @@ export default {
       'topUpCredit',
       'searchByUsername',
       'editMember',
+      'lockstatus',
     ]),
     manageForm() {
       this.formRegister = {
@@ -459,14 +462,14 @@ export default {
       return param
     },
     async getBalance(item) {
-      item.loading = true
+      this.loadingBtn = true
       try {
         let { data } = await this.creditBalance(item.username)
         item.creditBalance = data.credit
       } catch (error) {
         console.log(error)
       }
-      item.loading = false
+      this.loadingBtn = false
     },
     async getMember() {
       this.isLoading = true
@@ -485,11 +488,11 @@ export default {
     async handlePageSizeChange(size) {
       this.pagination.page = 1
       this.pagination.rowsPerPage = size
-      this.getMember()
+      this.checkRendering()
     },
     async handlePageChange(size) {
       this.pagination.page = size
-      this.getMember()
+      this.checkRendering()
     },
     async submitTransaction() {
       this.transactionBtn = true
@@ -510,6 +513,7 @@ export default {
         }
         await this.topUpCredit(body)
         this.transactionBtn = false
+        this.getBalance(this.formCredit)
         this.handlcCloseCreditForm()
       } catch (error) {
         console.log(error)
@@ -551,7 +555,7 @@ export default {
                 if (result) {
                   this.modal_edit = false
                   this.btn_loadingUpdate = false
-                  await this.getMember()
+                  await this.checkRendering()
                 }
               })
             } catch (error) {
@@ -568,7 +572,7 @@ export default {
         status: !item.status,
       }
       this.$swal({
-        title: 'Are you sure you want to Lock Member?',
+        title: `Are you sure you want to ${item.status ? 'Lock ' : 'Unlock'} Member ?`,
         icon: 'warning',
         showCancelButton: true,
         allowOutsideClick: false,
@@ -580,7 +584,7 @@ export default {
         if (result.isConfirmed) {
           // console.log(this.formCreate)
           try {
-            await this.editMember(body)
+            await this.lockstatus(body)
             this.$swal({
               icon: 'success',
               title: 'Lock Success',
@@ -589,7 +593,7 @@ export default {
               timer: 1500,
             }).then(async (result) => {
               if (result) {
-                await this.getMember()
+                await this.checkRendering()
               }
             })
           } catch (error) {
@@ -628,8 +632,8 @@ export default {
               }).then(async (result) => {
                 if (result) {
                   this.manageForm()
-                  this.modal_edit = false
-                  await this.getMember()
+                  this.modal_add = false
+                  await this.checkRendering()
                 }
               })
             } catch (error) {
@@ -645,8 +649,28 @@ export default {
         })
       }
     },
+    async checkRendering() {
+      if (!this.searchdata || this.searchdata === '') {
+        await this.getMember()
+      } else {
+        await this.searchbyuser()
+      }
+    },
     async searchbyuser() {
-      await this.searchByUsername(this.searchdata)
+      let parameters = {
+        company: this.profile.comPrefix ? this.profile.comPrefix : undefined,
+        agent: this.profile.agentPrefix ? this.profile.agentPrefix : undefined,
+        username: this.searchdata,
+      }
+      this.pagination.page = 1
+      try {
+        let { data } = await this.searchByUsername(parameters)
+        this.itemList = data.data
+        this.pagination.rowsNumber = data.meta.itemCount
+      } catch (error) {
+        console.log(error)
+        this.itemList = []
+      }
     },
     async getBank() {
       let { data: bank } = await this.$axios.get('bank.json')
@@ -675,7 +699,7 @@ export default {
     },
     async changePassword() {
       try {
-        await this.editMember(this.formChangePassword)
+        await this.changePasswordByuser(this.formChangePassword)
         this.closedchangePassword = false
       } catch (error) {
         this.closedchangePassword = false

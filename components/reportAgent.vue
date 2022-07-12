@@ -118,20 +118,27 @@
               <div class="pa-1 card-detail rounded-lg my-2 elevation-2" v-if="isRoleLevel === 4">
                 <div
                   class="cursor-pointer"
-                  :class="bgFunc(numberFormat(item.ownerWin + item.shareWin + item.smartWin))"
+                  :class="bgFunc(numberFormat(item.ownerWin + item.shareWin + item.smartWin + item.providerWin))"
                 >
                   <v-chip label x-small color="primary" dark class="px-1">W/L</v-chip>
-                  {{ numberFormat(item.ownerWin + item.shareWin + item.smartWin) }}
+                  {{ numberFormat(item.ownerWin + item.shareWin + item.smartWin + item.providerWin) }}
                 </div>
                 <div class="purple--text">
                   <v-chip label x-small color="purple" dark class="px-1">com</v-chip>
-                  {{ numberFormat(item.ownerCom + item.shareCom + item.smartCom) }}
+                  {{ numberFormat(item.ownerCom + item.shareCom + item.smartCom + item.providerCom) }}
                 </div>
                 <div
                   :class="
                     bgFunc(
                       numberFormat(
-                        item.ownerCom + item.ownerWin + item.smartCom + item.smartWin + item.shareCom + item.shareWin
+                        item.providerWin +
+                          item.providerCom +
+                          item.ownerCom +
+                          item.ownerWin +
+                          item.smartCom +
+                          item.smartWin +
+                          item.shareCom +
+                          item.shareWin
                       )
                     )
                   "
@@ -139,7 +146,14 @@
                   <v-chip label x-small color="black" dark class="px-1">W/L+com</v-chip>
                   {{
                     numberFormat(
-                      item.ownerCom + item.ownerWin + item.smartCom + item.smartWin + item.shareCom + item.shareWin
+                      item.providerWin +
+                        item.providerCom +
+                        item.ownerCom +
+                        item.ownerWin +
+                        item.smartCom +
+                        item.smartWin +
+                        item.shareCom +
+                        item.shareWin
                     )
                   }}
                 </div>
