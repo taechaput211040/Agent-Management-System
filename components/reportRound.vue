@@ -37,9 +37,15 @@
               <span @click="userendering(item.roundId)"> {{ item.roundId }}</span>
             </template>
             <template #[`item.shares`]="{ item }">
-              คอมปะนี: {{ getpercent(item, 1).percent }} %<br />
-              provider {{ getpercent(item, 0).percent }} %<br />
-              ซีเนียร์ {{ getpercent(item, 4).percent }} %
+              smart: {{ calProviderCom(item) }} %<br />
+              provider {{ item.provider === 'PGS' ? 10 : getShare(item).level0 }} %<br />
+              <span v-if="isRoleLevel < 3">
+                company: {{ getShare(item).level2 }} %<br />
+                share: {{ getShare(item).level3 }} %<br />
+              </span>
+
+              <span>senior {{ getShare(item).level4 }} %<br /></span>
+              <span v-if="getShare(item).level5">agent {{ getShare(item).level5 }} %</span>
             </template>
             <template #[`item.memberWin`]="{ item }">
               <div class="pa-1 card-detail-transaction rounded-lg my-2 elevation-2">
@@ -738,6 +744,43 @@ export default {
         this.isLoading = false
         // this.$q.loading.hide();
       }
+    },
+    getShare(item) {
+      let shares = item.shares
+      let result = {}
+      for (let i in shares) {
+        result[`level${shares[i].level}`] = shares[i].percent
+      }
+      console.log(result)
+      return result
+    },
+    calProviderCom(item) {
+      let smart = 0
+      let renderShare = this.getShare(item)
+      const asArray = Object.entries(renderShare)
+      const filtered = asArray.filter(([key]) => key != 'level0')
+      const result = Object.fromEntries(filtered)
+      const sumValues = Object.values(result).reduce((a, b) => a + b, 0)
+      if (item.provider === 'PGS') {
+        if (this.isRoleLevel < 3) {
+          smart = renderShare.level1 - (sumValues - 90)
+        } else if (this.isRoleLevel > 3) {
+          smart =
+            100 - ((renderShare.level4 ? renderShare.level4 : 0 + renderShare.level5 ? renderShare.level5 : 0) + 10)
+        }
+      } else {
+        if (this.isRoleLevel > 3) {
+          smart =
+            100 -
+            ((renderShare.level4 ? renderShare.level4 : 0) +
+              (renderShare.level5 ? renderShare.level5 : 0) +
+              renderShare.level0)
+        } else {
+          smart = renderShare.level1
+        }
+      }
+
+      return smart
     },
   },
 }

@@ -1,7 +1,6 @@
 <template>
   <div>
     <h2>Lotto Management</h2>
-
     <iframe
       class="mt-3"
       v-if="lottoLink"

@@ -19,7 +19,9 @@
                   v-model="password"
                   :rules="[(v) => !!v || 'Mew Password is required']"
                   prepend-inner-icon="mdi-lock"
-                  type="password"
+                  :type="hidden ? 'password' : 'text'"
+                  @click:append="() => (hidden = !hidden)"
+                  :append-icon="hidden ? 'mdi-eye' : 'mdi-eye-off'"
                   class="rounded-0"
                 ></v-text-field>
               </div>
@@ -37,7 +39,9 @@
                     (v) => !!v || 'Re-Passwords is Required ',
                     (v) => (v && v === this.password) || 'Re-passwords are not the same ',
                   ]"
-                  type="password"
+                  :type="hidden ? 'password' : 'text'"
+                  @click:append="() => (hidden = !hidden)"
+                  :append-icon="hidden ? 'mdi-eye' : 'mdi-eye-off'"
                   class="rounded-0"
                 ></v-text-field>
               </div>
@@ -56,6 +60,7 @@ import { mapActions } from 'vuex'
 export default {
   data() {
     return {
+      hidden: String,
       repassword: '',
       password: '',
       authendata: {},

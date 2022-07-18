@@ -56,6 +56,7 @@ export async function creditBalance({ commit }, username) {
 export async function topUpCredit({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
+      console.log(body, 'body')
       let response = await this.$axios.post(`https://all-member-ehhif4jpyq-as.a.run.app/api/Member/Agent/deposit`, body)
       resolve(response)
     } catch (error) {
@@ -90,7 +91,10 @@ export async function lockstatus({ commit }, body) {
 export async function changePasswordByuser({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.patch(`https://all-member-ehhif4jpyq-as.a.run.app/api/Member/Agent/Password`, body)
+      let response = await this.$axios.patch(
+        `https://all-member-ehhif4jpyq-as.a.run.app/api/Member/Agent/Password`,
+        body
+      )
       resolve(response)
     } catch (error) {
       reject(error)

@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import dayjs from 'dayjs' //import dayjs in your main.js
+  import dayjs from 'dayjs' //import dayjs in your main.js
 Vue.filter('numberFormat', (value) => {
   return Number(value).toLocaleString('en-US', {
     minimumFractionDigits: 2,

@@ -35,9 +35,11 @@
                   label="Enter your password"
                   required
                   outlined
+                  :type="hidden ? 'password' : 'text'"
+                  @click:append="() => (hidden = !hidden)"
                   v-model="password"
+                  :append-icon="hidden ? 'mdi-eye' : 'mdi-eye-off'"
                   prepend-inner-icon="mdi-lock"
-                  type="password"
                   @keyup.enter="login()"
                 ></v-text-field>
                 <v-btn class="login-Btn" color="#9155fd" x-large block dark @click.prevent="login()">Login</v-btn>
@@ -61,6 +63,7 @@ export default {
   layout: 'session',
   data() {
     return {
+      hidden: String,
       isLoading: false,
       username: '',
       password: '',

@@ -22,7 +22,6 @@
                 >
               </div>
             </div>
-            {{ pagination }}
             <v-data-table
               class="ma-4"
               :server-items-length="pagination.rowsNumber"
@@ -119,15 +118,26 @@
               ></v-card>
             </v-dialog>
             <v-dialog v-model="changepassDl" persistent max-width="400">
-              <v-card class="pa-5">
-                เปลี่ยนรหัสผ่าน
-                <v-text-field type="password" v-model="formChangePassword.password" autofocus></v-text-field>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="success" depressed @click="changePassword()"> เปลี่ยนรหัสผ่าน </v-btn>
-                  <v-btn color="error" depressed @click="changepassDl = false"> ยกเลิก </v-btn
-                  ><v-spacer></v-spacer> </v-card-actions
-              ></v-card>
+              <v-form ref="formChangepass">
+                <v-card class="pa-5">
+                  เปลี่ยนรหัสผ่าน
+                  <v-text-field
+                    :rules="[
+                      (v) => !!v || 'กรุณากรอก password',
+                      (v) => (v && v.length >= 8 && v.length < 17) || 'กรุณากรอกชื่ออย่างน้อย 8 - 16 ตัวอักษร',
+                    ]"
+                    :type="hidden ? 'password' : 'text'"
+                    @click:append="() => (hidden = !hidden)"
+                    v-model="formChangePassword.password"
+                    :append-icon="hidden ? 'mdi-eye' : 'mdi-eye-off'"
+                    autofocus
+                  ></v-text-field>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="success" depressed @click="changePassword()"> เปลี่ยนรหัสผ่าน </v-btn>
+                    <v-btn color="error" depressed @click="closedchangePassword"> ยกเลิก </v-btn
+                    ><v-spacer></v-spacer> </v-card-actions></v-card
+              ></v-form>
             </v-dialog>
           </v-card>
         </v-container>
@@ -164,6 +174,7 @@
           ></v-text-field>
           <v-text-field
             v-model="formRegister.username"
+            prefix="kg"
             :rules="[
               (v) => !!v || 'กรุณากรอก username',
               (v) => (v && v.length >= 8) || 'กรุณากรอกชื่ออย่างน้อย 8 ตัวอักษร',
@@ -175,10 +186,12 @@
           <v-text-field
             v-model="formRegister.password"
             label="Password"
-            type="password"
+            :type="hidden ? 'password' : 'text'"
+            @click:append="() => (hidden = !hidden)"
+            :append-icon="hidden ? 'mdi-eye' : 'mdi-eye-off'"
             :rules="[
               (v) => !!v || 'กรุณากรอก password',
-              (v) => (v && v.length >= 8) || 'กรุณากรอก password อย่างน้อย 8 ตัวอักษร',
+              (v) => (v && v.length >= 8 && v.length < 17) || 'กรุณากรอก password อย่างน้อย 8 ตัวอักษร',
             ]"
             dense
             outlined
@@ -218,7 +231,7 @@
         <v-card-actions align="right">
           <v-spacer></v-spacer>
           <v-btn push rounded color="success" :loading="btn_loadingUpdate" @click="submitRegister()">Submit </v-btn>
-          <v-btn push rounded color="error" @click="modal_add = false">Cancel</v-btn>
+          <v-btn push rounded color="error" @click="closeModaladd()">Cancel</v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
@@ -291,6 +304,7 @@ export default {
   components: { loadingPage },
   data() {
     return {
+      hidden: String,
       btn_loadingUpdate: false,
       modal_edit: false,
       transactionBtn: false,
@@ -322,6 +336,8 @@ export default {
         recomander: '',
         name: '',
         lastname: '',
+        company: '',
+        agent: '',
       },
       formCredit: {
         number: 0,
@@ -438,17 +454,20 @@ export default {
       'searchByUsername',
       'editMember',
       'lockstatus',
+      'changePasswordByuser',
     ]),
     manageForm() {
       this.formRegister = {
         username: '',
         password: '',
         phone: '',
-        bank: null,
-        bankNo: '',
+        bankName: null,
+        bankAcc: '',
         recomander: '',
         name: '',
         lastname: '',
+        company: this.profile.comPrefix,
+        agent: this.profile.agentPrefix,
       }
     },
     getParameter() {
@@ -464,7 +483,10 @@ export default {
     async getBalance(item) {
       this.loadingBtn = true
       try {
-        let { data } = await this.creditBalance(item.username)
+        let { data } = await this.creditBalance(item.username ? item.username : this.formCredit.targetUser)
+        if (!item.username) {
+          this.itemList.find((x) => x.username === this.formCredit.targetUser).creditBalance = data.credit
+        }
         item.creditBalance = data.credit
       } catch (error) {
         console.log(error)
@@ -513,8 +535,8 @@ export default {
         }
         await this.topUpCredit(body)
         this.transactionBtn = false
-        this.getBalance(this.formCredit)
-        this.handlcCloseCreditForm()
+        await this.getBalance(this.formCredit)
+        await this.handlcCloseCreditForm()
       } catch (error) {
         console.log(error)
         this.transactionBtn = false
@@ -602,7 +624,8 @@ export default {
         }
       })
     },
-    async submitRegister() {
+    submitRegister() {
+      this.formRegister.username = this.profile.agentPrefix + this.formRegister.username
       let body = {
         ...this.formRegister,
         operator: this.username,
@@ -632,7 +655,7 @@ export default {
               }).then(async (result) => {
                 if (result) {
                   this.manageForm()
-                  this.modal_add = false
+                  this.closeModaladd()
                   await this.checkRendering()
                 }
               })
@@ -649,6 +672,10 @@ export default {
         })
       }
     },
+    closeModaladd() {
+      this.$refs.form.reset()
+      this.modal_add = false
+    },
     async checkRendering() {
       if (!this.searchdata || this.searchdata === '') {
         await this.getMember()
@@ -657,6 +684,7 @@ export default {
       }
     },
     async searchbyuser() {
+      this.isLoading = true
       let parameters = {
         company: this.profile.comPrefix ? this.profile.comPrefix : undefined,
         agent: this.profile.agentPrefix ? this.profile.agentPrefix : undefined,
@@ -671,6 +699,7 @@ export default {
         console.log(error)
         this.itemList = []
       }
+      this.isLoading = false
     },
     async getBank() {
       let { data: bank } = await this.$axios.get('bank.json')
@@ -682,6 +711,7 @@ export default {
     },
     async add() {
       this.modal_add = true
+      this.manageForm()
     },
     addstatus(value) {
       console.log(value)
@@ -696,14 +726,18 @@ export default {
         id: null,
         password: '',
       }
+      this.$refs.formChangepass.reset()
+      this.changepassDl = false
     },
     async changePassword() {
-      try {
-        await this.changePasswordByuser(this.formChangePassword)
-        this.closedchangePassword = false
-      } catch (error) {
-        this.closedchangePassword = false
-        console.log(error)
+      if (this.$refs.formChangepass.validate()) {
+        try {
+          await this.changePasswordByuser(this.formChangePassword)
+          this.closedchangePassword = false
+        } catch (error) {
+          this.closedchangePassword = false
+          console.log(error)
+        }
       }
     },
     openChangePassDl(id) {
