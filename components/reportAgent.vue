@@ -261,6 +261,22 @@
       </template>
       <!-- v-if="isRoleLevel != 5" -->
       <h2 class="mt-3">Report Member by Senior</h2>
+      <div class="mx-3 d-flex align-center">
+        <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+          <v-text-field
+            hide-details="auto"
+            label="กรอก username"
+            dense
+            outlined
+            v-model="searchUsername"
+          ></v-text-field>
+        </div>
+
+        <v-btn color="success" @click="searchByUser()">
+          <v-icon left> mdi-magnify </v-icon>
+          Search
+        </v-btn>
+      </div>
       <template>
         <v-card class="ma-3 justify-center rounded-lg classtable">
           <v-data-table
@@ -270,7 +286,7 @@
             :options.sync="options"
             :headers="headerCustom"
             :items="reportsenior.docs"
-            :loading="isLoading"
+            :loading="isLoadingMember"
             loading-text="Loading... Please wait"
             hide-default-footer
           >
@@ -591,6 +607,8 @@ export default {
   },
   data() {
     return {
+      isLoadingMember:false,
+      searchUsername: '',
       pageSizes: [5, 10, 15, 30, 50],
       options: {},
       progressBar: true,
@@ -745,6 +763,12 @@ export default {
         pagination: this.pagination_render,
       })
     },
+    async searchByUser() {
+      this.pagination_render.page = 1
+      await this.onRequest({
+        pagination: this.pagination_render,
+      })
+    },
     async handlePageChange(size) {
       this.pagination_render.page = size
       await this.onRequest({
@@ -856,7 +880,7 @@ export default {
       }
     },
     async onRequest(props) {
-      this.isLoading = true
+      this.isLoadingMember = true
       try {
         const parameters = this.getFilterParameter(props)
 
@@ -867,13 +891,14 @@ export default {
           id: this.$route.query.share_user ? this.$route.query.share_user : undefined,
           senior_user: this.$route.query.senior_user ? this.$route.query.senior_user : undefined,
           role: this.isRoleLevel,
+          username: this.searchUsername || this.searchUsername !== '' ? this.searchUsername : undefined,
         })
         this.reportsenior = senior
         this.pagination.rowsNumber = senior.pageInfo.total
-        this.isLoading = false
+        this.isLoadingMember = false
       } catch (ex) {
         console.log(ex)
-        this.isLoading = false
+        this.isLoadingMember = false
         // this.$q.loading.hide();
       }
     },

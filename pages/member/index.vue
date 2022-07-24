@@ -567,6 +567,7 @@ export default {
             // console.log(this.formCreate)
             try {
               await this.editMember(body)
+
               this.$swal({
                 icon: 'success',
                 title: 'Registered Success',
@@ -582,7 +583,9 @@ export default {
               })
             } catch (error) {
               console.log(error)
+
               this.modal_edit = false
+              this.btn_loadingUpdate = false
             }
           }
         })
@@ -646,7 +649,7 @@ export default {
             // console.log(this.formCreate)
             try {
               await this.createMember(body)
-              this.$swal({
+              await this.$swal({
                 icon: 'success',
                 title: 'Registered Success',
                 allowOutsideClick: false,
@@ -666,6 +669,7 @@ export default {
                 showConfirmButton: false,
                 timer: 1500,
               })
+              this.btn_loadingUpdate = false
             }
             this.btn_loadingUpdate = false
           }
@@ -673,6 +677,7 @@ export default {
       }
     },
     closeModaladd() {
+      this.$refs.form.resetValidation()
       this.$refs.form.reset()
       this.modal_add = false
     },
@@ -711,7 +716,6 @@ export default {
     },
     async add() {
       this.modal_add = true
-      this.manageForm()
     },
     addstatus(value) {
       console.log(value)

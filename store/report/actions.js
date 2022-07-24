@@ -149,6 +149,7 @@ export async function getSeniorByShare(
     search: undefined,
     senior_user: undefined,
     role: undefined,
+    username: undefined,
   }
 ) {
   return new Promise(async (resolve, reject) => {
@@ -169,7 +170,7 @@ export async function getSeniorByShare(
           end: params.end,
           provider: params.provider,
           typeCode: params.typeCode,
-          search: params.search,
+          username: params.username,
         },
       })
       resolve(response)
@@ -237,6 +238,7 @@ export async function getUserByAgent(
     senior_user: undefined,
     agent_user: undefined,
     role: undefined,
+    username: undefined,
   }
 ) {
   return new Promise(async (resolve, reject) => {
@@ -268,6 +270,7 @@ export async function getUserByAgent(
           provider: params.provider,
           typeCode: params.typeCode,
           search: params.search,
+          username: params.username,
         },
       })
       resolve(response)

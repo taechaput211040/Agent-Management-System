@@ -29,7 +29,10 @@
             <template #[`item.roundId`]="{ item }">
               <span @click="userendering(item.roundId)"> {{ item.roundId }}</span>
             </template>
-
+            <template #[`item.time`]="{ item }">
+              <div>start : {{ item.startAt | dateFormat }}</div>
+              <div>end : {{ item.endAt | dateFormat }}</div>
+            </template>
             <template #[`item.memberWin`]="{ item }">
               <div class="pa-1 card-detail-transaction rounded-lg my-2 elevation-2">
                 <div class="cursor-pointer" :class="bgFunc(numberFormat(getpercent(item, 6).winLosePayout))">
@@ -405,6 +408,13 @@ export default {
           width: '75px',
           class: 'text-center',
           cellClass: 'text-center',
+        },
+        {
+          text: 'time',
+          value: 'time',
+          sortable: false,
+          width: '200px',
+          align: 'center',
         },
         {
           text: 'ประเภทเกม',

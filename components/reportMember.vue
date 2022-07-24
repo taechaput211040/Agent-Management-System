@@ -1,13 +1,17 @@
 <template>
   <v-flex>
-    <div class="text-right mx-3">
+    <div class="text-right mx-3 d-flex justify-end align-center">
+      <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+        <v-text-field hide-details="auto" label="กรอก username" dense outlined v-model="searchUsername"></v-text-field>
+      </div>
+
       <v-btn color="success" @click="onSearch()">
         <v-icon left> mdi-magnify </v-icon>
         Search
       </v-btn>
     </div>
     <div v-if="!loadingpage">
-      <v-btn color="red" v-if="this.isRoleLevel != 5" @click="$router.go(-1)" dark small class="mx-3">Back</v-btn>
+      <v-btn color="red" v-if="this.isRoleLevel != 5" @click="$router.go(-1)" dark small class="ma-3">Back</v-btn>
       <h2 class="mt-3">Report Member</h2>
       <template>
         <div class="ma-3 justify-center rounded-lg classtable">
@@ -338,6 +342,7 @@ export default {
   },
   data() {
     return {
+      searchUsername: '',
       pageSizes: [5, 10, 15, 25],
       options: {},
       progressBar: true,
@@ -533,6 +538,7 @@ export default {
       return this.numberFormat(result)
     },
     async onSearch() {
+      this.pagination.page = 1
       this.progressBar = true
       await this.onRequest({
         pagination: this.pagination,
@@ -594,7 +600,6 @@ export default {
       this.isLoading = true
       try {
         const parameters = this.getFilterParameter(props)
-
         const { data } = await this.getUserByAgent({
           ...parameters,
           page: this.pagination.page,
@@ -603,6 +608,7 @@ export default {
           senior_user: this.$route.query.senior_user ? this.$route.query.senior_user : undefined,
           agent_user: this.$route.query.agent_user ? this.$route.query.agent_user : this.$store.state.auth.username,
           role: this.isRoleLevel,
+          username: this.searchUsername || this.searchUsername !== '' ? this.searchUsername : undefined,
         })
 
         this.reportdata = data.docs

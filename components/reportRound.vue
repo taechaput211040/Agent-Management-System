@@ -26,6 +26,11 @@
             <template #[`item._id`]="{ item }">
               <span class="user_pointer" @click="userendering(item.roundId)"> {{ item.username }}</span>
             </template>
+
+            <template #[`item.time`]="{ item }">
+              <div>start : {{ item.startAt | dateFormat }}</div>
+              <div>end : {{ item.endAt | dateFormat }}</div>
+            </template>
             <template #[`item.bet`]="{ item }">
               {{ numberFormat(item.bet) }}
             </template>
@@ -474,6 +479,13 @@ export default {
           sortable: false,
           class: 'text-center',
           width: '100px',
+        },
+        {
+          text: 'time',
+          value: 'time',
+          sortable: false,
+           width: '200px',
+           align:'center'
         },
         {
           text: 'ค่ายเกม',
