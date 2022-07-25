@@ -13,6 +13,7 @@
                   v-model="searchdata"
                   hide-details="auto"
                   dense
+                  @keyup.enter="checkRendering()"
                   solo-inverted
                   label="ค้นหาอย่างน้อย3ตัวอักษร"
                   required
@@ -157,7 +158,7 @@
     <v-dialog width="800" v-model="modal_add" persistent>
       <v-card class="pa-4">
         <h2 class="text-center my-2">Add Member</h2>
-        <v-form ref="form">
+        <v-form ref="form" v-model="valid">
           <v-text-field
             v-model="formRegister.name"
             :rules="[(v) => !!v || 'กรุณากรอกชื่อ']"
@@ -204,6 +205,7 @@
             v-model="formRegister.phone"
             label="phone number"
             dense
+            type="number"
             outlined
           ></v-text-field>
           <v-autocomplete
@@ -222,6 +224,7 @@
             v-model="formRegister.bankAcc"
             label="bank number"
             dense
+            type="number"
             :disabled="!formRegister.bankName"
             outlined
           ></v-text-field>
@@ -230,7 +233,9 @@
 
         <v-card-actions align="right">
           <v-spacer></v-spacer>
-          <v-btn push rounded color="success" :loading="btn_loadingUpdate" @click="submitRegister()">Submit </v-btn>
+          <v-btn push rounded :disabled="!valid" color="success" :loading="btn_loadingUpdate" @click="submitRegister()"
+            >Submit
+          </v-btn>
           <v-btn push rounded color="error" @click="closeModaladd()">Cancel</v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
@@ -263,6 +268,7 @@
             v-model="formEdit.phone"
             label="phone number"
             dense
+            type="number"
             outlined
           ></v-text-field>
           <v-autocomplete
@@ -275,11 +281,12 @@
           ></v-autocomplete>
           <v-text-field
             :rules="[
-              (v) => !!v || 'กรุณากรอกเบอร์มือถือ',
+              (v) => !!v || 'กรุณากรอกเลขบัญชีธนาคาร',
               (v) => (v && v.length >= 10 && v.length < 13) || 'กรุณากรอกเลขบัญชีธนาคาร 10 ถึง 13 ตัว',
             ]"
             v-model="formEdit.bankAcc"
             label="bank number"
+            type="number"
             dense
             outlined
           ></v-text-field>
@@ -304,6 +311,7 @@ export default {
   components: { loadingPage },
   data() {
     return {
+      valid: false,
       hidden: String,
       btn_loadingUpdate: false,
       modal_edit: false,
@@ -455,6 +463,8 @@ export default {
       'editMember',
       'lockstatus',
       'changePasswordByuser',
+      'depositCredit',
+      'withdrawCredit',
     ]),
     manageForm() {
       this.formRegister = {
@@ -482,12 +492,13 @@ export default {
     },
     async getBalance(item) {
       this.loadingBtn = true
+
       try {
         let { data } = await this.creditBalance(item.username ? item.username : this.formCredit.targetUser)
         if (!item.username) {
-          this.itemList.find((x) => x.username === this.formCredit.targetUser).creditBalance = data.credit
+          this.itemList.find((x) => x.username === this.formCredit.targetUser).creditBalance = data.balance
         }
-        item.creditBalance = data.credit
+        item.creditBalance = data.balance
       } catch (error) {
         console.log(error)
       }
@@ -522,18 +533,13 @@ export default {
         username: this.formCredit.targetUser,
         amount: this.formCredit.number,
       }
-      let method = ''
       try {
         if (!this.formCredit.isMinus) {
-          method = 'deposit'
+          await this.depositCredit(body)
         } else {
-          method = 'withdraw'
+          await this.withdrawCredit(body)
         }
-        body = {
-          ...body,
-          method,
-        }
-        await this.topUpCredit(body)
+        // await this.topUpCredit(body)
         this.transactionBtn = false
         await this.getBalance(this.formCredit)
         await this.handlcCloseCreditForm()
@@ -628,12 +634,8 @@ export default {
       })
     },
     submitRegister() {
-      this.formRegister.username = this.profile.agentPrefix + this.formRegister.username
-      let body = {
-        ...this.formRegister,
-        operator: this.username,
-      }
       if (this.$refs.form.validate()) {
+        this.valid = true
         this.$swal({
           title: 'Are you sure you want to register Member?',
           icon: 'warning',
@@ -647,6 +649,13 @@ export default {
           if (result.isConfirmed) {
             this.btn_loadingUpdate = true
             // console.log(this.formCreate)
+            this.formRegister.username = this.profile.agentPrefix + this.formRegister.username
+            this.formRegister.company = this.profile.comPrefix
+            this.formRegister.agent = this.profile.agentPrefix
+            let body = {
+              ...this.formRegister,
+              operator: this.username,
+            }
             try {
               await this.createMember(body)
               await this.$swal({

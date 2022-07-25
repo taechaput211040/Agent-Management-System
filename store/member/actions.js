@@ -44,7 +44,7 @@ export async function creditBalance({ commit }, username) {
     console.log(username)
     try {
       let response = await this.$axios.get(
-        `https://all-member-ehhif4jpyq-as.a.run.app/api/Member/Agent/Credit/${username}`
+        `/v1alpha/credit-tranfer/balance/${username}`
       )
       resolve(response)
     } catch (error) {
@@ -64,6 +64,31 @@ export async function topUpCredit({ commit }, body) {
     }
   })
 }
+
+export async function depositCredit({ commit }, body) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      console.log(body, 'body')
+      let response = await this.$axios.post(`/v1alpha/credit-tranfer/deposit/`, body)
+      resolve(response)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
+export async function withdrawCredit({ commit }, body) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      console.log(body, 'body')
+      let response = await this.$axios.post(`/v1alpha/credit-tranfer/withdraw/`, body)
+      resolve(response)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
 
 export async function searchByUsername({ commit }, param) {
   return new Promise(async (resolve, reject) => {
