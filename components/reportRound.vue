@@ -449,7 +449,6 @@ export default {
           width: '100px',
           sortable: false,
         },
-
         {
           text: 'Payout',
           value: 'payout',
@@ -474,6 +473,14 @@ export default {
           cellClass: 'text-center',
         },
         {
+          text: 'turnover',
+          value: 'turnover',
+          sortable: false,
+          width: '50px',
+          class: 'text-center',
+          cellClass: 'text-center',
+        },
+        {
           text: 'ชื่อเกม',
           value: 'name',
           sortable: false,
@@ -484,8 +491,8 @@ export default {
           text: 'time',
           value: 'time',
           sortable: false,
-           width: '200px',
-           align:'center'
+          width: '200px',
+          align: 'center',
         },
         {
           text: 'ค่ายเกม',

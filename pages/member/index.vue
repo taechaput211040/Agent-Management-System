@@ -400,19 +400,19 @@ export default {
           sortable: false,
           class: 'col-1',
         },
-        // {
-        //   text: '+ / -',
-        //   value: 'edit',
-        //   align: 'center',
-        //   class: 'col-1',
-        //   sortable: false,
-        // },
-        // {
-        //   text: 'Log',
-        //   value: 'log',
-        //   align: 'center',
-        //   sortable: false,
-        // },
+        {
+          text: '+ / -',
+          value: 'edit',
+          align: 'center',
+          class: 'col-1',
+          sortable: false,
+        },
+        {
+          text: 'Log',
+          value: 'log',
+          align: 'center',
+          sortable: false,
+        },
         { text: 'Phone', value: 'phone', sortable: false, align: 'center' },
         { text: 'Status', value: 'status', sortable: false, align: 'center' },
         {

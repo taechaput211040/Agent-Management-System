@@ -30,6 +30,15 @@
             <template #[`item._id`]="{ item }">
               <span class="user_pointer" @click="userendering(item._id)"> {{ item._id }}</span>
             </template>
+            <template #[`item.payout`]="{ item }">
+              {{ numberFormat(getReport(item.reports, 6).pay) }}
+            </template>
+            <template #[`item.bet`]="{ item }">
+              {{ numberFormat(getReport(item.reports, 6).bet) }}
+            </template>
+            <template #[`item.turnover`]="{ item }">
+              {{ numberFormat(getReport(item.reports, 6).turn) }}
+            </template>
             <template #[`item.memberWin`]="{ item }">
               <div class="pa-1 card-detail rounded-lg my-2 elevation-2">
                 <div class="cursor-pointer" :class="bgFunc(numberFormat(getReport(item.reports, 6).win))">
@@ -377,7 +386,31 @@ export default {
           text: 'Username',
           value: '_id',
           cellClass: 'font-weight-bold',
-          width: '200px',
+          width: '120px',
+        },
+        {
+          text: 'Payout',
+          value: 'payout',
+          sortable: false,
+          width: '60px',
+          align: 'center',
+        },
+        {
+          text: 'Bet',
+          value: 'bet',
+          sortable: false,
+          width: '60px',
+          class: 'text-center',
+          align: 'center',
+        },
+
+        {
+          text: 'turnover',
+          value: 'turnover',
+          sortable: false,
+          width: '60px',
+          class: 'text-center',
+          align: 'center',
         },
         {
           text: 'สมาชิก',
