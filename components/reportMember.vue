@@ -2,7 +2,7 @@
   <v-flex>
     <div class="text-right mx-3 d-flex justify-end align-center">
       <div class="col-12 col-sm-8 col-md-6 col-lg-4">
-        <v-text-field hide-details="auto" label="กรอก username" dense outlined v-model="searchUsername"></v-text-field>
+        <v-text-field hide-details="auto" @keyup.enter="onSearch()" label="กรอก username" dense outlined v-model="searchUsername"></v-text-field>
       </div>
 
       <v-btn color="success" @click="onSearch()">

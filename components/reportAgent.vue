@@ -268,6 +268,7 @@
             label="กรอก username"
             dense
             outlined
+            @keyup.enter="searchByUser()"
             v-model="searchUsername"
           ></v-text-field>
         </div>
