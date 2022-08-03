@@ -222,7 +222,7 @@ export default {
   },
   data() {
     return {
-      pageSizes: [5, 10, 15, 25],
+      pageSizes: [25, 50, 100],
       options: {},
       progressBar: true,
       loadingpage: false,
@@ -244,7 +244,7 @@ export default {
         sortBy: 'desc',
         descending: false,
         page: 1,
-        rowsPerPage: 25,
+        rowsPerPage: 100,
         rowsNumber: 0,
       },
       reportdata: [],

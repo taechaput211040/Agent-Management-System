@@ -22,9 +22,9 @@ export default {
         content: 'width=device-width, initial-scale=1',
       },
       {
-        hid: 'description',
-        name: 'description',
-        content: '',
+        hid: 'og:description',
+        property: 'og:description',
+        content: 'Agent Management System',
       },
       {
         name: 'format-detection',

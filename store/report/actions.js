@@ -25,6 +25,8 @@ export async function getAllByDashboard(
 export async function getAllReport(
   { commit },
   params = {
+    page: undefined,
+    limit: undefined,
     start: 'undefined',
     end: 'undefined',
     provider: undefined,
@@ -42,6 +44,8 @@ export async function getAllReport(
     try {
       let response = await this.$axios.get(url, {
         params: {
+          page: params.page,
+          limit: params.limit,
           start: params.start,
           end: params.end,
           provider: params.provider,
