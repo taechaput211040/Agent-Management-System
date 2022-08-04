@@ -99,19 +99,16 @@
               <v-btn
                 class="mx-2"
                 x-small
-                 :disabled="item.role === 'MEMBER' || item.username == customer_name"
+                :disabled="item.role === 'MEMBER' || item.username == customer_name"
                 color="success"
                 @click="settingProvider(item)"
               >
                 <span>Edit</span>
               </v-btn>
             </template>
-            <template #[`item.action`]>
-              <v-btn class="mx-2" fab dark x-small color="purple" @click="modal_add = true">
-                <v-icon dark> mdi-pencil </v-icon>
-              </v-btn>
-              <v-btn class="mx-2" fab dark x-small color="blue-grey">
-                <v-icon dark> mdi-key </v-icon>
+            <template #[`item.action`]="{ item }">
+              <v-btn class="mx-2" dark small color="blue-grey" @click="openChangePassword(item.username)">
+                <v-icon dark left> mdi-lock-reset </v-icon> changepass
               </v-btn>
             </template>
             <template #[`item.status`]="{ item }">
@@ -166,6 +163,29 @@
             <v-btn color="error" depressed @click="handlcCloseCreditForm"> ยกเลิก </v-btn
             ><v-spacer></v-spacer> </v-card-actions
         ></v-card>
+      </v-dialog>
+      <v-dialog v-model="changepassworddl" width="400">
+        <v-card class="pa-sm-3 pa-1">
+          <div class="text-center my-3">Change Password</div>
+          <v-form ref="formchangepass">
+            <div>
+              <v-text-field
+                label="New password"
+                required
+                :rules="[(v) => !!v || 'password  is required']"
+                v-model="formChange.password"
+                :type="hidden ? 'password' : 'text'"
+                :append-icon="hidden ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:append="() => (hidden = !hidden)"
+                outlined
+              ></v-text-field>
+            </div>
+            <div class="text-center">
+              <v-btn color="success" class="mx-1" @click="handleSubmitChangepass()" small>change</v-btn
+              ><v-btn color="error" class="mx-1" @click="closedlcp()" small>cancel</v-btn>
+            </div></v-form
+          >
+        </v-card>
       </v-dialog>
       <v-dialog v-model="open_history" width="800">
         <v-card class="pa-sm-3 pa-1">
@@ -237,6 +257,12 @@ export default {
   components: { RevenueTable, LoadingPage },
   data() {
     return {
+      hidden: String,
+      formChange: {
+        username: '',
+        password: '',
+      },
+      changepassworddl: false,
       userHistory: undefined,
       paginationHistory: {
         page: 1,
@@ -362,6 +388,12 @@ export default {
           align: 'center',
           sortable: false,
         },
+        {
+          text: 'action',
+          value: 'action',
+          align: 'center',
+          sortable: false,
+        },
 
         {
           text: 'Suspend',
@@ -422,7 +454,26 @@ export default {
     sessionStorage.removeItem('pathPrev')
     sessionStorage.removeItem('userPrev')
   },
+
   methods: {
+    closedlcp() {
+      this.changepassworddl = false
+      this.$refs.formchangepass.reset()
+    },
+    async handleSubmitChangepass() {
+      if (this.$refs.formchangepass.validate()) {
+        try {
+          await this.changePasswordByuser(this.formChange)
+        } catch (error) {
+          console.log(error)
+        }
+        this.changepassworddl = false
+      }
+    },
+    openChangePassword(targetUser) {
+      this.formChange.username = targetUser
+      this.changepassworddl = true
+    },
     searchList() {
       this.pagination.page = 1
       this.getDownlineData()
@@ -470,6 +521,7 @@ export default {
       'withdrawCredit',
       'checkCreditByuser',
       'getHistoryCredit',
+      'changePasswordByuser',
     ]),
     ...mapActions('account', ['get_creditBalance']),
     async getDownlineData() {

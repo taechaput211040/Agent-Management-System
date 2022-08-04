@@ -10,15 +10,18 @@
           <div class="mx-auto col-sm-8 col-md-6 col-lg-12 col-12">
             <div class="elevation-0 pa-sm-6 white--text">
               <v-form>
-                <!-- <div class="justify-center text-center">
+                
+                <div class="justify-center text-center">
                   <img
-                    src="https://smart-binary.cloud/storage/b2kbet/logo/logo_b2kbet_silver.png"
+                     src="https://smart-binary.cloud/storage/GameROV/logo.png"
                     class="img_logo"
                                      />
-                </div> -->
-                <v-card-title class="justify-center white--text">
-                  <h3>LOGIN : Smart Agent</h3>
-                </v-card-title>
+                </div>
+                <div class="text-center white--text my-3">
+                  <!-- <h1 class="amber--text darken-4">PSAB COMPANY</h1> -->
+                  <h2>Agent Management</h2>
+                  <h2>System</h2>
+                </div>
                 <v-text-field
                   dark
                   color="purple "

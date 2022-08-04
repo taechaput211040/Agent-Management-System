@@ -123,13 +123,15 @@ export async function getHistoryCredit(
   })
 }
 
-// export async function getMemberBysearch({ commit }, targetUser) {
-//   return new Promise(async (resolve, reject) => {
-//     try {
-//       let response = await this.$axios.get(`/v1alpha/credit/balance/${targetUser}`)
-//       resolve(response)
-//     } catch (error) {
-//       reject(error)
-//     }
-//   })
-// }
+export async function changePasswordByuser({ commit }, body) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.put(`/v1alpha/user/members/${body.username}/reset-password`, {
+        password: body.password,
+      })
+      resolve(response)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}

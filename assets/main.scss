@@ -275,13 +275,13 @@ span {
 .img_logo {
   max-width: 100%;
   width: auto;
-  height: 50px;
+  height: 100px;
   cursor: pointer;
 }
 .img_logo_bar {
   max-width: 100%;
   width: auto;
-  height: 40px;
+  height: 60px;
   cursor: pointer;
 }
 .apexcharts-xaxis {
@@ -294,6 +294,6 @@ span {
     font-weight: bold;
   }
 }
-.apexcharts-tooltip.apexcharts-theme-light{
+.apexcharts-tooltip.apexcharts-theme-light {
   color: black !important;
 }

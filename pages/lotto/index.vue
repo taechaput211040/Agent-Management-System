@@ -1,6 +1,7 @@
 <template>
   <div>
     <h2>Lotto Management</h2>
+    <!-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" /> -->
     <iframe
       class="mt-3"
       v-if="lottoLink"
@@ -21,6 +22,12 @@ export default {
       lotto: undefined,
     }
   },
+  head: {
+    meta: [
+      // creates a meta description tag in header.
+      { name: 'description', content: 'My description' },
+    ],
+  },
   computed: {
     token() {
       return localStorage.getItem('key')
@@ -36,10 +43,13 @@ export default {
         {},
         {
           params: {
-            token: this.token,
+            token: `Bearer ${this.token}`,
           },
         }
       )
+      console.log(res, 'res')
+      console.log(this.token, 'token')
+
       this.lotto = res.data
     } catch (error) {
       this.$swal({

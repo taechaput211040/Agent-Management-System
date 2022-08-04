@@ -446,7 +446,7 @@ export default {
     }
   },
   async beforeMount() {
-    await this.getBank()
+    this.getBank()
     await this.checkRendering()
   },
   computed: {
@@ -716,8 +716,8 @@ export default {
       this.isLoading = false
     },
     async getBank() {
-      let { data: bank } = await this.$axios.get('bank.json')
-      this.bankList = bank
+      // let { data: bank } = await this.$axios.get('bank.json')
+      this.bankList = this.$store.state.auth.bank
     },
     showlog(dataHistory) {
       this.open_history = true

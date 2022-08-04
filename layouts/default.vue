@@ -2,12 +2,17 @@
   <v-app>
     <v-app-bar clipped-left class="elevation-1" color="white" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-
+      <!-- <h1 class="amber--text darken-4">PSAB COMPANY</h1> -->
       <img
-        src="https://smart-binary.cloud/storage/smartagent/logo_smartbet.png"
+         src="https://smart-binary.cloud/storage/GameROV/logo.png"
         class="img_logo_bar"
         @click="$router.push('/')"
       />
+      <!-- <img
+        src="https://smart-binary.cloud/storage/smartagent/logo_smartbet.png"
+        class="img_logo_bar"
+        @click="$router.push('/')"
+      /> -->
       <v-spacer />
       <div class="d-none d-sm-block">
         <v-btn icon @click.prevent="$vuetify.theme.dark = !$vuetify.theme.dark">
