@@ -59,13 +59,17 @@
             </template>
             <template #[`item.providerBet`]="{ item }">
               <span class="cursor-pointer">
-                {{ numberFormat(item.providerBet) }}
+                {{ item.providerBet | numberFormat }}
               </span>
             </template>
-
+            <template #[`item.providerTurn`]="{ item }">
+              <span class="cursor-pointer">
+                {{ item.providerTurn | numberFormat }}
+              </span>
+            </template>
             <template #[`item.providerPay`]="{ item }">
               <span class="cursor-pointer">
-                {{ numberFormat(item.providerPay) }}
+                {{ item.providerPay | numberFormat }}
               </span>
             </template>
             <template #[`item.memberWin`]="{ item }">
@@ -234,7 +238,7 @@ export default {
   },
   data() {
     return {
-      pageSizes: [25,50,100],
+      pageSizes: [25, 50, 100],
       options: {},
       progressBar: true,
       loadingpage: false,

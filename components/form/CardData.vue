@@ -8,12 +8,7 @@
       <v-col cols="3" class="pa-0" align-self="center"
         ><v-icon x-large v-if="icon">{{ icon }}</v-icon>
         <div v-else class="pa-2">
-          <img
-            src="https://image.smart-ai-api.com/public/image-storage-betkub/images/20210811100859a9261ec6ff414acaaaa677c9ad7c83a7.png"
-            alt="John"
-            class="mt-2"
-            style="width: auto; height: 100%; max-width: 100%"
-          />
+          <v-icon x-large>mdi-hexagram</v-icon>
         </div>
       </v-col>
     </div>
@@ -25,11 +20,11 @@ export default {
   props: {
     title: {
       type: String,
-      default: '',
+      default: 'example',
     },
     value: {
       type: [String, Number],
-      default: '',
+      default: '999.99',
     },
     icon: {
       type: String,

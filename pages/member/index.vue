@@ -145,7 +145,7 @@
       </v-row>
     </div>
     <v-dialog v-model="open_history" width="800">
-      <v-card class="pb-2">
+      <v-card class="pb-2 classtable">
         <v-card color="indigo darken-2" dark align-baseline>
           <v-card-title class="text-h5"
             >ประวัติการเติม<v-spacer></v-spacer

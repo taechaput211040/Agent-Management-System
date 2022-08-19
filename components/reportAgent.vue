@@ -38,15 +38,20 @@
                 </span>
               </div>
             </template>
-            <template #[`item.providerBet`]="{ item }">
+            <template #[`item.bet`]="{ item }">
               <span class="cursor-pointer">
                 {{ numberFormat(item.providerBet) }}
               </span>
             </template>
 
-            <template #[`item.providerPay`]="{ item }">
+            <template #[`item.payout`]="{ item }">
               <span class="cursor-pointer">
                 {{ numberFormat(item.providerPay) }}
+              </span>
+            </template>
+            <template #[`item.turnover`]="{ item }">
+              <span class="cursor-pointer">
+                {{ numberFormat(item.providerTurn) }}
               </span>
             </template>
             <template #[`item.memberWin`]="{ item }">

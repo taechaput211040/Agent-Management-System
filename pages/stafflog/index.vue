@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2>Staff Log</h2>
-    <div class="mt-3">
+    <div class="mt-3 classtable">
       <v-data-table :headers="headerOutsatanding" :items="renderlog">
         <template #[`item.no`]="{ index }">
           {{ index + 1 }}

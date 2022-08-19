@@ -63,7 +63,17 @@
                 <span>View</span>
               </v-btn>
             </template>
-
+            <template #[`item.setting`]="{ item }">
+              <v-btn
+                class="mx-2"
+                x-small
+                :disabled="item.role === 'MEMBER' || item.username == customer_name"
+                color="success"
+                @click="settingProvider(item)"
+              >
+                <span>view</span>
+              </v-btn>
+            </template>
             <template #[`item.action`]>
               <v-btn class="mx-2" fab dark x-small color="purple" @click="modal_add = true">
                 <v-icon dark> mdi-pencil </v-icon>
@@ -106,7 +116,7 @@
       </div>
 
       <v-dialog v-model="open_history" width="800">
-        <v-card class="pb-2">
+        <v-card class="pb-2 classtable">
           <v-card color="indigo darken-2" dark align-baseline>
             <v-card-title
               ><h3>ประวัติการเติม</h3>
@@ -117,6 +127,14 @@
           <v-data-table class="ma-2" :headers="headersHistory" hide-default-footer></v-data-table
         ></v-card>
       </v-dialog>
+      <v-dialog v-model="dlProvider"  max-width="900px"
+        ><v-card class="pa-3">
+          <revenue-table :downline="true" :username="targetUser" ref="table"></revenue-table>
+          <v-card-actions class="justify-center">
+            <v-btn color="error" @click="CloseDl">ปิด</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </div>
   </div>
 </template>
@@ -124,10 +142,13 @@
 <script>
 import { mapActions } from 'vuex'
 import loadingPage from '../form/loadingPage.vue'
+import RevenueTable from '../market-share/RevenueTable.vue'
 export default {
-  components: { loadingPage },
+  components: { loadingPage, RevenueTable },
   data() {
     return {
+      targetUser: '',
+      dlProvider: false,
       isLoading: false,
       showCreditamount: false,
       pageSizes: [5, 10, 15, 25],
@@ -213,6 +234,12 @@ export default {
           align: 'center',
           sortable: false,
         },
+        {
+          text: 'setting',
+          value: 'setting',
+          align: 'center',
+          sortable: false,
+        },
 
         {
           text: 'Suspend',
@@ -273,6 +300,10 @@ export default {
     this.customer_name = this.$route.query.username
   },
   methods: {
+    settingProvider(item) {
+      this.dlProvider = true
+      this.targetUser = item.username
+    },
     searchList() {
       this.pagination.page = 1
       this.getDownlineData()
@@ -342,6 +373,9 @@ export default {
         // role ? this.checkRoleRender(role) : this.checkRoleRender(this.$route.query.role),
       }
       return params
+    },
+    CloseDl() {
+      this.dlProvider = false
     },
     checkRoleRender(role) {
       let roletoRendering = undefined

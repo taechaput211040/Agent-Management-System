@@ -1,15 +1,15 @@
 <template>
   <v-app>
-    <v-app-bar clipped-left class="elevation-1" color="white" fixed app>
+    <v-app-bar clipped-left class="elevation-1" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <!-- <h1 class="amber--text darken-4">PSAB COMPANY</h1> -->
       <img
-         src="https://smart-binary.cloud/storage/GameROV/logo.png"
+        src="https://image-storage-betkub.s3.ap-southeast-1.amazonaws.com/images/ffeuZ2TFVCcdP123zqF7aufImZoUhmGZaVu5zcMx.png"
         class="img_logo_bar"
         @click="$router.push('/')"
       />
       <!-- <img
-        src="https://smart-binary.cloud/storage/smartagent/logo_smartbet.png"
+        src="https://image-storage-betkub.s3.ap-southeast-1.amazonaws.com/images/ffeuZ2TFVCcdP123zqF7aufImZoUhmGZaVu5zcMx.png"
         class="img_logo_bar"
         @click="$router.push('/')"
       /> -->
@@ -304,6 +304,12 @@ export default {
           icon: 'mdi-account-tie-outline',
           status: 2,
         },
+        {
+          title: 'Palette menegement',
+          to: '/palette',
+          icon: 'mdi-palette',
+          status: 1,
+        },
       ],
       miniVariant: false,
       right: true,
@@ -323,6 +329,9 @@ export default {
   },
   async fetch() {
     await this.get_creditBalance()
+  },
+  async beforeMount() {
+    await this.CheckOrganize()
   },
   async created() {
     await this.get_profile()
@@ -378,7 +387,15 @@ export default {
     },
   },
   methods: {
-    ...mapActions('account', ['get_creditBalance', 'get_profile']),
+    async CheckOrganize() {
+      try {
+        await this.getPalletePreset()
+      } catch (error) {
+        console.log('norest')
+        console.log(error)
+      }
+    },
+    ...mapActions('account', ['get_creditBalance', 'get_profile', 'getPalletePreset']),
     async submitauthen() {
       try {
         const { data } = await this.$axios.get(`/api/v2/authenticate/token/${this.switchauthtoagent.usernameByAuthen}`)

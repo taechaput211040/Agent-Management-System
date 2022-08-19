@@ -2,7 +2,7 @@
   <v-app>
     <loading-page v-if="isLoading"></loading-page>
     <div class="row form">
-      <div class="d-none d-lg-block pa-5 col-lg-7 col overflow-hidden">
+      <div class="d-none d-lg-block pa-0 col-lg-7 col overflow-hidden">
         <div class="bg-left"></div>
       </div>
       <div class="d-flex align-center auth-bg col-lg-5 col-12">
@@ -10,12 +10,8 @@
           <div class="mx-auto col-sm-8 col-md-6 col-lg-12 col-12">
             <div class="elevation-0 pa-sm-6 white--text">
               <v-form>
-                
                 <div class="justify-center text-center">
-                  <img
-                     src="https://smart-binary.cloud/storage/GameROV/logo.png"
-                    class="img_logo"
-                                     />
+                  <img src="https://image-storage-betkub.s3.ap-southeast-1.amazonaws.com/images/ffeuZ2TFVCcdP123zqF7aufImZoUhmGZaVu5zcMx.png" class="img_logo" />
                 </div>
                 <div class="text-center white--text my-3">
                   <!-- <h1 class="amber--text darken-4">PSAB COMPANY</h1> -->

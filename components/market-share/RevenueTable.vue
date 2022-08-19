@@ -21,16 +21,19 @@
           ></v-text-field> -->
         </div>
       </v-card-text>
-      <v-card>
+      <v-card class="classtable">
         <v-data-table
           :search="search"
           :page.sync="paginationProvider.page"
           :items-per-page.sync="paginationProvider.rowsPerPage"
           :server-items-length="paginationProvider.rowsNumber"
-          :headers="headersProvider"
+          :headers="downline == false ? headersProvider : headersProvider.filter((x) => x.value !== 'actions')"
           hide-default-footer
           :items="rendering"
         >
+          <template #[`item.code`]="{ item }">
+            {{ providerName(item.code) || item.code }}
+          </template>
           <template #[`item.commission`]="{ item }">
             <v-text-field
               dense
@@ -116,31 +119,35 @@ export default {
       type: String,
       default: () => undefined,
     },
+    downline: {
+      type: Boolean,
+      default: () => false,
+    },
   },
-
+  computed: {},
   data() {
     return {
       isLoading: false,
-      pageSizes: [5, 10, 15, 25],
+      pageSizes: [50, 100],
       paginationProvider: {
         sortBy: 'desc',
         descending: false,
         page: 1,
-        rowsPerPage: 10,
+        rowsPerPage: 100,
         rowsNumber: 0,
       },
       options: {},
       search: '',
       headersProvider: [
         {
-          text: 'code',
+          text: 'Provider',
           value: 'code',
           align: 'center',
           cellClass: 'font-weight-bold primary--text',
-          width: '200px',
+          width: '400px',
         },
         {
-          text: 'percent',
+          text: 'percent(%)',
           value: 'percent',
           align: 'center',
           sortable: false,
@@ -171,6 +178,7 @@ export default {
   },
   mounted() {
     this.getRevenueListByuser()
+    this.isLoading = false
   },
   watch: {
     username() {
@@ -180,6 +188,10 @@ export default {
   },
 
   methods: {
+    providerName(val) {
+      let provider = this.$store.state.auth?.provider[val]
+      return provider
+    },
     changePageSize(size) {
       this.paginationProvider.page = 1
       this.paginationProvider.rowsPerPage = size
@@ -240,7 +252,7 @@ export default {
         sortBy: 'desc',
         descending: false,
         page: 1,
-        rowsPerPage: 10,
+        rowsPerPage: 100,
         rowsNumber: 0,
       }
     },
@@ -263,8 +275,17 @@ export default {
         this.rendering = this.rendering.map((object) => {
           return { ...object, edit_status: false }
         })
+        this.rendering = this.rendering
+          .map((x) => {
+            if (this.$store.state.auth.provider[x.code]) {
+              return x
+            }
+          })
+          .filter((y) => y)
+        this.isLoading = false
       } catch (error) {
         this.rendering = []
+        this.isLoading = false
         this.$swal({
           icon: 'error',
           title: `${error.response.data.message}`,

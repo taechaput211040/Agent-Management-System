@@ -42,12 +42,13 @@
               <span @click="userendering(item.roundId)"> {{ item.roundId }}</span>
             </template>
             <template #[`item.shares`]="{ item }">
-              smart: {{ calProviderCom(item) }} %<br />
-              provider {{ item.provider === 'PGS' ? 10 : getShare(item).level0 }} %<br />
               <span v-if="isRoleLevel < 3">
+                smart: {{ calProviderCom(item) }} %<br />
+                provider {{ item.provider === 'PGS' ? 10 : getShare(item).level0 }} %<br />
                 company: {{ getShare(item).level2 }} %<br />
                 share: {{ getShare(item).level3 }} %<br />
               </span>
+              <span v-else> company : {{ 100 - (getShare(item).level4 + (getShare(item).level5 || 0)) }} %</span>
 
               <span>senior {{ getShare(item).level4 }} %<br /></span>
               <span v-if="getShare(item).level5">agent {{ getShare(item).level5 }} %</span>

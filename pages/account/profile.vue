@@ -9,7 +9,7 @@
             <v-col sm="6" md="6" lg="3" cols="12">
               <card-view
                 title="Company Name"
-                :value="$store.state.account.profile.workspace"
+                :value="$store.state.account.profile.company? $store.state.account.profile.company : `smart`"
                 icon="mdi-domain"
               ></card-view>
             </v-col>
@@ -32,12 +32,13 @@
             </v-col>
           </v-row>
           <!-- <provider-share></provider-share> -->
-          <!-- <revenue-table></revenue-table> -->
+           <revenue-table class="mt-4" :downline="true" :username="$store.state.auth.username" ref="table"></revenue-table>
+          <!-- <revenue-table class="mt-4" :username="$store.state.auth.username" ref="table"></revenue-table> -->
           <!-- <marketshare-table></marketshare-table> -->
         </div>
       </div>
     </div>
-    <loading-page v-if="isLoading"></loading-page>
+    <!-- <loading-page v-if="isLoading"></loading-page> -->
   </v-flex>
 </template>
 <script>
@@ -53,12 +54,13 @@ export default {
     return {
       search: '',
       data: undefined,
-      isLoading: false,
+      // isLoading: false,
     }
   },
 
   methods: {
     ...mapActions('account', ['get_profile']),
+    ...mapActions('marketshare', ['getRevenueProviderByUser', 'updateMarketsharebyProvider']),
   },
 }
 </script>

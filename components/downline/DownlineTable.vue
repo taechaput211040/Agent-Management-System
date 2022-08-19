@@ -3,7 +3,7 @@
     <loading-page v-if="isLoading"></loading-page>
     <div>
       <!-- row member name -->
-      <v-card class="pa-3 mt-4">
+      <v-card class="pa-3 mt-4 classtable">
         <h3 class="my-3">
           Member Management - List : <a class="px-5">{{ customer_name }}</a>
         </h3>
@@ -196,49 +196,51 @@
               ><v-btn fab icon x-small @click="open_history = false"><v-icon>mdi-close-thick</v-icon></v-btn>
             </v-card-title>
           </v-card>
-          <v-data-table
-            class="ma-2"
-            :headers="headersHistory"
-            hide-default-footer
-            :server-items-length="paginationHistory.total"
-            :page.sync="paginationHistory.page"
-            :items-per-page="paginationHistory.limit"
-            :items="itemHistory"
-          >
-            <template #[`item.no`]="{ index }">
-              {{ paginationHistory.limit * (paginationHistory.page - 1) + (index + 1) }}
-            </template>
-            <template #[`item.credit`]="{ item }"
-              ><div class="font-weight-bold" :class="item.credit > 0 ? 'success--text' : 'error--text'">
-                {{ item.credit | numberFormat }}
-              </div>
-            </template>
-            <template #[`item.createdAt`]="{ item }"> {{ item.createdAt | dateFormat }} </template></v-data-table
-          >
-          <v-row>
-            <v-col cols="12" sm="2" class="px-3">
-              <v-select
-                dense
-                hide-details="auto"
-                solo
-                v-model="paginationHistory.limit"
-                :items="pageSizes"
-                @change="handlePagesizeHistoryChange"
-                label="Items per Page"
-              ></v-select>
-            </v-col>
-            <v-col cols="12" sm="10">
-              <v-pagination
-                v-model="paginationHistory.page"
-                :total-visible="7"
-                @input="changePageHistory(paginationHistory.page)"
-                :length="Math.ceil(paginationHistory.total / paginationHistory.limit)"
-              ></v-pagination> </v-col
-          ></v-row>
+          <v-card class="classtable">
+            <v-data-table
+              class="ma-2"
+              :headers="headersHistory"
+              hide-default-footer
+              :server-items-length="paginationHistory.total"
+              :page.sync="paginationHistory.page"
+              :items-per-page="paginationHistory.limit"
+              :items="itemHistory"
+            >
+              <template #[`item.no`]="{ index }">
+                {{ paginationHistory.limit * (paginationHistory.page - 1) + (index + 1) }}
+              </template>
+              <template #[`item.credit`]="{ item }"
+                ><div class="font-weight-bold" :class="item.credit > 0 ? 'success--text' : 'error--text'">
+                  {{ item.credit | numberFormat }}
+                </div>
+              </template>
+              <template #[`item.createdAt`]="{ item }"> {{ item.createdAt | dateFormat }} </template></v-data-table
+            >
+            <v-row>
+              <v-col cols="12" sm="2" class="px-3">
+                <v-select
+                  dense
+                  hide-details="auto"
+                  solo
+                  v-model="paginationHistory.limit"
+                  :items="pageSizes"
+                  @change="handlePagesizeHistoryChange"
+                  label="Items per Page"
+                ></v-select>
+              </v-col>
+              <v-col cols="12" sm="10">
+                <v-pagination
+                  v-model="paginationHistory.page"
+                  :total-visible="7"
+                  @input="changePageHistory(paginationHistory.page)"
+                  :length="Math.ceil(paginationHistory.total / paginationHistory.limit)"
+                ></v-pagination> </v-col
+            ></v-row>
+          </v-card>
         </v-card>
       </v-dialog>
       <v-dialog v-model="dlProvider" persistent max-width="900px"
-        ><v-card class="pa-3">
+        ><v-card class="pa-3 classtable">
           <revenue-table :username="targetUser" ref="table"></revenue-table>
           <v-card-actions class="justify-center">
             <v-btn color="error" @click="CloseDl">ปิด</v-btn>

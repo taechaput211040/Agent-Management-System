@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="  mt-3" v-if="!this.$route.query.username">
+    <v-card class="classtable  mt-3" v-if="!this.$route.query.username">
       <v-card-text class="pa-0 indigo lighten-3 white--text d-sm-flex d-block align-baseline">
         <h2 class="ml-2 py-3">Market Share</h2>
         <v-spacer></v-spacer>
