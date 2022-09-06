@@ -3,7 +3,7 @@
     <div v-if="!isLoading">
       <v-row>
         <v-container>
-          <h3 class="text-center mt-2">Report By User</h3>
+          <h1 class="text-center mt-2">Report By User</h1>
           <!-- <div>
             <v-row class="select-item py-2">
               <h4 class="pa-4">ประเภทเกม:</h4>
@@ -100,6 +100,13 @@
               <date-filter-search :filter="dateFilter"></date-filter-search>
             </div>
           </div>
+          <total-summary
+            :group_select="group_select"
+            :provider_select="provider_select"
+            :dateFilter="dateFilter"
+            :event="useEvent"
+          ></total-summary>
+
           <!-- report admin -->
           <report-winlose
             ref="winlose"
@@ -107,6 +114,7 @@
             :group_select="group_select"
             :provider_select="provider_select"
             :dateFilter="dateFilter"
+            @tougle="(value) => handleEmite(value)"
           ></report-winlose>
           <!-- report admin -->
           <!-- report owner -->
@@ -118,6 +126,7 @@
             :group_select="group_select"
             :provider_select="provider_select"
             :dateFilter="dateFilter"
+            @tougle="(value) => handleEmite(value)"
           ></report-owner>
           <!-- report owner -->
           <!-- report share --><report-share
@@ -131,6 +140,7 @@
             :group_select="group_select"
             :provider_select="provider_select"
             :dateFilter="dateFilter"
+            @tougle="(value) => handleEmite(value)"
           ></report-share>
           <!-- report share -->
           <!-- report senior -->
@@ -151,6 +161,7 @@
             :group_select="group_select"
             :provider_select="provider_select"
             :dateFilter="dateFilter"
+            @tougle="(value) => handleEmite(value)"
           ></report-agent>
           <!-- ||(this.isRoleLevel == 5 && !this.$route.query.agent_user && !this.$route.query.username) -->
           <!-- report member -->
@@ -171,6 +182,7 @@
             :group_select="group_select"
             :provider_select="provider_select"
             :dateFilter="dateFilter"
+            @tougle="(value) => handleEmite(value)"
           ></report-member>
           <!-- report member -->
           <!-- report senior -->
@@ -208,6 +220,7 @@
             :group_select="group_select"
             :provider_select="provider_select"
             :dateFilter="dateFilter"
+            @tougle="(value) => handleEmite(value)"
           ></report-round>
           <report-transaction
             v-if="
@@ -242,6 +255,7 @@
             :group_select="group_select"
             :provider_select="provider_select"
             :dateFilter="dateFilter"
+            @tougle="(value) => handleEmite(value)"
           ></report-transaction>
           <!-- report round -->
         </v-container>
@@ -254,10 +268,13 @@
 </template>
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
+import TotalSummary from '~/components/dashboard/TotalSummary.vue'
 
 export default {
+  components: { TotalSummary },
   data() {
     return {
+      useEvent: false,
       seen1: true,
       seen2: false,
       seen3: true,
@@ -299,6 +316,9 @@ export default {
     }
   },
   methods: {
+    handleEmite(value) {
+      this.useEvent = value
+    },
     ...mapActions('provider', { load_provider: 'load' }),
     ...mapActions('group', ['load_list']),
     ...mapActions('report', ['getAllReport']),

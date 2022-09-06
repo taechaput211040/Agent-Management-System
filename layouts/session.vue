@@ -38,9 +38,13 @@ export default {
             allowOutsideClick: false,
             showConfirmButton: false,
             timer: 1500,
+          }).then(async (result) => {
+            if (result) {
+              await location.reload()
+              //refreshandredirect/
+            }
           })
         }
-        console.log(window.location.origin, 'norest')
       } catch (error) {
         console.log(error)
       }

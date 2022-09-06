@@ -98,7 +98,7 @@ export default {
     },
   },
   server: {
-    port: process.env.APP_PORT || 8011, // default: 3000
+    port: process.env.APP_PORT || 8123, // default: 3000
   },
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {

@@ -2,7 +2,14 @@
   <v-flex>
     <div class="text-right mx-3 d-flex justify-end align-center">
       <div class="col-12 col-sm-8 col-md-6 col-lg-4">
-        <v-text-field hide-details="auto" @keyup.enter="onSearch()" label="กรอก username" dense outlined v-model="searchUsername"></v-text-field>
+        <v-text-field
+          hide-details="auto"
+          @keyup.enter="onSearch()"
+          label="กรอก username"
+          dense
+          outlined
+          v-model.trim="searchUsername"
+        ></v-text-field>
       </div>
 
       <v-btn color="success" @click="onSearch()">
@@ -351,6 +358,7 @@ export default {
   },
   data() {
     return {
+       eventSearch: false,
       searchUsername: '',
       pageSizes: [5, 10, 15, 25],
       options: {},
@@ -571,6 +579,8 @@ export default {
       return this.numberFormat(result)
     },
     async onSearch() {
+      this.eventSearch = !this.eventSearch
+      this.$emit('tougle', this.eventSearch)
       this.pagination.page = 1
       this.progressBar = true
       await this.onRequest({
@@ -641,7 +651,7 @@ export default {
           senior_user: this.$route.query.senior_user ? this.$route.query.senior_user : undefined,
           agent_user: this.$route.query.agent_user ? this.$route.query.agent_user : this.$store.state.auth.username,
           role: this.isRoleLevel,
-          username: this.searchUsername || this.searchUsername !== '' ? this.searchUsername : undefined,
+          username: this.searchUsername || this.searchUsername !== '' ? this.searchUsername.toLowerCase() : undefined,
         })
 
         this.reportdata = data.docs

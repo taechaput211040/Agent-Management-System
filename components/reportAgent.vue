@@ -40,18 +40,18 @@
             </template>
             <template #[`item.bet`]="{ item }">
               <span class="cursor-pointer">
-                {{ numberFormat(item.providerBet) }}
+                {{ numberFormat(item.memberBet) }}
               </span>
             </template>
 
             <template #[`item.payout`]="{ item }">
               <span class="cursor-pointer">
-                {{ numberFormat(item.providerPay) }}
+                {{ numberFormat(item.memberPay) }}
               </span>
             </template>
             <template #[`item.turnover`]="{ item }">
               <span class="cursor-pointer">
-                {{ numberFormat(item.providerTurn) }}
+                {{ numberFormat(item.memberTurn) }}
               </span>
             </template>
             <template #[`item.memberWin`]="{ item }">
@@ -274,7 +274,7 @@
             dense
             outlined
             @keyup.enter="searchByUser()"
-            v-model="searchUsername"
+            v-model.trim="searchUsername"
           ></v-text-field>
         </div>
 
@@ -622,6 +622,7 @@ export default {
   },
   data() {
     return {
+      eventSearch: false,
       isLoadingMember: false,
       searchUsername: '',
       pageSizes: [5, 10, 15, 30, 50],
@@ -858,6 +859,8 @@ export default {
     },
 
     async onSearch() {
+      this.$emit('tougle', this.eventSearch)
+      this.eventSearch = !this.eventSearch
       this.progressBar = true
       this.getAgentlist()
       await this.onRequest()
@@ -930,7 +933,7 @@ export default {
           id: this.$route.query.share_user ? this.$route.query.share_user : undefined,
           senior_user: this.$route.query.senior_user ? this.$route.query.senior_user : undefined,
           role: this.isRoleLevel,
-          username: this.searchUsername || this.searchUsername !== '' ? this.searchUsername : undefined,
+          username: this.searchUsername || this.searchUsername !== '' ? this.searchUsername.toLowerCase() : undefined,
         })
         this.reportsenior = senior
         this.pagination.rowsNumber = senior.pageInfo.total

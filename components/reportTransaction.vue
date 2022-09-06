@@ -351,6 +351,7 @@ export default {
   },
   data() {
     return {
+      eventSearch: false,
       progressBar: true,
       loadingpage: false,
       fishing: 'FH',
@@ -582,6 +583,8 @@ export default {
       return this.numberFormat(result)
     },
     async onSearch() {
+      this.eventSearch = !this.eventSearch
+      this.$emit('tougle', this.eventSearch)
       this.progressBar = true
       await this.onRequest({
         pagination: this.pagination,

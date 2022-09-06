@@ -37,3 +37,15 @@ export function change_password(context, data) {
     }
   })
 }
+export function swapAccount(context, user) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.post('/v1alpha/control/user/signIn', {
+        username: user,
+      })
+      resolve(response)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}

@@ -1,15 +1,13 @@
 export function set_login(
   state,
-  {
-    groups = {},
-    key = '',
-    role = 'NONE',
-    supervisor = 'NONE',
-    username = 'UnAuthorizeUser',
-    workspace = 'workspace',
-  }
+  { groups = {}, key = '', role = 'NONE', supervisor = 'NONE', username = 'UnAuthorizeUser', workspace = 'workspace' }
 ) {
-  localStorage.clear()
+  localStorage.removeItem('groups')
+  localStorage.removeItem('key')
+  localStorage.removeItem('role')
+  localStorage.removeItem('supervisor')
+  localStorage.removeItem('username')
+  localStorage.removeItem('workspace')
 
   state.groups = groups
   state.key = key

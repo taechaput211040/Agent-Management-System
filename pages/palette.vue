@@ -1,6 +1,23 @@
 <template>
   <div>
+    <loading-page v-if="isLoading"></loading-page>
     <h2 class="text-center">Palette Management</h2>
+    <div class="row justify-center">
+      <div class="col-lg-3 col-md-4 col-12 text-center elevation-4 my-5 rounded">
+        <h2 class="text-center text-decoration-underline font-italic my-2">ภาพ LOGO</h2>
+        <img :src="image ? image : this.webPalette.logo" alt="" class="img_logo" />
+
+        <v-file-input
+          label="File input"
+          outlined
+          dense
+          accept="image/png, image/jpeg, image/jpg , image/webp"
+          @change="inputImage"
+        ></v-file-input>
+        <v-btn color="success" @click="saveLogo()">Save Logo</v-btn>
+      </div>
+    </div>
+
     <div class="text-center my-4">
       <v-btn
         :color="index === `darkApp` ? 'black white--text' : 'white black--text'"
@@ -37,7 +54,7 @@
               :text_color="renderItem.menu.textColor.value"
               :activeMenu="renderItem.menu.activeMenuColor.value"
               v-if="index === 'menu'"
-              class="col-lg-3 col-xl-6 col-md-8 col-sm-12 col-12"
+              class="col-lg-8 col-xl-6 col-md-8 col-sm-12 col-12"
             ></navbar-detail>
             <table-detail
               :bgHeader="renderItem.table.colorTable.value"
@@ -88,14 +105,18 @@ import CardDetial from '~/components/palette/example/CardDetial.vue'
 import NavbarDetail from '~/components/palette/example/NavbarDetail.vue'
 import TableDetail from '~/components/palette/example/TableDetail.vue'
 import GradientInput from '~/components/palette/GradientInput.vue'
+import loadingPage from '~/components/form/loadingPage.vue'
 export default {
-  components: { ColorInput, GradientInput, CardData, CheckType, CardDetial, NavbarDetail, TableDetail },
+  components: { loadingPage, ColorInput, GradientInput, CardData, CheckType, CardDetial, NavbarDetail, TableDetail },
   data() {
     return {
+      image: '',
       renderItem: {},
       mainitem: {},
       dataExample: {},
       theme: true,
+      imageUpload: {},
+      isLoading: false,
     }
   },
   computed: {
@@ -119,12 +140,85 @@ export default {
       this.mainitem = this.webPalette.palette
       sessionStorage.setItem('current_palette', JSON.stringify(this.mainitem))
     }
-
+    this.image = this.webPalette.logo
     await this.selectData()
   },
   methods: {
     ...mapActions('account', ['updatePalette']),
     ...mapMutations('account', ['setPallete']),
+    async saveLogo() {
+      this.$swal({
+        title: 'Are you sure you want to Change Logo ?',
+        icon: 'warning',
+        showCancelButton: true,
+        allowOutsideClick: false,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          this.isLoading = true
+          await this.handleUploadImage(this.imageUpload)
+            .then(async (logo) => {
+              if (logo) {
+                try {
+                  let { data } = await this.$axios.patch(
+                    `http://localhost:3000/css/profile/agent/${this.webPalette.web_id}`,
+                    {
+                      logo: logo,
+                    }
+                  )
+                  this.image = data.logo
+                  this.isLoading = false
+                  this.$swal({
+                    icon: 'success',
+                    title: 'Update Logo Success',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    timer: 1500,
+                  }).then(async (result) => {
+                    if (result) {
+                      this.isLoading = false
+                      await location.reload()
+                      //refreshandredirect/
+                    }
+                  })
+                } catch (error) {
+                  this.$swal({
+                    icon: 'error',
+                    title: `${error.response.data.message}`,
+                    showConfirmButton: false,
+                    timer: 1500,
+                  })
+                  this.isLoading = false
+                }
+              }
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        }
+      })
+      this.isLoading = false
+    },
+    async inputImage(value) {
+      if (value) this.image = URL.createObjectURL(value)
+      let formData = new FormData()
+      formData.append('file', value)
+      console.log(formData.get('file'), 'formData')
+      this.imageUpload = formData
+    },
+    async handleUploadImage(image) {
+      try {
+        let { data } = await this.$axios.post(`http://localhost:3000/image/file/image/smart`, image)
+        console.log(data.image, 'response')
+        return data.image
+      } catch (error) {
+        console.log(error)
+        this.isLoading = false
+      }
+    },
     async getPresetByOrganize() {},
     async selectData(index) {
       if (!index) {

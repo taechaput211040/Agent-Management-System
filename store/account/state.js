@@ -3,6 +3,7 @@ export default function () {
     profile: JSON.parse(localStorage.getItem('profile')) || null,
     credit: null,
     webPalette: {
+      logo: '',
       palette: {
         darkApp: {
           menu: {

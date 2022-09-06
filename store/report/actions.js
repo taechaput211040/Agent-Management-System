@@ -406,3 +406,26 @@ export async function getTransactionByRound(
     }
   })
 }
+
+export async function getProviderReport(
+  { commit, state },
+  params = {
+    start: undefined,
+    end: undefined,
+    limit: undefined,
+    page: undefined,
+  }
+) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.get('/v1alpha/report-transaction/provider/', {
+        params: {
+          ...params,
+        },
+      })
+      resolve(response)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}

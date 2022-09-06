@@ -10,11 +10,19 @@
           <div class="mx-auto col-sm-8 col-md-6 col-lg-12 col-12">
             <div class="elevation-0 pa-sm-6 white--text">
               <v-form>
+                <!-- <div class="justify-center text-center">
+                  <img :src="image ? image : this.webPalette.logo" class="img_logo" />
+                </div> -->
                 <div class="justify-center text-center">
-                  <img src="https://image-storage-betkub.s3.ap-southeast-1.amazonaws.com/images/ffeuZ2TFVCcdP123zqF7aufImZoUhmGZaVu5zcMx.png" class="img_logo" />
+                  <img
+                    src="https://smart-binary.cloud/storage/smartagent/logo_smartbet.png"
+                    class="img_logo"
+                    @click="$router.push('/')"
+                  />
                 </div>
+
                 <div class="text-center white--text my-3">
-                  <!-- <h1 class="amber--text darken-4">PSAB COMPANY</h1> -->
+                  <!-- <h1 class="amber--text darken-4">BETKUB COMPANY</h1> -->
                   <h2>Agent Management</h2>
                   <h2>System</h2>
                 </div>
@@ -55,7 +63,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex'
 import loadingPage from '~/components/form/loadingPage.vue'
 export default {
   components: { loadingPage },
@@ -63,6 +71,7 @@ export default {
   data() {
     return {
       hidden: String,
+      image: '',
       isLoading: false,
       username: '',
       password: '',
@@ -74,6 +83,9 @@ export default {
   },
   created() {
     this.$vuetify.theme.dark = true
+  },
+  computed: {
+    ...mapState('account', ['webPalette']),
   },
   methods: {
     ...mapMutations('auth', ['set_login']),

@@ -404,6 +404,7 @@ export default {
   },
   data() {
     return {
+      eventSearch: false,
       pageSizes: [25, 50, 75, 100],
       options: {},
       progressBar: true,
@@ -695,6 +696,8 @@ export default {
       return this.numberFormat(result)
     },
     async onSearch() {
+      this.eventSearch = !this.eventSearch
+      this.$emit('tougle', this.eventSearch)
       this.progressBar = true
       await this.onRequest({
         pagination: this.pagination,
@@ -771,7 +774,6 @@ export default {
       for (let i in shares) {
         result[`level${shares[i].level}`] = shares[i].percent
       }
-      console.log(result)
       return result
     },
     calProviderCom(item) {

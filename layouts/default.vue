@@ -2,17 +2,13 @@
   <v-app>
     <v-app-bar clipped-left class="elevation-1" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <!-- <h1 class="amber--text darken-4">PSAB COMPANY</h1> -->
+      <!-- <h1 class="amber--text darken-4">BETKUB</h1> -->
+      <!-- <img :src="image ? image : this.webPalette.logo" class="img_logo_bar" @click="$router.push('/')" /> -->
       <img
-        src="https://image-storage-betkub.s3.ap-southeast-1.amazonaws.com/images/ffeuZ2TFVCcdP123zqF7aufImZoUhmGZaVu5zcMx.png"
+        src="https://smart-binary.cloud/storage/smartagent/logo_smartbet.png"
         class="img_logo_bar"
         @click="$router.push('/')"
       />
-      <!-- <img
-        src="https://image-storage-betkub.s3.ap-southeast-1.amazonaws.com/images/ffeuZ2TFVCcdP123zqF7aufImZoUhmGZaVu5zcMx.png"
-        class="img_logo_bar"
-        @click="$router.push('/')"
-      /> -->
       <v-spacer />
       <div class="d-none d-sm-block">
         <v-btn icon @click.prevent="$vuetify.theme.dark = !$vuetify.theme.dark">
@@ -43,7 +39,8 @@
           </v-btn>
         </template>
         <v-list>
-          <v-list-item @click.prevent="switchBackToAdmin" v-show="isStaff">
+          <!-- v-show="isStaff" -->
+          <v-list-item @click.prevent="switchBackToAdmin" v-if="!showSwich">
             <v-list-item-icon>
               <v-icon>mdi-shield-account</v-icon>
             </v-list-item-icon>
@@ -51,7 +48,7 @@
               <v-list-item-title>Back To Admin</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item @click.prevent="switch_auth = true" v-show="isStaff">
+          <v-list-item @click.prevent="switch_auth = true" v-if="showSwich && isStaff">
             <v-list-item-icon>
               <v-icon>mdi-account-switch</v-icon>
             </v-list-item-icon>
@@ -195,6 +192,7 @@ export default {
   middleware: 'auth',
   data() {
     return {
+      image: '',
       isStaff: false,
       fillter: {
         start: '2022-03-31T17:00:00.000Z',
@@ -282,7 +280,7 @@ export default {
               icon: 'mdi-chart-donut',
               text: 'Report By provider',
               to: '/report/byProvider',
-              status: 2,
+              status: 1,
             },
             {
               icon: 'mdi-chart-timeline-variant-shimmer',
@@ -305,7 +303,7 @@ export default {
           status: 2,
         },
         {
-          title: 'Palette menegement',
+          title: 'Palette Management',
           to: '/palette',
           icon: 'mdi-palette',
           status: 1,
@@ -318,13 +316,23 @@ export default {
     }
   },
   computed: {
+    showSwich() {
+      if (!localStorage.getItem('admin_user')) return true
+      else return false
+    },
+
+    ...mapGetters('auth', ['isRoleLevel']),
+    ...mapState('account', ['webPalette']),
     ...mapGetters('auth', ['token']),
-    ...mapState('auth', ['role']),
+    ...mapState('auth', ['role', 'username']),
     ...mapState('account', ['profile']),
     navigationMenu() {
       let menu = this.items.filter((x) => x.status != 0)
       if (this.role === 'SENIOR' || this.role === 'AGENT') return menu
-      return menu.filter((x) => x.title != 'Member Management')
+      else if (this.role === 'OWNER') return menu.filter((x) => x.title != 'Member Management')
+      else {
+        return menu.filter((x) => x.title != 'Member Management' && x.title != 'Palette Management')
+      }
     },
   },
   async fetch() {
@@ -395,49 +403,61 @@ export default {
         console.log(error)
       }
     },
+    ...mapActions('auth', ['swapAccount']),
     ...mapActions('account', ['get_creditBalance', 'get_profile', 'getPalletePreset']),
     async submitauthen() {
       try {
-        const { data } = await this.$axios.get(`/api/v2/authenticate/token/${this.switchauthtoagent.usernameByAuthen}`)
-        const { data: userProfile } = await this.$axios.get('/api/v1/authenticate/profile', {
-          headers: {
-            Authorization: data.key,
-          },
-        })
-        const token = this.token
-        const profile = { ...userProfile, ...data }
-        profile.role = profile.level
-        console.log(profile, 'user')
-        this.set_login(profile)
-        // console.log("is_switch_admin", true);
-        // console.log("admin_token", token);
-        localStorage.setItem('is_switch_admin', true)
-        localStorage.setItem('admin_token', token)
+        const { data } = await this.swapAccount(this.switchauthtoagent.usernameByAuthen)
+        if (data.code == 404) {
+          this.$swal({
+            icon: 'error',
+            title: 'Invalid username!!',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            timer: 1500,
+          })
+        } else {
+          await localStorage.setItem('admin_user', this.username)
+          await this.set_login(data)
+          await this.$swal({
+            icon: 'success',
+            title: `Authen with : ${data.username}`,
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            timer: 1500,
+          }).then(async (result) => {
+            if (result) {
+              await location.reload()
+            }
+          })
+        }
       } catch (error) {
-        this.$swal({
-          icon: 'error',
-          title: `${error.response.data.message}`,
-          showConfirmButton: false,
-          timer: 1500,
-        })
+        console.log(error)
       } finally {
         this.switch_auth = false
       }
     },
     async switchBackToAdmin() {
+      let adminUser = localStorage.getItem('admin_user')
       try {
-        const { data } = await this.$axios.get('/api/v1/authenticate/profile', {
-          headers: {
-            Authorization: localStorage.getItem('admin_token'),
-          },
+        const { data } = await this.swapAccount(adminUser)
+        console.log(data, 'dataauthen')
+        await this.set_login(data)
+        await localStorage.removeItem('admin_user')
+        await this.$swal({
+          icon: 'success',
+          title: `Authen with ADMIN !!`,
+          allowOutsideClick: false,
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(async (result) => {
+          if (result) {
+            await location.reload()
+          }
         })
-        const profile = { ...data }
-        profile.role = profile.level
-        profile.key = localStorage.getItem('admin_token')
-        this.set_login(profile)
-        console.log(profile, 'back authen')
-      } finally {
-        console.log('final')
+        // localStorage.setItem('admin_token', token)
+      } catch (error) {
+        console.log(error)
       }
     },
     ...mapMutations('auth', ['set_logout', 'set_login']),

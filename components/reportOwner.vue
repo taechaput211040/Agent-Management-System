@@ -58,17 +58,17 @@
             </template>
             <template #[`item.providerBet`]="{ item }">
               <span class="cursor-pointer">
-                {{ item.providerBet | numberFormat }}
+                {{ item.memberBet | numberFormat }}
               </span>
             </template>
             <template #[`item.providerTurn`]="{ item }">
               <span class="cursor-pointer">
-                {{ item.providerTurn | numberFormat }}
+                {{ item.memberTurn | numberFormat }}
               </span>
             </template>
             <template #[`item.providerPay`]="{ item }">
               <span class="cursor-pointer">
-                {{ item.providerPay | numberFormat }}
+                {{ item.memberPay | numberFormat }}
               </span>
             </template>
             <template #[`item.memberWin`]="{ item }">
@@ -226,6 +226,7 @@ export default {
   },
   data() {
     return {
+      eventSearch: false,
       pageSizes: [25, 50, 100],
       options: {},
       progressBar: true,
@@ -448,6 +449,8 @@ export default {
       return this.numberFormat(result)
     },
     async onSearch() {
+      this.$emit('tougle', this.eventSearch)
+      this.eventSearch = !this.eventSearch
       this.progressBar = true
       await this.onRequest({
         pagination: this.pagination,
