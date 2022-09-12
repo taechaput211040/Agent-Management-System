@@ -506,8 +506,8 @@ export default {
       return {
         typeCode: this.group_select.join(',') ? this.group_select.join(',') : undefined,
         provider: this.provider_select.join(',') ? this.provider_select.join(',') : undefined,
-        start: new Date(start).toISOString(),
-        end: new Date(end).toISOString(),
+        start: moment(start).format(),
+        end: moment(end).format(),
       }
     },
     async onRequest(props) {

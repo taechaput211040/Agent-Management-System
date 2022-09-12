@@ -43,6 +43,18 @@ export async function create_SubAccont({ commit }, body) {
     }
   })
 }
+export async function createGroups({ commit }, payout) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let data = await this.$axios.patch(`/v1alpha/user/members/${payout.username}/group`, {
+        groups: payout.groups,
+      })
+      resolve(data)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
 
 export async function subaccontList(
   { commit },

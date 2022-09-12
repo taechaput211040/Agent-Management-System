@@ -7,6 +7,7 @@
         <h3 class="my-3">
           Member Management - List : <a class="px-5">{{ customer_name }}</a>
         </h3>
+      
 
         <v-row>
           <v-col cols="12" md="4">
@@ -33,7 +34,7 @@
       <div class="mt-5">
         <div class="text-right pa-2">
           <v-btn
-            :disabled="$store.state.auth.role == 'AGENT'"
+            :disabled="$store.state.auth.role == 'AGENT' || canwrite"
             class="my-3"
             v-if="$store.state.auth.role !== 'MEMBER'"
             @click="handleCreateDownline()"
@@ -66,28 +67,43 @@
                   color="warning"
                   elevation="2"
                   small
+                  :disabled="canwrite"
                   >ตรวจสอบเครดิต <v-icon dark right> mdi-cash-check </v-icon></v-btn
                 >
               </div>
             </template>
             <template #[`item.edit`]="{ item, index }">
               <div class="d-flex justify-center">
-                <v-btn class="mx-2" dark small color="success" @click="hanClickCredit(item, false, index)">
+                <v-btn
+                  :disabled="canwrite"
+                  class="mx-2"
+                  dark
+                  small
+                  color="success"
+                  @click="hanClickCredit(item, false, index)"
+                >
                   เพิ่ม <v-icon dark right> mdi-cash-multiple </v-icon> </v-btn
-                ><v-btn class="mx-2" dark small color="error" @click="hanClickCredit(item, true, index)">
+                ><v-btn
+                  :disabled="canwrite"
+                  class="mx-2"
+                  dark
+                  small
+                  color="error"
+                  @click="hanClickCredit(item, true, index)"
+                >
                   ตัด <v-icon dark right> mdi-cash-minus </v-icon>
                 </v-btn>
               </div>
             </template>
             <template #[`item.log`]="{ item }">
-              <v-btn class="mx-2" fab dark x-small color="teal" @click="showlog(item)">
+              <v-btn :disabled="canwrite" class="mx-2" fab dark x-small color="teal" @click="showlog(item)">
                 <v-icon dark> mdi-format-list-bulleted-square </v-icon>
               </v-btn>
             </template>
             <template #[`item.view`]="{ item }">
               <v-btn
                 class="mx-2"
-                :disabled="item.role === 'MEMBER' || item.username == customer_name"
+                :disabled="item.role === 'MEMBER' || item.username == customer_name || canwrite"
                 x-small
                 color="primary"
                 @click="viewDownline(item)"
@@ -99,7 +115,7 @@
               <v-btn
                 class="mx-2"
                 x-small
-                :disabled="item.role === 'MEMBER' || item.username == customer_name"
+                :disabled="item.role === 'MEMBER' || item.username == customer_name || canwrite"
                 color="success"
                 @click="settingProvider(item)"
               >
@@ -107,7 +123,7 @@
               </v-btn>
             </template>
             <template #[`item.action`]="{ item }">
-              <v-btn class="mx-2" dark small color="blue-grey" @click="openChangePassword(item.username)">
+              <v-btn class="mx-2" :disabled="canwrite"  dark small color="blue-grey" @click="openChangePassword(item.username)">
                 <v-icon dark left> mdi-lock-reset </v-icon> changepass
               </v-btn>
             </template>
@@ -252,7 +268,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import LoadingPage from '../form/loadingPage.vue'
 import RevenueTable from '../market-share/RevenueTable.vue'
 export default {
@@ -450,6 +466,15 @@ export default {
       async handler() {
         this.getDownlineData()
       },
+    },
+  },
+  computed: {
+    ...mapState('account', ['profile', 'isClone', 'groups']),
+    canwrite() {
+      if (this.groups) {
+        if (!this.groups.includes('downline_write') && this.isClone) return true
+        else false
+      }
     },
   },
   async mounted() {

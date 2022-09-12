@@ -2,13 +2,13 @@
   <v-app>
     <v-app-bar clipped-left class="elevation-1" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <!-- <h1 class="amber--text darken-4">BETKUB</h1> -->
+      <h1 class="amber--text darken-4">BETKUB</h1>
       <!-- <img :src="image ? image : this.webPalette.logo" class="img_logo_bar" @click="$router.push('/')" /> -->
-      <img
+      <!-- <img
         src="https://smart-binary.cloud/storage/smartagent/logo_smartbet.png"
         class="img_logo_bar"
         @click="$router.push('/')"
-      />
+      /> -->
       <v-spacer />
       <div class="d-none d-sm-block">
         <v-btn icon @click.prevent="$vuetify.theme.dark = !$vuetify.theme.dark">
@@ -48,6 +48,7 @@
               <v-list-item-title>Back To Admin</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
+          <!-- -->
           <v-list-item @click.prevent="switch_auth = true" v-if="showSwich && isStaff">
             <v-list-item-icon>
               <v-icon>mdi-account-switch</v-icon>
@@ -213,6 +214,7 @@ export default {
           title: 'Dashboard',
           to: '/',
           icon: 'mdi-view-dashboard',
+          permission: 'dashboard_read',
           status: 1,
         },
         {
@@ -239,42 +241,35 @@ export default {
           title: 'Sub Account',
           to: '/subAccount',
           icon: 'mdi-text-account',
+          permission: 'sub-account_read',
           status: 1,
         },
         {
           title: 'Downline Management',
           to: '/downline/downlineManagement',
           icon: 'mdi-sitemap',
+          permission: 'downline_read',
           status: 1,
         },
         {
           title: 'Member Management',
           to: '/member',
           icon: 'mdi-human-male-male',
+          permission: 'member_read',
           status: 1,
         },
         {
           title: 'Lotto Management',
           to: '/lotto',
           icon: 'mdi-slot-machine',
+          permission: 'lotto-management_read',
           status: 1,
-        },
-        {
-          title: 'Landing Page Management',
-          to: '/landinpage',
-          icon: 'mdi-page-layout-header',
-          status: 0,
-        },
-        {
-          title: 'Member Page Management',
-          to: '/mamberpage',
-          icon: 'mdi-page-layout-body',
-          status: 0,
         },
         {
           title: 'Report',
           icon: 'mdi-chart-multiple',
           status: 1,
+          permission: 'report_read',
           subLinks: [
             {
               icon: 'mdi-chart-donut',
@@ -294,12 +289,14 @@ export default {
           title: 'Check Outstanding',
           to: '/outstanding',
           icon: 'mdi-set-center',
+          permission: 'check-outstanding_read',
           status: 2,
         },
         {
           title: 'Staff Logs',
           to: '/stafflog',
           icon: 'mdi-account-tie-outline',
+          permission: 'staff-log_read',
           status: 2,
         },
         {
@@ -322,17 +319,23 @@ export default {
     },
 
     ...mapGetters('auth', ['isRoleLevel']),
-    ...mapState('account', ['webPalette']),
+    ...mapState('account', ['webPalette', 'profile', 'isClone', 'groups']),
     ...mapGetters('auth', ['token']),
     ...mapState('auth', ['role', 'username']),
     ...mapState('account', ['profile']),
     navigationMenu() {
       let menu = this.items.filter((x) => x.status != 0)
-      if (this.role === 'SENIOR' || this.role === 'AGENT') return menu
-      else if (this.role === 'OWNER') return menu.filter((x) => x.title != 'Member Management')
+      let dynamicMenu = null
+      if (this.role === 'SENIOR' || this.role === 'AGENT') dynamicMenu = menu
+      else if (this.role === 'OWNER') dynamicMenu = menu.filter((x) => x.title != 'Member Management')
       else {
-        return menu.filter((x) => x.title != 'Member Management' && x.title != 'Palette Management')
+        dynamicMenu = menu.filter((x) => x.title != 'Member Management' && x.title != 'Palette Management')
       }
+      if (this.isClone) {
+        dynamicMenu = dynamicMenu.filter((menu) => this.groups.includes(menu.permission))
+      }
+
+      return dynamicMenu
     },
   },
   async fetch() {

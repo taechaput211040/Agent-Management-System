@@ -6,7 +6,9 @@
           <h2 class="mt-2">Member Management</h2>
           <v-card class="pa-2 mt-5 mb-2 classtable">
             <div class="d-sm-flex d-block align-baseline pa-2">
-              <v-btn depressed color="primary" @click="add()"> <v-icon>mdi-plus</v-icon>Add Member</v-btn>
+              <v-btn depressed color="primary" :disabled="canwrite" @click="add()">
+                <v-icon>mdi-plus</v-icon>Add Member</v-btn
+              >
               <v-spacer></v-spacer>
               <div class="col-12 col-sm-4 col-md-4 pa-0 my-1">
                 <v-text-field
@@ -37,36 +39,83 @@
               </template>
               <template #[`item.credit`]="{ item }">
                 {{ item.creditBalance }}
-                <v-btn color="warning" :loading="loadingBtn" elevation="2" small @click="getBalance(item)"
+                <v-btn
+                  color="warning"
+                  :loading="loadingBtn"
+                  elevation="2"
+                  small
+                  @click="getBalance(item)"
                   >ตรวจสอบเครดิต</v-btn
                 >
               </template>
               <template #[`item.edit`]="{ item }">
                 <div class="d-flex justify-center">
-                  <v-btn class="mx-2" fab dark x-small color="success" @click="hanClickCredit(item, false)">
+                  <v-btn
+                    :disabled="canwrite"
+                    class="mx-2"
+                    fab
+                    dark
+                    x-small
+                    color="success"
+                    @click="hanClickCredit(item, false)"
+                  >
                     <v-icon dark> mdi-plus </v-icon> </v-btn
-                  ><v-btn class="mx-2" fab dark x-small color="error" @click="hanClickCredit(item, true)">
+                  ><v-btn
+                    :disabled="canwrite"
+                    class="mx-2"
+                    fab
+                    dark
+                    x-small
+                    color="error"
+                    @click="hanClickCredit(item, true)"
+                  >
                     <v-icon dark> mdi-minus </v-icon>
                   </v-btn>
                 </div>
               </template>
               <template #[`item.log`]="{ item }">
-                <v-btn class="mx-2" fab dark x-small color="teal" @click="showlog(item)">
+                <v-btn  class="mx-2" fab dark x-small color="teal" @click="showlog(item)">
                   <v-icon dark> mdi-format-list-bulleted-square </v-icon>
                 </v-btn>
               </template>
               <template #[`item.action`]="{ item }">
                 <div class="d-flex justify-center">
-                  <v-btn class="mx-2" fab dark x-small color="purple" @click="openDlUpdate(item)">
+                  <v-btn :disabled="canwrite" class="mx-2" fab dark x-small color="purple" @click="openDlUpdate(item)">
                     <v-icon dark> mdi-pencil </v-icon>
                   </v-btn>
-                  <v-btn class="mx-2" fab dark x-small color="warning" @click="openChangePassDl(item.id)">
+                  <v-btn
+                    :disabled="canwrite"
+                    class="mx-2"
+                    fab
+                    dark
+                    x-small
+                    color="warning"
+                    @click="openChangePassDl(item.id)"
+                  >
                     <v-icon dark> mdi-lock-reset </v-icon>
                   </v-btn>
-                  <v-btn class="mx-2" v-if="item.status" fab dark x-small color="blue-grey" @click="lockAccount(item)">
+                  <v-btn
+                    :disabled="canwrite"
+                    class="mx-2"
+                    v-if="item.status"
+                    fab
+                    dark
+                    x-small
+                    color="blue-grey"
+                    @click="lockAccount(item)"
+                  >
                     <v-icon dark> mdi-lock </v-icon>
                   </v-btn>
-                  <v-btn class="mx-2" v-else fab dark x-small color="success" @click="lockAccount(item)">
+                  <v-btn
+                    :disabled="canwrite"
+                    class="mx-2"
+                    v-else
+                    fab
+                    dark
+                    x-small
+                    color="success"
+                    @click="lockAccount(item)"
+                  >
                     <v-icon dark> mdi-lock-open </v-icon>
                   </v-btn>
                 </div>
@@ -135,7 +184,9 @@
                   ></v-text-field>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="success" depressed @click="changePassword()"> เปลี่ยนรหัสผ่าน </v-btn>
+                    <v-btn color="success" depressed @click="changePassword()" :disabled="canwrite">
+                      เปลี่ยนรหัสผ่าน
+                    </v-btn>
                     <v-btn color="error" depressed @click="closedchangePassword"> ยกเลิก </v-btn
                     ><v-spacer></v-spacer> </v-card-actions></v-card
               ></v-form>
@@ -450,7 +501,13 @@ export default {
     await this.checkRendering()
   },
   computed: {
-    ...mapState('account', ['profile']),
+    canwrite() {
+      if (this.groups) {
+        if (!this.groups.includes('member_write') && this.isClone) return true
+        else false
+      }
+    },
+    ...mapState('account', ['profile', 'isClone', 'groups']),
     ...mapState('auth', ['username']),
   },
   methods: {

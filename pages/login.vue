@@ -13,16 +13,16 @@
                 <!-- <div class="justify-center text-center">
                   <img :src="image ? image : this.webPalette.logo" class="img_logo" />
                 </div> -->
-                <div class="justify-center text-center">
+                <!-- <div class="justify-center text-center">
                   <img
                     src="https://smart-binary.cloud/storage/smartagent/logo_smartbet.png"
                     class="img_logo"
                     @click="$router.push('/')"
                   />
-                </div>
+                </div> -->
 
                 <div class="text-center white--text my-3">
-                  <!-- <h1 class="amber--text darken-4">BETKUB COMPANY</h1> -->
+                  <h1 class="amber--text darken-4">BETKUB COMPANY</h1>
                   <h2>Agent Management</h2>
                   <h2>System</h2>
                 </div>

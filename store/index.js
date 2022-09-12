@@ -14,6 +14,9 @@ import marketshare from './marketshare'
 import downline from './downline'
 import member from './member'
 import state from './auth/state'
+import VueFriendlyIframe from 'vue-friendly-iframe'
+
+Vue.use(VueFriendlyIframe)
 Vue.use(VueSweetalert2)
 Vue.use(Vuex)
 Vue.use(ElementUI, {

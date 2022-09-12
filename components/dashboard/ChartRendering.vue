@@ -47,6 +47,7 @@
                 ><v-btn
                   small
                   text
+                  :disabled="canwrite"
                   rounded
                   color="primary"
                   class="font-weight-bold"
@@ -82,6 +83,7 @@
 import VueApexCharts from 'vue-apexcharts'
 import { mapState, mapActions } from 'vuex'
 import LoadingPage from '../form/loadingPage.vue'
+import * as moment from 'moment'
 export default {
   components: { VueApexCharts, LoadingPage },
   data() {
@@ -151,6 +153,13 @@ export default {
     }
   },
   computed: {
+    canwrite() {
+      if (this.groups) {
+        if (!this.groups.includes('dashboard_write') && this.isClone) return true
+        else false
+      }
+    },
+    ...mapState('account', ['profile', 'isClone', 'groups']),
     ...mapState('report', ['dashboardData']),
   },
   async beforeMount() {
@@ -164,8 +173,8 @@ export default {
     ...mapActions('report', ['getAllByDashboard']),
     getParameter() {
       let parameters = {
-        start: this.fillter.start,
-        end: this.fillter.end,
+        start: moment().startOf('month').format(),
+        end: moment().subtract(1, 'days').set({ hour: 23, minute: 59, second: 59 }).format(),
       }
       return parameters
     },

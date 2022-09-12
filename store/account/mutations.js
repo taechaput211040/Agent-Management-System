@@ -1,5 +1,7 @@
 export function set_profile(state, payload) {
   state.profile = payload.profile
+  state.isClone = payload.profile.isClone
+  state.groups = payload.profile.groups
   localStorage.setItem('profile', JSON.stringify(payload.profile))
 }
 export function set_credit(state, payload) {
@@ -19,17 +21,16 @@ export function setPallete(state, payload) {
         for (const [valIn, valpay] of Object.entries(val)) {
           if (valpay.type == 'color') {
             document.documentElement.style.setProperty(`--${key}_${k}_${valIn}`, valpay.value)
-            console.log(`--${key}_${k}_${valIn}`)
           } else if (valpay.type == 'linear') {
-            document.documentElement.style.setProperty(`--${key}_${val.name}`, valpay.value)
+            document.documentElement.style.setProperty(`--${key}_${k}_${valIn}`, valpay.value)
           } else if (valpay.type == 'image') {
-            document.documentElement.style.setProperty(`--${key}_${val.name}`, `url(${valpay.value})`)
+            document.documentElement.style.setProperty(`--${key}_${k}_${valIn}`, `url(${valpay.value})`)
           }
         }
       }
     }
   }
   state.webPalette = payload
-  console.log('set_success')
+
   // localStorage.setItem('presetPallete', JSON.stringify(payload))
 }

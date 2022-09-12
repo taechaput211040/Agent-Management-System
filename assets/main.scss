@@ -372,3 +372,41 @@ span {
   margin-top: 0px !important;
   margin-left: -12px;
 }
+.lotto_class {
+  border-radius: 10px;
+
+  border: 2px solid #8d8d8d;
+}
+.card-showtheme {
+  width: 350px;
+  position: relative;
+  .img-showtheme,
+  .btn-showpalace {
+    transition: 0.3s all;
+  }
+  .btn-showpalace {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -60%);
+    opacity: 0;
+    height: 50px;
+    cursor: pointer;
+  }
+  &:hover {
+    .btn-showpalace {
+      opacity: 1;
+      border-radius: 15px;
+    }
+    .img-showtheme {
+      opacity: 0.7;
+      -webkit-filter: blur(2px);
+      filter: blur(3px);
+    }
+  }
+}
+@media (min-width: 1264px) and (max-width: 1903px) {
+  .container {
+    max-width: 1480px !important;
+  }
+}

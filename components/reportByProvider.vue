@@ -264,9 +264,9 @@ export default {
       type: [Array, Object],
       default: {
         startDate: new Date(),
-        startTime: new Date(new Date().setHours(0, 0, 0, 0)),
+        startTime:new Date().setHours(0, 0, 0, 0),
         endDate: new Date(),
-        endTime: new Date(new Date().setHours(23, 59, 59, 999)),
+        endTime: new Date().setHours(23, 59, 59, 999),
       },
     },
   },
@@ -318,8 +318,8 @@ export default {
         }
       }
       params = {
-        start: new Date(start).toISOString(),
-        end: new Date(end).toISOString(),
+        start: moment(start).format(),
+        end: moment(end).format(),
         limit: this.pagination.rowsPerPage ? this.pagination.rowsPerPage : undefined,
         page: this.pagination.page ? this.pagination.page : undefined,
       }

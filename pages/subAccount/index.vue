@@ -53,6 +53,9 @@
               <span v-if="item.isSuspend">{{ item.isSuspend }}</span>
               <span v-else><v-chip small color="grey" dark> - </v-chip></span>
             </template>
+            <!-- <template #[`item.action`]="{ item }">
+              <v-btn @click="editSubaccont"> <v-icon>mdi-pencil</v-icon>edit</v-btn>
+            </template> -->
           </v-data-table>
           <v-row align="baseline" class="mt-3">
             <v-col cols="12" sm="2">
@@ -80,6 +83,7 @@
             <v-form ref="create">
               <v-card class="pa-5">
                 <h2 class="mt-3 mb-6 text-center">New Sub Account</h2>
+
                 <!-- username -->
                 <v-row class="select-item py-2">
                   <v-col cols="12" sm="4" md="2" class="py-0">
@@ -209,6 +213,7 @@ export default {
   data() {
     return {
       pageSizes: [5, 10, 15, 25],
+      serchtext: '',
       pagination: {
         itemPerpage: 15,
         page: 1,
@@ -228,9 +233,9 @@ export default {
       selectedReadAll: false,
       selectedWriteAll: false,
       item_menu: [
-        { displayName: 'Credit', menu: 'credit' },
         { displayName: 'Dashboard', menu: 'dashboard' },
         { displayName: 'Downline', menu: 'downline' },
+        { displayName: 'Sub Account', menu: 'sub-account' },
         { displayName: 'Member', menu: 'member' },
         { displayName: 'Lotto Management', menu: 'lotto-management' },
         { displayName: 'Report', menu: 'report' },
@@ -291,14 +296,15 @@ export default {
           align: 'center',
           value: 'no',
           class: 'col-1',
+          sortable: false,
         },
-        { text: 'Username', value: 'username', align: 'left' },
-
-        { text: 'Created at', value: 'createdAt' },
-        { text: 'Login IP', value: 'ipAddress' },
-        { text: 'Last Login', value: 'loginDatetime' },
+        { text: 'Username', value: 'username', align: 'left', sortable: false },
+        { text: 'Created at', value: 'createdAt', sortable: false },
+        { text: 'Login IP', value: 'ipAddress', sortable: false },
+        { text: 'Last Login', value: 'loginDatetime', sortable: false },
         // { text: 'Last Login', value: 'last_login', divider: true },
-        { text: 'Suppend', value: 'isSuspend', align: 'center' },
+        { text: 'Suppend', value: 'isSuspend', align: 'center', sortable: false },
+        // { text: 'Action', value: 'action', align: 'center', sortable: false },
       ],
       itemList: [],
     }
@@ -312,7 +318,7 @@ export default {
       this.pagination.page = 1
       this.getSubaccount()
     },
-    ...mapActions('account', ['create_SubAccont', 'subaccontList']),
+    ...mapActions('account', ['create_SubAccont', 'subaccontList', 'createGroups']),
     changeItemPerpage(size) {
       this.pagination.page = 1
       this.pagination.itemPerpage = size
@@ -402,7 +408,15 @@ export default {
       }
       if (this.$refs.create.validate()) {
         try {
-          await this.create_SubAccont(body)
+          let { data } = await this.create_SubAccont(body)
+          if (data.code == 201) {
+            let payout = {
+              username: body.username,
+              groups: this.selected,
+            }
+            await this.createGroups(payout)
+            console.log('create')
+          }
           await this.getSubaccount()
           this.$swal({
             icon: 'success',
