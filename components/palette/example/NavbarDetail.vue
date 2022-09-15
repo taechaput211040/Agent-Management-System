@@ -1,8 +1,13 @@
 <template>
   <div style="width: 100%" class="row">
     <div class="col-12 col-sm-6">
-      <v-card class="mx-auto overflow-hidden" :color="`${bgMainColor} !important`" height="200" width="100%">
-        <v-app-bar :color="`${Color} !important`">
+      <v-card
+        class="mx-auto overflow-hidden"
+        :style="`color:${text_color}; background:${bgMainColor} !important;`"
+        height="200"
+        width="100%"
+      >
+        <v-app-bar :style="`background: ${Color} !important;`">
           <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
           <v-toolbar-title>MY WEB</v-toolbar-title>
           <v-spacer></v-spacer>
@@ -16,7 +21,7 @@
       </v-card>
     </div>
     <div class="col-12 col-sm-6">
-      <v-list dark nav dense :color="`${bgSidebarColor} !important`">
+      <v-list dark nav dense :style="`background:${bgSidebarColor} !important;`">
         <v-list-item-group v-model="group" active-class="deep-purple--text text--accent-4">
           <v-list-item class="v-list-item class-menu pa-1 font-weight-bold" active-class="activeColor">
             <v-list-item-title>menu1</v-list-item-title>
@@ -42,6 +47,7 @@ export default {
       return
     },
   },
+
   data() {
     return {
       drawer: false,

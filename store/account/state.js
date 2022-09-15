@@ -22,7 +22,7 @@ export default function () {
             },
             textColor: {
               label: 'สีตัวอักษร web',
-              type: 'color',
+              type: 'color_text',
               value: '#ffffff',
             },
             activeMenuColor: {
@@ -33,13 +33,13 @@ export default function () {
           },
           card: {
             cardBgColor: { label: 'สี card', type: 'color', value: '#1F1D31' },
-            cardTextColor: { label: 'สีตัวอักษรใน card', type: 'color', value: '#E9E9E9' },
+            cardTextColor: { label: 'สีตัวอักษรใน card', type: 'color_text', value: '#E9E9E9' },
           },
 
           table: {
             colorTable: { label: 'สีหัวตาราง', type: 'color', value: '#1E1E1E' },
             colorBodyTable: { label: 'สีในตัวตาราง', type: 'color', value: '#1E1E1E' },
-            colorTextTable: { label: 'สีตัวอักษรในตาราง', type: 'color', value: '#FFFFFF' },
+            colorTextTable: { label: 'สีตัวอักษรในตาราง', type: 'color_text', value: '#FFFFFF' },
             bgTable: { label: 'สีพื้นหลังตาราง', type: 'color', value: '#1f1d31' },
           },
         },
@@ -58,7 +58,7 @@ export default function () {
             },
             textColor: {
               label: 'สีตัวอักษร web',
-              type: 'color',
+              type: 'color_text',
               value: '#000000',
             },
             activeMenuColor: {
@@ -69,13 +69,13 @@ export default function () {
           },
           card: {
             cardBgColor: { label: 'สี card', type: 'color', value: '#FFFFFF' },
-            cardTextColor: { label: 'สีตัวอักษรใน card', type: 'color', value: '#000000' },
+            cardTextColor: { label: 'สีตัวอักษรใน card', type: 'color_text', value: '#000000' },
           },
 
           table: {
             colorTable: { label: 'สีหัวตาราง', type: 'color', value: '#FFFFFF' },
             colorBodyTable: { label: 'สีในตัวตาราง', type: 'color', value: '#FFFFFF' },
-            colorTextTable: { label: 'สีตัวอักษรในตาราง', type: 'color', value: '#000000' },
+            colorTextTable: { label: 'สีตัวอักษรในตาราง', type: 'color_text', value: '#000000' },
             bgTable: { label: 'สีพื้นหลังตาราง', type: 'color', value: '#FFFFFF' },
           },
         },

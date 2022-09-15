@@ -81,47 +81,6 @@ span {
 .v-text-field__prefix {
   font-weight: bold;
 }
-// .v-main__wrap {
-//   background-color: #eaeaea;
-// }
-// .v-list-item__title {
-//   font-size: 1rem !important;
-// }
-// .card-child {
-//   flex: 1 1 auto;
-//   padding: 1rem;
-//   border-radius: 6px;
-//   // background-color: #ffffff;
-//   height: 100%;
-// }
-// .card-dashboard {
-//   transition: 0.2s;
-// }
-// .card-report:hover,
-// .card-dashboard:hover {
-//   transform: scale(1.05);
-//   transition: 0.2s;
-// }
-// .img-icon {
-//   max-width: 100%;
-//   height: auto;
-// }
-// .icon-show {
-//   width: 70px;
-// }
-// .img_section {
-//   display: flex;
-//   justify-content: flex-end;
-//   align-items: center;
-// }
-// .stackSheet {
-//   position: relative;
-// }
-// .stackSpark {
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-// }
 
 .positive_text {
   color: rgb(0, 129, 6);
@@ -131,53 +90,7 @@ span {
   color: rgb(233, 71, 66);
   font-weight: bold;
 }
-// .usertext {
-//   color: rgb(4, 0, 66);
-//   font-weight: bolder;
-// }
 
-// .center {
-//   text-align: center;
-//   left: 0px;
-//   top: 0px;
-//   width: 100%;
-//   height: 100%;
-//   z-index: 9999;
-//   padding: 100px;
-//   .lds-hourglass {
-//     margin: auto;
-//     display: inline-block;
-//     position: relative;
-//     width: 80px;
-//     height: 80px;
-//     top: 50%;
-//   }
-//   .lds-hourglass:after {
-//     content: " ";
-//     display: block;
-//     border-radius: 50%;
-//     width: 0;
-//     height: 0;
-//     margin: 8px;
-//     box-sizing: border-box;
-//     border: 32px solid rgb(0, 0, 0);
-//     border-color: rgb(0, 0, 0) transparent rgb(0, 0, 0) transparent;
-//     animation: lds-hourglass 1.2s infinite;
-//   }
-//   @keyframes lds-hourglass {
-//     0% {
-//       transform: rotate(0);
-//       animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
-//     }
-//     50% {
-//       transform: rotate(900deg);
-//       animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
-//     }
-//     100% {
-//       transform: rotate(1800deg);
-//     }
-//   }
-// }
 .card-detail {
   // background-color: white;
   transition: 0.3s;
@@ -214,15 +127,7 @@ span {
     align-items: center;
   }
 }
-// .v-data-table > .v-data-table__wrapper > table > tbody > tr > td,
-// .v-data-table > .v-data-table__wrapper > table > tbody > tr > th,
-// .v-data-table > .v-data-table__wrapper > table > thead > tr > td,
-// .v-data-table > .v-data-table__wrapper > table > thead > tr > th,
-// .v-data-table > .v-data-table__wrapper > table > tfoot > tr > td,
-// .v-data-table > .v-data-table__wrapper > table > tfoot > tr > th {
-//   padding: 0px 8px !important;
-//   transition: height 0.2s cubic-bezier(0.4, 0, 0.6, 1);
-// }
+
 .centered-input {
   text-align: center;
 }
@@ -281,11 +186,11 @@ span {
   color: var(--lightApp_menu_textColor) !important;
 }
 .theme--light.v-card {
-  background-color: var(--lightApp_card_cardBgColor) !important;
+  background: var(--lightApp_card_cardBgColor) !important;
   color: var(--lightApp_card_cardTextColor) !important;
 }
 .theme--dark.v-card {
-  background-color: var(--darkApp_card_cardBgColor) !important;
+  background: var(--darkApp_card_cardBgColor) !important;
   color: var(--darkApp_card_cardTextColor) !important;
 }
 .theme--dark.v-navigation-drawer {
@@ -294,13 +199,13 @@ span {
 }
 .theme--light.v-navigation-drawer,
 .theme--dark.v-app-bar.v-toolbar.v-sheet {
-  background-color: var(--darkApp_menu_navberColor) !important;
+  background: var(--darkApp_menu_navberColor) !important;
 }
 .theme--light.v-app-bar.v-toolbar.v-sheet {
-  background-color: var(--lightApp_menu_navberColor) !important;
+  background: var(--lightApp_menu_navberColor) !important;
 }
 .v-application .v-avatar.v-avatar-light-bg {
-  background-color: transparent !important;
+  background: transparent !important;
 }
 
 .v-card {
@@ -341,12 +246,14 @@ span {
 }
 
 .theme--dark.classtable {
+  
   background: var(--darkApp_table_bgTable) !important;
   thead {
     background: var(--darkApp_table_colorTable) !important;
   }
   tbody {
     background: var(--darkApp_table_colorBodyTable) !important;
+    color: var(--darkApp_table_colorTextTable) !important;
   }
   .v-data-table {
     color: var(--darkApp_table_colorTextTable) !important;
@@ -409,4 +316,11 @@ span {
   .container {
     max-width: 1480px !important;
   }
+}
+.body-listcolor {
+  border-radius: 10px;
+}
+.grad_btn {
+  background: linear-gradient(146deg, rgb(11 0 38) 0%, rgb(102 102 102) 65%) !important;
+  color: white !important;
 }

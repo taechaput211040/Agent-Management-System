@@ -1,5 +1,5 @@
 <template>
-  <v-card class="rounded-lg elevation-3 pa-3" :color="`${cardColor} !important`">
+  <v-card class="rounded-lg elevation-3 pa-3" :style="`background: ${cardColor} !important;`">
     <div class="row">
       <v-col cols="9">
         <h4 :style="`color: ${textColor} !important;`">example</h4>

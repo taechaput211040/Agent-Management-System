@@ -1,7 +1,9 @@
 <template>
-  <div>
-    <h3>{{ label }}</h3> 
-    <v-color-picker v-model="color"></v-color-picker>
+  <div class="row  mt-3">
+    <h3 class="col-12">{{ label }}</h3>
+    <div class="col-12 pa-0 d-flex justify-center">
+      <v-color-picker flat v-model="color"></v-color-picker>
+    </div>
   </div>
 </template>
 

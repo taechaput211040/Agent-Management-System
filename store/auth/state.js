@@ -1,5 +1,6 @@
 export default function () {
   return {
+    groups: localStorage.getItem('groups') || [],
     credit: localStorage.getItem('credit') || 0,
     role: localStorage.getItem('role') || -1,
     username: localStorage.getItem('username') || 'unknown',

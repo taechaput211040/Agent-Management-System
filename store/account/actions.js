@@ -8,12 +8,12 @@ export async function getProvider({ commit }) {
     }
   })
 }
-export async function get_profile({ commit, state }) {
+export async function get_profile(context) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get('/v1alpha/user/profile/')
       console.log(response, 'res')
-      commit('set_profile', response.data.result)
+      context.commit('set_profile', response.data.result)
       resolve(response)
     } catch (error) {
       reject(error)
@@ -49,6 +49,27 @@ export async function createGroups({ commit }, payout) {
       let data = await this.$axios.patch(`/v1alpha/user/members/${payout.username}/group`, {
         groups: payout.groups,
       })
+      resolve(data)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
+export async function deleteSubaccount({ commit }, username) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let data = await this.$axios.delete(`/v1alpha/user/sub-account/${username}/remove`)
+      resolve(data)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+export async function editGroups({ commit }, username) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let data = await this.$axios.get(`/v1alpha/user/members/${username}`)
       resolve(data)
     } catch (error) {
       reject(error)

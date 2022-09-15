@@ -53,9 +53,12 @@
               <span v-if="item.isSuspend">{{ item.isSuspend }}</span>
               <span v-else><v-chip small color="grey" dark> - </v-chip></span>
             </template>
-            <!-- <template #[`item.action`]="{ item }">
-              <v-btn @click="editSubaccont"> <v-icon>mdi-pencil</v-icon>edit</v-btn>
-            </template> -->
+            <template #[`item.action`]="{ item }">
+              <v-btn dark icon fab small color="warning" @click="editgroupsByuser(item)">
+                <v-icon>mdi-pencil</v-icon></v-btn
+              >
+              <v-btn dark icon fab small color="error" @click="deleteAccount(item)"> <v-icon>mdi-delete</v-icon></v-btn>
+            </template>
           </v-data-table>
           <v-row align="baseline" class="mt-3">
             <v-col cols="12" sm="2">
@@ -136,7 +139,7 @@
                     <v-spacer></v-spacer>
                   </v-card-text>
 
-                  <v-data-table hide-default-footer :items="item_menu" class="elevetion-1" :headers="headrSetting">
+                  <v-data-table :items="item_menu" hide-default-footer class="elevetion-1" :headers="headrSetting">
                     <template #[`header.read`]>
                       <v-checkbox
                         hide-details="auto"
@@ -203,6 +206,56 @@
         <v-data-table class="ma-2" :headers="headersHistory" hide-default-footer></v-data-table
       ></v-card>
     </v-dialog>
+    <v-dialog v-model="dlUpdate" max-width="900">
+      <v-card class="pa-3">
+        <v-card-text class="pa-3 indigo lighten-3 white--text d-sm-flex d-block align-baseline">
+          <h2 class="ml-2 pt-3">User Permission</h2>
+          <v-spacer></v-spacer>
+        </v-card-text>
+        <div class="pa-3">
+          <v-data-table hide-default-footer class="elevetion-1" :headers="headrSetting" :items="editgroups">
+            <template #[`header.read`]>
+              <v-checkbox
+                hide-details="auto"
+                v-model="updateReadAll"
+                :value="true ? editgroups.filter((x) => x.read).length == editgroups.length : false"
+                label="ดู"
+                :indeterminate="
+                  editgroups.filter((x) => x.read).length < editgroups.length &&
+                  editgroups.filter((x) => x.read).length > 0
+                "
+                @change="selectAllRead(updateReadAll)"
+              ></v-checkbox>
+            </template>
+            <template #[`header.write`]>
+              <v-checkbox
+                hide-details="auto"
+                :value="true ? editgroups.filter((x) => x.write).length == editgroups.length : false"
+                :indeterminate="
+                  editgroups.filter((x) => x.write).length < editgroups.length &&
+                  editgroups.filter((x) => x.write).length > 0
+                "
+                v-model="updateWriteAll"
+                @change="selectAllWrite(updateWriteAll)"
+                label="แก้ไข"
+              >
+              </v-checkbox>
+            </template>
+            <template #[`item.read`]="{ item }">
+              <v-checkbox v-model="item.read" hide-details="auto" @change="handleReadEditPermission(item)"></v-checkbox>
+            </template>
+            <template #[`item.write`]="{ item }">
+              <v-checkbox :disabled="!item.read" v-model="item.write" hide-details="auto"></v-checkbox>
+            </template>
+          </v-data-table>
+        </div>
+
+        <div class="text-center mt-4">
+          <v-btn color="success" :loading="btn_loadingGroups" small @click="submitGroups">Submit</v-btn>
+          <v-btn color="error" small @click="dlUpdate = false">Cancel</v-btn>
+        </div>
+      </v-card>
+    </v-dialog>
   </v-flex>
 </template>
 <script>
@@ -212,6 +265,13 @@ export default {
   components: { loadingPage },
   data() {
     return {
+      btn_loadingGroups: false,
+      formUpdate: {
+        username: '',
+        groups: [],
+      },
+      dlUpdate: false,
+      editgroups: [],
       pageSizes: [5, 10, 15, 25],
       serchtext: '',
       pagination: {
@@ -232,15 +292,16 @@ export default {
       selected: [],
       selectedReadAll: false,
       selectedWriteAll: false,
+      updateReadAll: false,
+      updateWriteAll: false,
       item_menu: [
-        { displayName: 'Dashboard', menu: 'dashboard' },
-        { displayName: 'Downline', menu: 'downline' },
-        { displayName: 'Sub Account', menu: 'sub-account' },
-        { displayName: 'Member', menu: 'member' },
-        { displayName: 'Lotto Management', menu: 'lotto-management' },
-        { displayName: 'Report', menu: 'report' },
-        { displayName: 'Check Outstanding', menu: 'check-outstanding' },
-        { displayName: 'Staff Logs', menu: 'staff-log' },
+        { displayName: 'Downline', menu: 'downline', read: false, write: false },
+        { displayName: 'Sub Account', menu: 'sub-account', read: false, write: false },
+        { displayName: 'Member', menu: 'member', read: false, write: false },
+        { displayName: 'Lotto Management', menu: 'lotto-management', read: false, write: false },
+        { displayName: 'Report', menu: 'report', read: false, write: false },
+        { displayName: 'Check Outstanding', menu: 'check-outstanding', read: false, write: false },
+        { displayName: 'Staff Logs', menu: 'staff-log', read: false, write: false },
       ],
       headrSetting: [
         {
@@ -304,7 +365,7 @@ export default {
         { text: 'Last Login', value: 'loginDatetime', sortable: false },
         // { text: 'Last Login', value: 'last_login', divider: true },
         { text: 'Suppend', value: 'isSuspend', align: 'center', sortable: false },
-        // { text: 'Action', value: 'action', align: 'center', sortable: false },
+        { text: 'Action', value: 'action', align: 'center', sortable: false },
       ],
       itemList: [],
     }
@@ -318,15 +379,173 @@ export default {
       this.pagination.page = 1
       this.getSubaccount()
     },
-    ...mapActions('account', ['create_SubAccont', 'subaccontList', 'createGroups']),
+    ...mapActions('account', ['create_SubAccont', 'subaccontList', 'createGroups', 'deleteSubaccount', 'editGroups']),
+    handleReadEditPermission(item) {
+      if (!item.read) {
+        item.write = false
+      }
+    },
+    selectAllRead(read) {
+      read = !read
+      this.editgroups.forEach((x) => (x.read = !read))
+      if (read == true) {
+        this.editgroups.forEach((x) => (x.write = false))
+        this.updateWriteAll = false
+      }
+    },
+    selectAllWrite(write) {
+      write = !write
+      this.editgroups.forEach((x) => (x.write = !write))
+      if (this.updateWriteAll) {
+        if (!this.updateReadAll) {
+          this.editgroups.forEach((x) => (x.read = !this.updateReadAll))
+        } else this.editgroups.forEach((x) => (x.read = true))
+      }
+      if (this.updateWriteAll) {
+        this.updateReadAll = true
+      }
+    },
     changeItemPerpage(size) {
       this.pagination.page = 1
       this.pagination.itemPerpage = size
       this.getSubaccount()
     },
+    async editgroupsByuser(item) {
+      let maingroups = Object.assign([], this.item_menu)
+      let permissionSelect = []
+      try {
+        let { data } = await this.editGroups(item.username)
+        permissionSelect = data.groups
+        this.editgroups = []
+      } catch (error) {
+        console.log(error)
+      }
+      maingroups.forEach((x) => {
+        if (permissionSelect.includes(`${x.menu}_read`)) {
+          console.log('real')
+          return (x.read = true)
+        } else {
+          return (x.read = false)
+        }
+      })
+      maingroups.forEach((x) => {
+        if (permissionSelect.includes(`${x.menu}_write`)) {
+          console.log('wreal')
+          return (x.write = true)
+        } else {
+          return (x.write = false)
+        }
+      })
+
+      this.editgroups = maingroups
+      if (this.editgroups.filter((x) => x.read).length == this.editgroups.length) {
+        this.updateReadAll = true
+      }
+      await this.setupdateForm(item)
+      this.dlUpdate = true
+    },
+    setupdateForm(item) {
+      this.formUpdate.username = item.username
+    },
+    async submitGroups() {
+      this.btn_loadingGroups = true
+      let result = this.editgroups
+      let groups = []
+      for (let i = 0; i < result.length; i++) {
+        if (result[i].read) {
+          groups.push(`${result[i].menu}_read`)
+        }
+        if (result[i].write) {
+          groups.push(`${result[i].menu}_write`)
+        }
+      }
+      if (!groups.includes('dashboard_read')) {
+        groups.push('dashboard_read')
+      }
+      this.formUpdate.groups = groups
+
+      this.$swal({
+        title: 'Are you sure you want to update permission by sub-account?',
+        icon: 'warning',
+        showCancelButton: true,
+        allowOutsideClick: false,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          // console.log(this.formCreate)
+          try {
+            await this.createGroups(this.formUpdate)
+            this.$swal({
+              icon: 'success',
+              title: 'update Success',
+              allowOutsideClick: false,
+              showConfirmButton: false,
+              timer: 1500,
+            }).then(async (result) => {
+              if (result) {
+                this.dlUpdate = false
+                await this.getSubaccount()
+                this.btn_loadingGroups = false
+              }
+            })
+          } catch (error) {
+            this.$swal({
+              icon: 'error',
+              title: `${error.response.data.message}`,
+              showConfirmButton: false,
+              timer: 1500,
+            })
+            this.btn_loadingGroups = false
+            this.dlUpdate = false
+          }
+        }
+      })
+
+      // console.log(this.formUpdate, 'groups')
+    },
     changePage(size) {
       this.pagination.page = size
       this.getSubaccount()
+    },
+    async deleteAccount(item) {
+      this.$swal({
+        title: 'Are you sure you want to remove sub-account?',
+        icon: 'warning',
+        showCancelButton: true,
+        allowOutsideClick: false,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          // console.log(this.formCreate)
+          try {
+            await this.deleteSubaccount(item.username)
+            this.$swal({
+              icon: 'success',
+              title: 'Remove Success',
+              allowOutsideClick: false,
+              showConfirmButton: false,
+              timer: 1500,
+            }).then(async (result) => {
+              if (result) {
+                await this.getSubaccount()
+              }
+            })
+          } catch (error) {
+            this.$swal({
+              icon: 'error',
+              title: `${error.response.data.message}`,
+              showConfirmButton: false,
+              timer: 1500,
+            })
+          }
+        }
+      })
     },
     handleReadAllPermission(state, items) {
       if (state) {
@@ -410,12 +629,15 @@ export default {
         try {
           let { data } = await this.create_SubAccont(body)
           if (data.code == 201) {
+            if (!this.selected.includes('dashboard_read')) {
+              this.selected.push('dashboard_read')
+            }
             let payout = {
               username: body.username,
               groups: this.selected,
             }
             await this.createGroups(payout)
-            console.log('create')
+            // console.log(payout,'create')
           }
           await this.getSubaccount()
           this.$swal({
@@ -437,6 +659,7 @@ export default {
           this.loadingCreatebtn = false
         }
       }
+      this.loadingCreatebtn = false
     },
     handleAdd() {
       this.selected = this.$store.state.account.profile.groups

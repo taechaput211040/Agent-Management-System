@@ -66,7 +66,7 @@
             ></table-detail>
           </div>
           <div class="col-12 row justify-center">
-            <div v-for="(itemChild, j) in item" :key="j">
+            <div v-for="(itemChild, j) in item" :key="j" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
               <check-type
                 class="mx-2"
                 :items="itemChild"

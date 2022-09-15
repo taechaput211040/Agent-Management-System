@@ -19,7 +19,7 @@ export function setPallete(state, payload) {
     if (typeof v === 'object') {
       for (const [k, val] of Object.entries(v)) {
         for (const [valIn, valpay] of Object.entries(val)) {
-          if (valpay.type == 'color') {
+          if (valpay.type == 'color'||valpay.type == 'color_text') {
             document.documentElement.style.setProperty(`--${key}_${k}_${valIn}`, valpay.value)
           } else if (valpay.type == 'linear') {
             document.documentElement.style.setProperty(`--${key}_${k}_${valIn}`, valpay.value)

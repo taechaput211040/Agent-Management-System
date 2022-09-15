@@ -1,6 +1,6 @@
 export function set_login(
   state,
-  { groups = {}, key = '', role = 'NONE', supervisor = 'NONE', username = 'UnAuthorizeUser', workspace = 'workspace' }
+  { groups = [], key = '', role = 'NONE', supervisor = 'NONE', username = 'UnAuthorizeUser', workspace = 'workspace' }
 ) {
   localStorage.removeItem('groups')
   localStorage.removeItem('key')
@@ -16,7 +16,7 @@ export function set_login(
   state.username = username
   state.workspace = workspace
 
-  localStorage.setItem('groups', state.groups)
+  localStorage.setItem('groups', JSON.stringify(state.groups))
   localStorage.setItem('key', state.key)
   localStorage.setItem('role', state.role)
   localStorage.setItem('supervisor', JSON.stringify(state.supervisor))

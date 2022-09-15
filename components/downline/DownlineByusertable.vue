@@ -21,7 +21,9 @@
           </v-col>
 
           <v-col cols="12" md="2">
-            <v-btn elevation="2" @click="searchList()" color=""> <v-icon left> mdi-magnify</v-icon> Search </v-btn>
+            <v-btn color="success" elevation="2" @click="searchList()">
+              <v-icon left> mdi-magnify</v-icon> Search
+            </v-btn>
           </v-col>
           <v-col cols="12" md="6" class="text-sm-right text-center">
             <h4>เครดิตเอเย่นคงเหลือ : {{ remaining_credit }}</h4>
@@ -34,7 +36,6 @@
         <div class="pa-2"><v-btn color="error" small @click="backFunction()">back</v-btn></div>
         <v-card class="mt-3 pb-1 justify-center wite rounded-lg classtable">
           <v-data-table
-            class=" "
             :headers="headers"
             :items="itemRendering"
             :server-items-length="pagination.rowsNumber"
@@ -42,7 +43,6 @@
             :items-per-page="pagination.rowsPerPage"
             hide-default-footer
           >
-            <!-- :options.sync="options" -->
 
             <template #[`item.no`]="{ index }">
               {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
@@ -127,7 +127,7 @@
           <v-data-table class="ma-2" :headers="headersHistory" hide-default-footer></v-data-table
         ></v-card>
       </v-dialog>
-      <v-dialog v-model="dlProvider"  max-width="900px"
+      <v-dialog v-model="dlProvider" max-width="900px"
         ><v-card class="pa-3">
           <revenue-table :downline="true" :username="targetUser" ref="table"></revenue-table>
           <v-card-actions class="justify-center">

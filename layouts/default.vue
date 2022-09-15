@@ -48,7 +48,7 @@
               <v-list-item-title>Back To Admin</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <!-- -->
+          <!-- && isStaff-->
           <v-list-item @click.prevent="switch_auth = true" v-if="showSwich && isStaff">
             <v-list-item-icon>
               <v-icon>mdi-account-switch</v-icon>
@@ -73,7 +73,6 @@
         <v-card-text>
           <div style="justify-content: space-between; display: flex">
             <v-chip rounded outlined class="ma-1">User : {{ $store.state.auth.username }}</v-chip>
-
             <v-btn class="ma-1" icon @click.prevent="$vuetify.theme.dark = !$vuetify.theme.dark">
               <v-icon class="mx-2">{{ $vuetify.theme.dark ? 'mdi-brightness-4' : 'mdi-weather-night' }}</v-icon>
             </v-btn>
@@ -209,103 +208,7 @@ export default {
       clipped: true,
       drawer: true,
       fixed: false,
-      items: [
-        {
-          title: 'Dashboard',
-          to: '/',
-          icon: 'mdi-view-dashboard',
-          permission: 'dashboard_read',
-          status: 1,
-        },
-        {
-          title: 'Account',
-          to: '/account',
-          icon: 'mdi-shield-account',
-          status: 1,
-          subLinks: [
-            {
-              icon: 'mdi-account',
-              text: 'Profile',
-              to: '/account/profile',
-              status: 1,
-            },
-            {
-              icon: 'mdi-key-variant',
-              text: 'Change Password',
-              to: '/account/changepassword',
-              status: 1,
-            },
-          ],
-        },
-        {
-          title: 'Sub Account',
-          to: '/subAccount',
-          icon: 'mdi-text-account',
-          permission: 'sub-account_read',
-          status: 1,
-        },
-        {
-          title: 'Downline Management',
-          to: '/downline/downlineManagement',
-          icon: 'mdi-sitemap',
-          permission: 'downline_read',
-          status: 1,
-        },
-        {
-          title: 'Member Management',
-          to: '/member',
-          icon: 'mdi-human-male-male',
-          permission: 'member_read',
-          status: 1,
-        },
-        {
-          title: 'Lotto Management',
-          to: '/lotto',
-          icon: 'mdi-slot-machine',
-          permission: 'lotto-management_read',
-          status: 1,
-        },
-        {
-          title: 'Report',
-          icon: 'mdi-chart-multiple',
-          status: 1,
-          permission: 'report_read',
-          subLinks: [
-            {
-              icon: 'mdi-chart-donut',
-              text: 'Report By provider',
-              to: '/report/byProvider',
-              status: 1,
-            },
-            {
-              icon: 'mdi-chart-timeline-variant-shimmer',
-              text: 'Report By User',
-              to: '/report/byUser',
-              status: 1,
-            },
-          ],
-        },
-        {
-          title: 'Check Outstanding',
-          to: '/outstanding',
-          icon: 'mdi-set-center',
-          permission: 'check-outstanding_read',
-          status: 2,
-        },
-        {
-          title: 'Staff Logs',
-          to: '/stafflog',
-          icon: 'mdi-account-tie-outline',
-          permission: 'staff-log_read',
-          status: 2,
-        },
-        {
-          title: 'Palette Management',
-          to: '/palette',
-          icon: 'mdi-palette',
-          status: 1,
-        },
-      ],
+      items: this.$store.state.menu,
       miniVariant: false,
       right: true,
       rightDrawer: false,

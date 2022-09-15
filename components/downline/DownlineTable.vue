@@ -7,7 +7,6 @@
         <h3 class="my-3">
           Member Management - List : <a class="px-5">{{ customer_name }}</a>
         </h3>
-      
 
         <v-row>
           <v-col cols="12" md="4">
@@ -22,7 +21,9 @@
           </v-col>
 
           <v-col cols="12" md="2">
-            <v-btn elevation="2" @click="searchList()"> <v-icon left> mdi-magnify</v-icon> Search </v-btn>
+            <v-btn elevation="2" color="success" @click="searchList()">
+              <v-icon left> mdi-magnify</v-icon> Search
+            </v-btn>
           </v-col>
           <v-col cols="12" md="6" class="text-sm-right text-center">
             <h4>เครดิตเอเย่นคงเหลือ : {{ remaining_credit | numberFormat }}</h4>
@@ -67,7 +68,6 @@
                   color="warning"
                   elevation="2"
                   small
-                  :disabled="canwrite"
                   >ตรวจสอบเครดิต <v-icon dark right> mdi-cash-check </v-icon></v-btn
                 >
               </div>
@@ -96,14 +96,14 @@
               </div>
             </template>
             <template #[`item.log`]="{ item }">
-              <v-btn :disabled="canwrite" class="mx-2" fab dark x-small color="teal" @click="showlog(item)">
+              <v-btn class="mx-2" fab dark x-small color="teal" @click="showlog(item)">
                 <v-icon dark> mdi-format-list-bulleted-square </v-icon>
               </v-btn>
             </template>
             <template #[`item.view`]="{ item }">
               <v-btn
                 class="mx-2"
-                :disabled="item.role === 'MEMBER' || item.username == customer_name || canwrite"
+                :disabled="item.role === 'MEMBER' || item.username == customer_name"
                 x-small
                 color="primary"
                 @click="viewDownline(item)"
@@ -115,7 +115,7 @@
               <v-btn
                 class="mx-2"
                 x-small
-                :disabled="item.role === 'MEMBER' || item.username == customer_name || canwrite"
+                :disabled="item.role === 'MEMBER' || item.username == customer_name"
                 color="success"
                 @click="settingProvider(item)"
               >
@@ -123,7 +123,14 @@
               </v-btn>
             </template>
             <template #[`item.action`]="{ item }">
-              <v-btn class="mx-2" :disabled="canwrite"  dark small color="blue-grey" @click="openChangePassword(item.username)">
+              <v-btn
+                class="mx-2"
+                :disabled="canwrite"
+                dark
+                small
+                color="blue-grey"
+                @click="openChangePassword(item.username)"
+              >
                 <v-icon dark left> mdi-lock-reset </v-icon> changepass
               </v-btn>
             </template>
@@ -257,7 +264,7 @@
       </v-dialog>
       <v-dialog v-model="dlProvider" persistent max-width="900px"
         ><v-card class="pa-3 classtable">
-          <revenue-table :username="targetUser" ref="table"></revenue-table>
+          <revenue-table :username="targetUser" :downline="canwrite" ref="table"></revenue-table>
           <v-card-actions class="justify-center">
             <v-btn color="error" @click="CloseDl">ปิด</v-btn>
           </v-card-actions>
@@ -473,7 +480,7 @@ export default {
     canwrite() {
       if (this.groups) {
         if (!this.groups.includes('downline_write') && this.isClone) return true
-        else false
+        else return false
       }
     },
   },
