@@ -152,7 +152,7 @@ export async function checkPrefixOwner(
 export async function getPalletePreset({ commit, state, rootState }) {
   return new Promise(async (resolve, reject) => {
     try {
-      let { data } = await this.$axios.get(`http://localhost:3000/css/preset/agent`)
+      let { data } = await this.$axios.get(`https://static-template-api-ehhif4jpyq-as.a.run.app/css/preset/agent`)
       commit('setPallete', data)
       resolve(data)
     } catch (error) {
@@ -172,7 +172,7 @@ export function updatePalette(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `http://localhost:3000/css/preset/agent/${params.web_id}/${params.presetId}`,
+        `https://static-template-api-ehhif4jpyq-as.a.run.app/css/preset/agent/${params.web_id}/${params.presetId}`,
         {
           palette: params.detail,
         }
@@ -188,7 +188,10 @@ export function updatePalette(
 export function CreateOrganizePalette({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.post(`http://localhost:3000/css/organization/agent`, body)
+      let response = await this.$axios.post(
+        `https://static-template-api-ehhif4jpyq-as.a.run.app/css/organization/agent`,
+        body
+      )
       resolve(response)
     } catch (error) {
       reject(error)
@@ -204,9 +207,12 @@ export function CreatePreset(
 ) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.post(`http://localhost:3000/css/preset/agent/${params.id}`, {
-        palette: params.detail,
-      })
+      let response = await this.$axios.post(
+        `https://static-template-api-ehhif4jpyq-as.a.run.app/css/preset/agent/${params.id}`,
+        {
+          palette: params.detail,
+        }
+      )
       resolve(response)
     } catch (error) {
       reject(error)

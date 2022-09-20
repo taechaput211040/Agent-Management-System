@@ -165,6 +165,30 @@
             </div>
           </div>
         </template>
+        <template #[`item.senior`]="{ item }">
+          <div class="pa-1 card-detail rounded-lg my-2 elevation-2">
+            <div
+              class="cursor-pointer"
+              :class="[{ 'success--text': item.snWin > 0 }, { 'error--text': item.snWin < 0 }]"
+            >
+              <v-chip label x-small color="primary" dark class="px-1">W/L</v-chip>
+              {{ item.snWin | numberFormat }}
+            </div>
+            <div class="purple--text">
+              <v-chip label x-small color="purple" dark class="px-1">com</v-chip>
+              {{ item.snCom | numberFormat }}
+            </div>
+            <div
+              :class="[
+                { 'success--text': item.snWin + item.snCom > 0 },
+                { 'error--text': item.snWin + item.snCom < 0 },
+              ]"
+            >
+              <v-chip label x-small color="black" dark class="px-1">W/L+com</v-chip>
+              {{ (item.snWin + item.snCom) | numberFormat }}
+            </div>
+          </div>
+        </template>
       </v-data-table>
       <v-row align="baseline" class="ma-3">
         <v-col cols="12" sm="2">
@@ -229,6 +253,13 @@ export default {
           align: 'center',
         },
         {
+          text: 'senior',
+          value: 'senior',
+          cellClass: 'font-weight-bold',
+          sortable: false,
+          align: 'center',
+        },
+        {
           text: 'หุ้นส่วน',
           value: 'share',
           cellClass: 'font-weight-bold',
@@ -264,7 +295,7 @@ export default {
       type: [Array, Object],
       default: {
         startDate: new Date(),
-        startTime:new Date().setHours(0, 0, 0, 0),
+        startTime: new Date().setHours(0, 0, 0, 0),
         endDate: new Date(),
         endTime: new Date().setHours(23, 59, 59, 999),
       },

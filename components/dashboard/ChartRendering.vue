@@ -123,6 +123,7 @@ export default {
             color: 'white',
           },
         },
+        
         fill: {
           type: 'solid',
           fillOpacity: 0.7,

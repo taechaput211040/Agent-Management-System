@@ -43,7 +43,6 @@
             :items-per-page="pagination.rowsPerPage"
             hide-default-footer
           >
-
             <template #[`item.no`]="{ index }">
               {{ pagination.rowsPerPage * (pagination.page - 1) + (index + 1) }}
             </template>
@@ -82,6 +81,21 @@
                 <v-icon dark> mdi-key </v-icon>
               </v-btn>
             </template>
+            <template #[`item.creditbalance`]="{ item, index }">
+              <div class="pa-2">
+                <div v-if="item.credit != null">{{ item.credit | numberFormat }}</div>
+                <v-btn
+                  @click="showcredit(item, index)"
+                  :loading="item.loadingBtn"
+                  depressed
+                  color="warning"
+                  elevation="2"
+                  small
+                  >ตรวจสอบเครดิต <v-icon dark right> mdi-cash-check </v-icon></v-btn
+                >
+              </div>
+            </template>
+
             <template #[`item.status`]="{ item }">
               <span style="color: #c2e164">{{ item.status ? 'Active' : 'Idle' }}</span>
             </template>
@@ -225,6 +239,12 @@ export default {
         {
           text: 'workspace',
           value: 'workspace',
+          align: 'center',
+          sortable: false,
+        },
+        {
+          text: 'credit',
+          value: 'creditbalance',
           align: 'center',
           sortable: false,
         },

@@ -66,7 +66,12 @@
             ></table-detail>
           </div>
           <div class="col-12 row justify-center">
-            <div v-for="(itemChild, j) in item" :key="j" class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12">
+            <div
+              v-for="(itemChild, j) in item"
+              :key="j"
+              class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 d-flex "
+              style="align-items: flex-end;" 
+            >
               <check-type
                 class="mx-2"
                 :items="itemChild"
@@ -164,7 +169,7 @@ export default {
               if (logo) {
                 try {
                   let { data } = await this.$axios.patch(
-                    `http://localhost:3000/css/profile/agent/${this.webPalette.web_id}`,
+                    `https://static-template-api-ehhif4jpyq-as.a.run.app/css/profile/agent/${this.webPalette.web_id}`,
                     {
                       logo: logo,
                     }
@@ -211,7 +216,7 @@ export default {
     },
     async handleUploadImage(image) {
       try {
-        let { data } = await this.$axios.post(`http://localhost:3000/image/file/image/smart`, image)
+        let { data } = await this.$axios.post(`https://static-template-api-ehhif4jpyq-as.a.run.app/image/file/image/smart`, image)
         console.log(data.image, 'response')
         return data.image
       } catch (error) {

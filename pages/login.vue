@@ -22,7 +22,7 @@
                 </div> -->
 
                 <div class="text-center white--text my-3">
-                  <h1 class="amber--text darken-4">BETKUB COMPANY</h1>
+                  <!-- <h1 class="amber--text darken-4">BETKUB COMPANY</h1> -->
                   <h2>Agent Management</h2>
                   <h2>System</h2>
                 </div>

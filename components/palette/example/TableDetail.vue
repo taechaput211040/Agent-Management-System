@@ -1,5 +1,5 @@
 <template>
-  <v-card  :color="`${this.bgTable} !important`"
+  <v-card :style="` background:${bgTable} !important;`"
     ><v-data-table
       class="headerColor"
       hide-default-footer
@@ -38,6 +38,12 @@ export default {
     bgBody: { default: String },
     textColor: { default: String },
     bgTable: { default: String },
+  },
+  mounted() {
+    this.selectTextColor()
+    this.selectBgheaderColor()
+    this.selectTextColor()
+    this.selectBgBodyColor()
   },
   watch: {
     bgHeader() {
