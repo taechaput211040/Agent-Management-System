@@ -5,6 +5,7 @@
     <div class="row justify-center">
       <div class="col-lg-3 col-md-4 col-12 text-center elevation-4 my-5 rounded">
         <h2 class="text-center text-decoration-underline font-italic my-2">ภาพ LOGO</h2>
+
         <img :src="image ? image : this.webPalette.logo" alt="" class="img_logo" />
 
         <v-file-input
@@ -69,8 +70,8 @@
             <div
               v-for="(itemChild, j) in item"
               :key="j"
-              class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 d-flex "
-              style="align-items: flex-end;" 
+              class="col-lg-3 col-xl-3 col-md-6 col-sm-6 col-12 d-flex"
+              style="align-items: flex-end"
             >
               <check-type
                 class="mx-2"
@@ -216,7 +217,10 @@ export default {
     },
     async handleUploadImage(image) {
       try {
-        let { data } = await this.$axios.post(`https://static-template-api-ehhif4jpyq-as.a.run.app/image/file/image/smart`, image)
+        let { data } = await this.$axios.post(
+          `https://static-template-api-ehhif4jpyq-as.a.run.app/image/file/image/smart`,
+          image
+        )
         console.log(data.image, 'response')
         return data.image
       } catch (error) {

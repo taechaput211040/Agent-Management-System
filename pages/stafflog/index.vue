@@ -71,9 +71,19 @@ export default {
           username: 'superadmin',
           log: 'พยายามเข้าสู่ระบบ',
           detail: {},
+          action:"",
           ipAddress: '103.156.154.173',
         },
       ],
+//       {post => api
+// body=>{
+// username
+// role
+// agentPrefix
+// comPrefix
+// actions => ทำอะไรบ้าง
+// details => string => อธิบาย action ว่าทำอะไร
+// payload => Json}
     }
   },
 }

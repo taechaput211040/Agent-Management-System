@@ -6,6 +6,21 @@
         Search
       </v-btn>
     </div>
+
+    <h2 class="text-center" v-if="displaySum">Summary</h2>
+    <div class="row pa-3 justify-center">
+      <div class="col-12 col-sm-4 col-md-auto" v-for="(item, i) in displaySum" :key="i">
+        <v-card class="pa-3 rounded-lg">
+          <div class="font-weight-bold text-center">{{ i }}</div>
+          <div class="text-center my-2" :class="[{ 'green--text darken-3': item > 0 }, { 'error--text': item < 0 }]">
+            <v-progress-circular v-if="isLoading" indeterminate color="blue-grey"></v-progress-circular>
+            <h2 v-else>{{ item | numberFormat }}</h2>
+          </div>
+        </v-card>
+      </div>
+    </div>
+
+    <h2 class="text-center">Report by provider</h2>
     <v-card class="ma-3 pb-1 justify-center rounded-lg classtable">
       <v-data-table
         :server-items-length="pagination.rowsNumber"
@@ -18,9 +33,13 @@
       >
         <template #[`item._id`]="{ item }">
           <span class="cursor-pointer">
-            {{ providerName(item._id) || item._id }}
+            {{ providerName(item._id.code) || item._id.code }}
           </span>
         </template>
+        <template #[`item.percent`]="{ item }">
+          <span class="cursor-pointer"> {{ item._id.percent }} % </span>
+        </template>
+
         <template #[`item.provider`]="{ item }">
           <div class="pa-1 card-detail rounded-lg my-2 elevation-2">
             <div
@@ -32,16 +51,16 @@
             </div>
             <div class="purple--text">
               <v-chip label x-small color="purple" dark class="px-1">com</v-chip>
-              {{ item.ptCom | numberFormat }}
+              {{ item.pnCom | numberFormat }}
             </div>
             <div
               :class="[
-                { 'success--text': item.pnWin + item.ptCom > 0 },
-                { 'error--text': item.pnWin + item.ptCom < 0 },
+                { 'success--text': item.pnWin + item.pnCom > 0 },
+                { 'error--text': item.pnWin + item.pnCom < 0 },
               ]"
             >
               <v-chip label x-small color="black" dark class="px-1">W/L+com</v-chip>
-              {{ (item.pnWin + item.ptCom) | numberFormat }}
+              {{ (item.pnWin + item.pnCom) | numberFormat }}
             </div>
           </div>
         </template>
@@ -220,19 +239,27 @@ import { mapActions } from 'vuex'
 export default {
   data() {
     return {
-      pageSizes: [10, 20, 50],
+      displaySum: undefined,
+      pageSizes: [200],
       randerReport: [],
       isLoading: false,
       pagination: {
         sortBy: 'desc',
         page: 1,
-        rowsPerPage: 10,
+        rowsPerPage: 200,
         rowsNumber: 0,
       },
       headerProvider: [
         {
           text: 'Provider Name',
           value: '_id',
+          cellClass: 'font-weight-bold',
+          sortable: false,
+          align: 'center',
+        },
+        {
+          text: 'percent',
+          value: 'percent',
           cellClass: 'font-weight-bold',
           sortable: false,
           align: 'center',
@@ -245,6 +272,7 @@ export default {
           sortable: false,
           align: 'center',
         },
+
         {
           text: 'agent',
           value: 'agent',
@@ -363,12 +391,38 @@ export default {
         let { data } = await this.getProviderReport(params)
         this.randerReport = data[0].docs
         this.pagination.rowsNumber = data[0].pageInfo[0].total
+        this.displaySum = await this.sumdataAll(this.randerReport)
         this.isLoading = false
       } catch (error) {
         console.log(error)
         this.isLoading = false
       }
       this.isLoading = false
+    },
+    sumdataAll(results) {
+      return {
+        Member: results.reduce((initVal, item) => {
+          return (initVal += item.memWin + item.memCom)
+        }, 0),
+        Agent: results.reduce((initVal, item) => {
+          return (initVal += item.agWin + item.agCom)
+        }, 0),
+        Senir: results.reduce((initVal, item) => {
+          return (initVal += item.snWin + item.snCom)
+        }, 0),
+        Share: results.reduce((initVal, item) => {
+          return (initVal += item.shWin + item.shCom)
+        }, 0),
+        Company: results.reduce((initVal, item) => {
+          return (initVal += item.owWin + item.owCom)
+        }, 0),
+        Smartbet: results.reduce((initVal, item) => {
+          return (initVal += item.ptWin + item.ptCom)
+        }, 0),
+        Provider: results.reduce((initVal, item) => {
+          return (initVal += item.pnWin + item.pnCom)
+        }, 0),
+      }
     },
   },
 }

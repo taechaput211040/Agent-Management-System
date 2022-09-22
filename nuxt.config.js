@@ -77,26 +77,26 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    // baseURL: '/',
-    baseURL: 'https://kong-api-kdz5uqbpia-as.a.run.app',
-    // proxy: true,
+    baseURL: '/',
+    // baseURL: 'https://kong-api-kdz5uqbpia-as.a.run.app',
+    proxy: true,
   },
 
-  // proxy: {
-  //   '/v1alpha': {
-  //     // target: "http://192.168.1.123:5000",
-  //     // target: "http://localhost:5000",
-  //     target: 'https://kong-api-kdz5uqbpia-as.a.run.app',
-  //     changeOrigin: true,
-  //   },
+  proxy: {
+    '/v1alpha': {
+      // target: "http://192.168.1.123:5000",
+      // target: "http://localhost:5000",
+      target: 'https://kong-api-kdz5uqbpia-as.a.run.app',
+      changeOrigin: true,
+    },
 
-  //   '/api/V2/': {
-  //     target: 'https://backend-v2.smart-exchange.io',
-  //     pathRewrite: {
-  //       '^/apiV2/': '',
-  //     },
-  //   },
-  // },
+    '/api/V2/': {
+      target: 'https://backend-v2.smart-exchange.io',
+      pathRewrite: {
+        '^/apiV2/': '',
+      },
+    },
+  },
   server: {
     port: process.env.APP_PORT || 8123, // default: 3000
   },
