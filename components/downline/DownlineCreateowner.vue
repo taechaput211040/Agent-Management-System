@@ -227,7 +227,7 @@ export default {
                 timer: 1500,
               }).then(async (result) => {
                 if (result) {
-                  this.$router.push('/downline/downlineManagement')
+                  this.$router.push('/downline')
                 }
               })
             } catch (error) {
