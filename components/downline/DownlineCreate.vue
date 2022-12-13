@@ -233,7 +233,7 @@ export default {
                   (this.formCreate.agentPrefix ? this.formCreate.agentPrefix : '') +
                   this.formCreate.username,
                 password: this.formCreate.password,
-                role: 'OWNER',
+                role: this.checkRole(),
                 comPrefix: this.formCreate.comPrefix,
                 agentPrefix: this.formCreate.agentPrefix,
                 isClone: false,
@@ -249,7 +249,7 @@ export default {
                 timer: 1500,
               }).then(async (result) => {
                 if (result) {
-                  this.$router.push('/downline/downlineManagement')
+                  this.$router.push('/downline')
                 }
               })
             } catch (error) {

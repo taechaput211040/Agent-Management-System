@@ -14,7 +14,7 @@ export default {
   components: { DownlineCreate, DownlineCreateowner },
   mounted() {
     if (this.$route.params.role === 'AGENT') {
-      this.$router.push('/downline/downlineManagement')
+      this.$router.push('/downline')
     }
   },
 }
