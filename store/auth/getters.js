@@ -19,7 +19,6 @@ export function token(state) {
 }
 
 export function isRoleLevel(state, getters, rootState) {
-  console.log(rootState, 'stateoffaccount')
   let level = -1
   if (state.role === 'OWNER' && rootState.account.profile.isStaff) {
     level = 0

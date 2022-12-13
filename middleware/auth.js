@@ -1,6 +1,8 @@
 export default function ({ store, redirect, route }) {
   // If the user is not authenticated
   if (!store.state.auth.key) {
+    localStorage.clear()
+    sessionStorage.clear()
     return redirect('/login')
   }
   if (store.state.auth.groups) {

@@ -9,23 +9,11 @@
     <v-form ref="formCreate" v-model="valid">
       <div class="pa-2">
         <div class="row pa-5">
-          <div class="col-12 col-sm-6 pa-1">
-            <small class="font-weigh-bold">Username</small>
-            <v-text-field
-              hide-details="auto"
-              label="username"
-              v-model="formCreate.username"
-              :rules="[(v) => !!v || 'Username  is required']"
-              dense
-              outlined
-            >
-            </v-text-field>
-          </div>
           <div class="col-12 col-sm-6 col-md-4 col-lg-4 pa-1">
             <small class="font-weigh-bold error--text">**กรอกอย่างน้อย1ตัวอักษรเพื่อสุ่ม Prefix</small>
             <v-text-field
               hide-details="auto"
-              v-model="formCreate.comPrefix"
+              v-model.trim="formCreate.comPrefix"
               label="Owner Prefix"
               dense
               @keyup.enter="checkprefix(formCreate.comPrefix)"
@@ -39,6 +27,7 @@
               "
               required
               outlined
+              autocomplete="username"
               :rules="[(v) => !!v || 'กรอก Prefix อย่างน้อย 1 ตัวอักษร']"
               solo
             >
@@ -54,6 +43,21 @@
               </template>
             </v-text-field>
           </div>
+          <div class="col-12 col-sm-6 pa-1">
+            <small class="font-weigh-bold">Username</small>
+            <v-text-field
+              :prefix="formCreate.comPrefix"
+              hide-details="auto"
+              :disabled="!(formCreate.comPrefix.length > 1 && checktrueProfix != false)"
+              label="username"
+              v-model="formCreate.username"
+              :rules="[(v) => !!v || 'Username  is required']"
+              dense
+              autocomplete="off"
+              outlined
+            >
+            </v-text-field>
+          </div>
 
           <div class="col-12 pa-1">
             <small class="font-weigh-bold">Password</small>
@@ -61,6 +65,7 @@
               label="password"
               v-model="formCreate.password"
               type="password"
+              autocomplete="off"
               hide-details="auto"
               dense
               outlined
@@ -70,6 +75,7 @@
           <div class="col-12 pa-1">
             <small class="font-weigh-bold">Re-Password</small>
             <v-text-field
+              autocomplete="new-password"
               label="Re-password"
               v-model="rePassword"
               type="password"
@@ -110,8 +116,22 @@ export default {
       isClone: false,
       groups: [],
     },
+    checktrueProfix: false,
     valid: false,
   }),
+  watch: {
+    'formCreate.comPrefix'(value) {
+      if (value) {
+        this.formCreate.username = ''
+        this.formCreate.password = ''
+        this.rePassword = ''
+        this.formCreate.agentPrefix = undefined
+        this.formCreate.isClone = false
+        this.$refs.formCreate.resetValidation()
+        this.checktrueProfix = false
+      }
+    },
+  },
   computed: {
     ...mapGetters('auth', ['isRoleLevel']),
   },
@@ -137,6 +157,7 @@ export default {
       if (item.length == 1) {
         let randomIndex = Math.floor(Math.random() * parseInt(result.length + 1))
         this.formCreate.comPrefix = result[randomIndex].prefix
+        this.checktrueProfix = false
       }
       if (item.length == 2) {
         let searchwords = result.find((word) => word.prefix === item.toLowerCase())
@@ -148,6 +169,7 @@ export default {
             showConfirmButton: false,
             timer: 1000,
           })
+          this.checktrueProfix = true
         } else {
           this.$swal({
             icon: 'error',
@@ -156,6 +178,7 @@ export default {
             timer: 1000,
           })
           this.formCreate.comPrefix = ''
+          this.checktrueProfix = false
         }
       }
     },
@@ -182,7 +205,20 @@ export default {
           if (result.isConfirmed) {
             // console.log(this.formCreate)
             try {
-              await this.create_SubAccont(this.formCreate)
+              let body = {
+                username:
+                  this.formCreate.comPrefix +
+                  (this.formCreate.agentPrefix ? this.formCreate.agentPrefix : '') +
+                  this.formCreate.username,
+                password: this.formCreate.password,
+                role: 'OWNER',
+                comPrefix: this.formCreate.comPrefix,
+                agentPrefix: this.formCreate.agentPrefix,
+                isClone: false,
+                groups: [],
+              }
+              // console.log(body, 'sendform')
+              await this.create_SubAccont(body)
               this.$swal({
                 icon: 'success',
                 title: 'Registered Success',

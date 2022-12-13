@@ -239,7 +239,7 @@ export default {
   data() {
     return {
       eventSearch: false,
-      pageSizes: [25, 50, 100],
+      pageSizes: [25, 50, 100, 500],
       options: {},
       progressBar: true,
       loadingpage: false,
@@ -261,7 +261,7 @@ export default {
         sortBy: 'desc',
         descending: false,
         page: 1,
-        rowsPerPage: 100,
+        rowsPerPage: 500,
         rowsNumber: 0,
       },
       reportdata: [],
@@ -448,11 +448,9 @@ export default {
     getDateTime(date, time) {
       let dateFormat = 'YYYY-MM-DD'
       let timeFormat = 'HH:mm:ss'
-      return (
-        moment(`${moment(date).format(dateFormat)} ${moment(time).format(timeFormat)}`, 'YYYY-MM-DD HH:mm:ss')
-          .utc()
-          .format(`${dateFormat} ${timeFormat}`) + 'Z'
-      )
+      return moment(`${moment(date).format(dateFormat)} ${moment(time).format(timeFormat)}`, 'YYYY-MM-DD HH:mm:ss')
+        .utc()
+        .format(`${dateFormat} ${timeFormat}`)
     },
     handleClickCopy(text) {
       console.log(text)
@@ -477,8 +475,8 @@ export default {
       return {
         typeCode: this.group_select.join(',') ? this.group_select.join(',') : undefined,
         provider: this.provider_select.join(',') ? this.provider_select.join(',') : undefined,
-        end: moment(end).format(),
-        start: moment(start).format(),
+        end: moment(end).format('YYYY-MM-DD HH:mm:ss') + 'Z',
+        start: moment(start).format('YYYY-MM-DD HH:mm:ss') + 'Z',
       }
     },
     async onRequest(props) {

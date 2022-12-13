@@ -102,7 +102,7 @@ export default {
         this.set_login(response.data)
         console.log(response.data)
         if (response.data.key) {
-          this.$router.push('/')
+          this.$router.push('/redirect')
         }
       } catch (error) {
         this.$swal({
@@ -132,7 +132,7 @@ export default {
 
 <style lang="scss" scoped>
 .bg-left {
-  background-image: url('https://demos.themeselection.com/materio-vuetify-vuejs-admin-template/demo-1/img/group-dark.b632498a.png');
+  background-image: url('https://demos.themeselection.com/materio-vuetify-vuejs-admin-template/demo-4/assets/auth-v2-login-illustration-dark.c163247b.png');
   background-position: center center;
   background-size: contain;
   background-color: #28243d !important;

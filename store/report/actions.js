@@ -75,7 +75,6 @@ export async function getOwnerByIdV2(
 ) {
   return new Promise(async (resolve, reject) => {
     let url = ''
-    console.log(params.role, 'role')
     if (params.role == 2) {
       url = `/v1alpha/report-transaction/owner`
     } else {
@@ -261,10 +260,8 @@ export async function getUserByAgent(
           url = `/v1alpha/report-transaction/agent/${params.agent_user}`
         }
       } else if (params.role == 5) {
-        console.log('lv5')
         url = `/v1alpha/report-transaction/agent/${params.agent_user}`
       }
-      console.log(url, 'url')
       let response = await this.$axios.get(url, {
         params: {
           page: params.page,
@@ -309,7 +306,6 @@ export async function getRoundBySenior(
           url = `/v1alpha/report-transaction/owner/${params.id}/share/${params.senior_user}/senior/${params.username}/round`
         } else if (params.agent_user && params.senior_user) {
           url = `/v1alpha/report-transaction/owner/${params.id}/share/${params.senior_user}/agent/${params.agent_user}/round/${params.username}`
-          console.log('agent')
         }
       }
       if (params.role == 3) {
@@ -323,7 +319,6 @@ export async function getRoundBySenior(
         if (params.senior_user && params.username && !params.agent_user) {
           url = `/v1alpha/report-transaction/senior/${params.username}/round`
         } else {
-          console.log(params.agent_user, 'thisuser,')
           url = `/v1alpha/report-transaction/agent/${params.agent_user}/round/${params.username}`
         }
       } else if (params.role == 6) {

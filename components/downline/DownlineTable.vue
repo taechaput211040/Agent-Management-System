@@ -262,8 +262,12 @@
           </v-card>
         </v-card>
       </v-dialog>
-      <v-dialog v-model="dlProvider" persistent max-width="900px"
-        ><v-card class="pa-3 classtable">
+      <v-dialog v-model="dlProvider" persistent max-width="900px">
+        <v-card class="classtable">
+          <div class="d-flex">
+            <v-spacer></v-spacer
+            ><v-btn class="mx-2" color="error" large icon @click="CloseDl"><v-icon>mdi-close</v-icon></v-btn>
+          </div>
           <revenue-table :username="targetUser" :downline="canwrite" ref="table"></revenue-table>
           <v-card-actions class="justify-center">
             <v-btn color="error" @click="CloseDl">ปิด</v-btn>
@@ -275,7 +279,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapGetters } from 'vuex'
 import LoadingPage from '../form/loadingPage.vue'
 import RevenueTable from '../market-share/RevenueTable.vue'
 export default {
@@ -476,6 +480,7 @@ export default {
     },
   },
   computed: {
+    ...mapGetters('auth', ['isRoleLevel']),
     ...mapState('account', ['profile', 'isClone', 'groups']),
     canwrite() {
       if (this.groups) {
@@ -525,24 +530,24 @@ export default {
       sessionStorage.setItem(`userPrev`, JSON.stringify(form_path))
     },
     handleCreateDownline() {
-      this.$router.push(`/downline/createDownline/${this.$store.state.auth.role}`)
+      this.$router.push(`/downline/createDownline`)
     },
     checkRole() {
-      let role = this.$store.state.auth.role ? this.$store.state.auth.role : undefined
+      // let role = this.$store.state.auth.role ? this.$store.state.auth.role : undefined
       let roletoRendering = undefined
-      if (role === 'ADMIN') {
+      if (this.isRoleLevel === 0) {
         roletoRendering = 'OWNER'
-      } else if (role === 'OWNER') {
+      } else if (this.isRoleLevel === 2) {
         if (this.$store.state.account.profile.isStaff) {
           roletoRendering = 'OWNER'
         } else {
           roletoRendering = 'SHAREHOLDER'
         }
-      } else if (role === 'SHAREHOLDER') {
+      } else if (this.isRoleLevel === 3) {
         roletoRendering = 'SENIOR'
-      } else if (role === 'SENIOR') {
+      } else if (this.isRoleLevel === 4) {
         roletoRendering = 'AGENT'
-      } else if (role === 'AGENT') {
+      } else if (this.isRoleLevel === 5) {
         roletoRendering = 'MEMBER'
       } else {
         roletoRendering = undefined

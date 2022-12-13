@@ -6,17 +6,18 @@
         Search
       </v-btn>
     </div>
-
-    <h2 class="text-center" v-if="displaySum">Summary</h2>
-    <div class="row pa-3 justify-center">
-      <div class="col-12 col-sm-4 col-md-auto" v-for="(item, i) in displaySum" :key="i">
-        <v-card class="pa-3 rounded-lg">
-          <div class="font-weight-bold text-center">{{ i }}</div>
-          <div class="text-center my-2" :class="[{ 'green--text darken-3': item > 0 }, { 'error--text': item < 0 }]">
-            <v-progress-circular v-if="isLoading" indeterminate color="blue-grey"></v-progress-circular>
-            <h2 v-else>{{ item | numberFormat }}</h2>
-          </div>
-        </v-card>
+    <div v-if="this.$store.state.auth.role == 'OWNER'">
+      <h2 class="text-center" v-if="displaySum">Summary</h2>
+      <div class="row pa-3 justify-center">
+        <div class="col-12 col-sm-4 col-md-auto" v-for="(item, i) in displaySum" :key="i">
+          <v-card class="pa-3 rounded-lg">
+            <div class="font-weight-bold text-center">{{ i }}</div>
+            <div class="text-center my-2" :class="[{ 'green--text darken-3': item > 0 }, { 'error--text': item < 0 }]">
+              <v-progress-circular v-if="isLoading" indeterminate color="blue-grey"></v-progress-circular>
+              <h2 v-else>{{ item | numberFormat }}</h2>
+            </div>
+          </v-card>
+        </div>
       </div>
     </div>
 
@@ -353,11 +354,9 @@ export default {
     getDateTime(date, time) {
       let dateFormat = 'YYYY-MM-DD'
       let timeFormat = 'HH:mm:ss'
-      return (
-        moment(`${moment(date).format(dateFormat)} ${moment(time).format(timeFormat)}`, 'YYYY-MM-DD HH:mm:ss')
-          .utc()
-          .format(`${dateFormat} ${timeFormat}`) + 'Z'
-      )
+      return moment(`${moment(date).format(dateFormat)} ${moment(time).format(timeFormat)}`, 'YYYY-MM-DD HH:mm:ss')
+        .utc()
+        .format(`${dateFormat} ${timeFormat}`)
     },
     getParameter(params = undefined) {
       let start = undefined
@@ -377,8 +376,8 @@ export default {
         }
       }
       params = {
-        start: moment(start).format(),
-        end: moment(end).format(),
+        end: moment(end).format('YYYY-MM-DD HH:mm:ss') + 'Z',
+        start: moment(start).format('YYYY-MM-DD HH:mm:ss') + 'Z',
         limit: this.pagination.rowsPerPage ? this.pagination.rowsPerPage : undefined,
         page: this.pagination.page ? this.pagination.page : undefined,
       }
@@ -407,7 +406,7 @@ export default {
         Agent: results.reduce((initVal, item) => {
           return (initVal += item.agWin + item.agCom)
         }, 0),
-        Senir: results.reduce((initVal, item) => {
+        Senior: results.reduce((initVal, item) => {
           return (initVal += item.snWin + item.snCom)
         }, 0),
         Share: results.reduce((initVal, item) => {

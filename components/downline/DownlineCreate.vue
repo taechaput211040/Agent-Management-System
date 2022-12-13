@@ -9,26 +9,14 @@
     <v-form ref="formCreate" v-model="valid">
       <div class="pa-2">
         <div class="row pa-5">
-          <div class="col-12 col-sm-6 pa-1">
-            Username
-            <v-text-field
-              hide-details="auto"
-              placeholder="username"
-              v-model="formCreate.username"
-              :prefix="prefixRole"
-              :rules="[(v) => !!v || 'Username  is required']"
-              dense
-              outlined
-            >
-            </v-text-field>
-          </div>
           <div class="col-12 col-sm-3 pa-1" v-if="$store.state.auth.role != 'OWNER'">
             Agent Prefix
             <v-text-field
               hide-details="auto"
-              v-model="formCreate.agentPrefix"
+              v-model.trim="formCreate.agentPrefix"
               placeholder="Agent Prefix"
               dense
+              autocomplete="username"
               :filled="isRoleLevel >= 5"
               :disabled="isRoleLevel >= 5"
               max="2"
@@ -56,6 +44,23 @@
               </template>
             </v-text-field>
           </div>
+          <div class="col-12 col-sm-6 pa-1">
+            Username
+            <v-text-field
+              hide-details="auto"
+              placeholder="username"
+              v-model="formCreate.username"
+              :disabled="
+                checkRole() !== 'SHAREHOLDER' && !(formCreate.agentPrefix.length > 1 && checktrueProfix != false)
+              "
+              :prefix="prefixRole + this.formCreate.agentPrefix"
+              :rules="[(v) => !!v || 'Username  is required']"
+              dense
+              outlined
+            >
+            </v-text-field>
+          </div>
+
           <div class="col-12 col-sm-3 pa-1">
             Role
             <v-text-field
@@ -80,6 +85,7 @@
               :rules="[(v) => !!v || 'Password is required']"
               dense
               outlined
+              autocomplete="new-password"
             ></v-text-field>
           </div>
           <div class="col-12 pa-1">
@@ -94,6 +100,7 @@
               ]"
               hide-details="auto"
               dense
+              autocomplete="off"
               outlined
             ></v-text-field>
           </div>
@@ -125,10 +132,24 @@ export default {
       isClone: false,
       groups: [],
     },
+    checktrueProfix: false,
     valid: false,
     prefixRole: 'prefix',
     roleToCrate: 'OWNER',
   }),
+  watch: {
+    'formCreate.agentPrefix'(value) {
+      if (value) {
+        console.log('+')
+        this.formCreate.username = ''
+        this.formCreate.password = ''
+        this.rePassword = ''
+        this.formCreate.isClone = false
+        this.$refs.formCreate.resetValidation()
+        this.checktrueProfix = false
+      }
+    },
+  },
   computed: {
     ...mapGetters('auth', ['isRoleLevel']),
   },
@@ -139,7 +160,7 @@ export default {
       this.formCreate.comPrefix = this.$store.state.account.profile.comPrefix
     }
     this.formCreate.role = this.checkRole()
-    console.log(this.isRoleLevel, 'use for check agent prefix')
+    console.log(this.checkRole(), 'use for check agent prefix')
   },
   methods: {
     ...mapActions('account', ['create_SubAccont', 'checkPrefixAgent']),
@@ -165,17 +186,19 @@ export default {
         let randomIndex = Math.floor(Math.random() * parseInt(result.length + 1))
         console.log(result[randomIndex], 'random')
         this.formCreate.agentPrefix = result[randomIndex].prefix
+        this.checktrueProfix = false
       }
       if (item.length == 2 && result) {
         let searchwords = result.find((word) => word.prefix === item)
-        if (searchwords)
+        if (searchwords) {
           this.$swal({
             icon: 'success',
             title: `Agent Prefix นี้สามารถใช้ได้`,
             showConfirmButton: false,
             timer: 1000,
           })
-        else {
+          this.checktrueProfix = true
+        } else {
           this.$swal({
             icon: 'error',
             title: `Agent Prefix ${item} นี้ไม่สามารถใช้ได้`,
@@ -183,11 +206,11 @@ export default {
             timer: 1000,
           })
           this.formCreate.agentPrefix = ''
+          this.checktrueProfix = false
         }
       }
     },
     async registerDownline() {
-      console.log(this.formCreate, 'formCreate')
       if (this.$refs.formCreate.validate()) {
         this.$swal({
           title: 'Are you sure you want to register downline?',
@@ -204,7 +227,20 @@ export default {
               this.formCreate.agentPrefix = undefined
             }
             try {
-              await this.create_SubAccont(this.formCreate)
+              let body = {
+                username:
+                  this.formCreate.comPrefix +
+                  (this.formCreate.agentPrefix ? this.formCreate.agentPrefix : '') +
+                  this.formCreate.username,
+                password: this.formCreate.password,
+                role: 'OWNER',
+                comPrefix: this.formCreate.comPrefix,
+                agentPrefix: this.formCreate.agentPrefix,
+                isClone: false,
+                groups: [],
+              }
+
+              await this.create_SubAccont(body)
               this.$swal({
                 icon: 'success',
                 title: 'Registered Success',
@@ -229,17 +265,16 @@ export default {
       }
     },
     checkRole() {
-      let role = this.$route.params.role ? this.$route.params.role : undefined
       let roletoRendering = undefined
-      if (role === 'ADMIN') {
+      if (this.isRoleLevel == 0) {
         roletoRendering = 'OWNER'
-      } else if (role === 'OWNER') {
+      } else if (this.isRoleLevel == 2) {
         roletoRendering = 'SHAREHOLDER'
-      } else if (role === 'SHAREHOLDER') {
+      } else if (this.isRoleLevel == 3) {
         roletoRendering = 'SENIOR'
-      } else if (role === 'SENIOR') {
+      } else if (this.isRoleLevel == 4) {
         roletoRendering = 'AGENT'
-      } else if (role === 'AGENT') {
+      } else if (this.isRoleLevel == 5) {
         roletoRendering = 'MEMBER'
       } else {
         roletoRendering = undefined

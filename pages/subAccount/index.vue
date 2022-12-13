@@ -581,7 +581,6 @@ export default {
       let parameters = this.getParameter()
       try {
         let { data } = await this.subaccontList(parameters)
-        console.log(data, 'data')
         this.itemList = data.docs
         this.pagination.totalDocs = data.totalDocs
       } catch (error) {

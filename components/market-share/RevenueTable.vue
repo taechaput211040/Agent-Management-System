@@ -3,23 +3,15 @@
   <div class="dl_rendering">
     <div v-if="isLoading" class="loading"><loading-page></loading-page></div>
     <div>
-      <v-card-text class="pa-0 indigo lighten-3 white--text d-sm-flex d-block align-baseline">
+      <v-card-text class="py-2 indigo lighten-3 white--text d-sm-flex d-block align-baseline">
         <div class="d-flex align-center pa-2">
           <h2>Revenue Share : {{ username || null }}</h2>
         </div>
 
-        <v-spacer></v-spacer>
-        <div class="col-12 col-sm-4 col-md-3 py-2">
-          <!-- <v-text-field
-            v-model="search"
-            label="seacrh"
-            append-icon="mdi-magnify"
-            dense
-            solo
-            rounded
-            hide-details="auto"
-          ></v-text-field> -->
-        </div>
+        <v-spacer></v-spacer
+        ><v-btn color="purple darken-4" dark @click="settingAllMaximumn" v-show="downline == false"
+          >ตั้งค่าสูงสุด</v-btn
+        >
       </v-card-text>
       <v-card class="classtable">
         <v-data-table
@@ -294,6 +286,49 @@ export default {
         })
       }
       this.isLoading = false
+    },
+    async settingAllMaximumn() {
+      this.$swal({
+        title: 'Are you sure you want to set to maximum all provider ?',
+        icon: 'warning',
+        showCancelButton: true,
+        allowOutsideClick: false,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await Promise.all(
+              await this.rendering.map(async (items) => {
+                let payload = {
+                  code: items.code,
+                  username: this.username,
+                  percent: items.percent_limit,
+                  commission: 0,
+                  option: 0,
+                }
+                if (items.percent != items.percent_limit) {
+                  await this.updateMarketsharebyProvider(payload)
+                }
+              })
+            )
+            this.$swal({
+              title: 'Update Success!',
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1000,
+            }).then(async (result) => {
+              if (result) {
+                await this.getRevenueListByuser()
+              }
+            })
+          } catch (error) {
+            console.log(error)
+          }
+        }
+      })
     },
   },
 }

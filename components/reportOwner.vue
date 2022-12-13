@@ -460,11 +460,9 @@ export default {
     getDateTime(date, time) {
       let dateFormat = 'YYYY-MM-DD'
       let timeFormat = 'HH:mm:ss'
-      return (
-        moment(`${moment(date).format(dateFormat)} ${moment(time).format(timeFormat)}`, 'YYYY-MM-DD HH:mm:ss')
-          .utc()
-          .format(`${dateFormat} ${timeFormat}`) + 'Z'
-      )
+      return moment(`${moment(date).format(dateFormat)} ${moment(time).format(timeFormat)}`, 'YYYY-MM-DD HH:mm:ss')
+        .utc()
+        .format(`${dateFormat} ${timeFormat}`)
     },
     handleClickCopy(text) {
       console.log(text)
@@ -492,8 +490,8 @@ export default {
 
         typeCode: this.group_select.join(',') ? this.group_select.join(',') : undefined,
         provider: this.provider_select.join(',') ? this.provider_select.join(',') : undefined,
-        start: moment(start).format(),
-        end: moment(end).format(),
+        end: moment(end).format('YYYY-MM-DD HH:mm:ss') + 'Z',
+        start: moment(start).format('YYYY-MM-DD HH:mm:ss') + 'Z',
       }
     },
     async onRequest(props) {

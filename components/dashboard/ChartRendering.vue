@@ -81,7 +81,7 @@
 
 <script>
 import VueApexCharts from 'vue-apexcharts'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import LoadingPage from '../form/loadingPage.vue'
 import * as moment from 'moment'
 export default {
@@ -123,7 +123,7 @@ export default {
             color: 'white',
           },
         },
-        
+
         fill: {
           type: 'solid',
           fillOpacity: 0.7,
@@ -162,6 +162,7 @@ export default {
     },
     ...mapState('account', ['profile', 'isClone', 'groups']),
     ...mapState('report', ['dashboardData']),
+    ...mapGetters('auth', ['isRoleLevel']),
   },
   async beforeMount() {
     this.isLoading = true
@@ -174,14 +175,16 @@ export default {
     ...mapActions('report', ['getAllByDashboard']),
     getParameter() {
       let parameters = {
-        start: moment().startOf('month').format(),
-        end: moment().subtract(1, 'days').set({ hour: 23, minute: 59, second: 59 }).format(),
+        start: moment().startOf('month').utc().format('YYYY-MM-DD HH:mm:ss') + 'Z',
+        end:
+          moment().subtract(1, 'days').set({ hour: 23, minute: 59, second: 59 }).utc().format('YYYY-MM-DD HH:mm:ss') +
+          'Z',
       }
       return parameters
     },
-    mapChartData() {
+    async mapChartData() {
       this.series[0].data = []
-      let realtimeData = this.getSummarydata()
+      let realtimeData = await this.getSummarydata()
       for (let key in realtimeData) {
         this.series[0].data.push({ x: key, y: realtimeData[key] < 0 ? realtimeData[key] : realtimeData[key] })
       }
@@ -207,6 +210,28 @@ export default {
         ...this.sumShare(),
         ...this.sumOwner(),
         ...this.sumSmartbet(),
+      }
+      if (this.isRoleLevel == 4) {
+        graphData = {
+          ...this.sumMember(),
+          ...this.sumAgent(),
+          ...this.sumSenior(),
+          company:
+            parseFloat(this.sumOwner().company) +
+            parseFloat(this.sumSmartbet().smart) +
+            parseFloat(this.sumShare().share),
+        }
+      } else if (this.isRoleLevel == 5) {
+        graphData = {
+          ...this.sumMember(),
+          ...this.sumAgent(),
+          ...this.sumSenior(),
+          senior:
+            parseFloat(this.sumSenior().senior) +
+            parseFloat(this.sumOwner().company) +
+            parseFloat(this.sumSmartbet().smart) +
+            parseFloat(this.sumShare().share),
+        }
       }
       return graphData
     },
@@ -238,7 +263,7 @@ export default {
       let results = this.dashboardData?.docs?.reduce((initVal, item) => {
         return (initVal += item.ownerWin + item.ownerCom)
       }, 0)
-      return { owner: parseFloat(results).toFixed(2) }
+      return { company: parseFloat(results).toFixed(2) }
     },
     sumSmartbet() {
       let results = this.dashboardData?.docs?.reduce((initVal, item) => {

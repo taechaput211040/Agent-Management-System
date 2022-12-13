@@ -10,6 +10,7 @@
         @click="$router.push('/')"
       /> -->
       <v-spacer />
+
       <div class="d-none d-sm-block">
         <v-btn icon @click.prevent="$vuetify.theme.dark = !$vuetify.theme.dark">
           <v-icon>{{ $vuetify.theme.dark ? 'mdi-brightness-4' : 'mdi-weather-night' }}</v-icon>
@@ -167,7 +168,7 @@
         <v-form style="width: 100%" class="q-gutter-sm" @submit.prevent="submitauthen">
           <span class="q-gutter-md" style="width: 100%">
             <v-text-field
-              v-model="switchauthtoagent.usernameByAuthen"
+              v-model.trim="switchauthtoagent.usernameByAuthen"
               required
               color="primary"
               label="Username"
@@ -216,6 +217,12 @@ export default {
     }
   },
   computed: {
+    showlogo() {
+      let url = window.location.hostname
+      if (url) {
+        return url
+      }
+    },
     showSwich() {
       if (!localStorage.getItem('admin_user')) return true
       else return false
@@ -312,35 +319,37 @@ export default {
     ...mapActions('auth', ['swapAccount']),
     ...mapActions('account', ['get_creditBalance', 'get_profile', 'getPalletePreset']),
     async submitauthen() {
-      try {
-        const { data } = await this.swapAccount(this.switchauthtoagent.usernameByAuthen)
-        if (data.code == 404) {
-          this.$swal({
-            icon: 'error',
-            title: 'Invalid username!!',
-            allowOutsideClick: false,
-            showConfirmButton: false,
-            timer: 1500,
-          })
-        } else {
-          await localStorage.setItem('admin_user', this.username)
-          await this.set_login(data)
-          await this.$swal({
-            icon: 'success',
-            title: `Authen with : ${data.username}`,
-            allowOutsideClick: false,
-            showConfirmButton: false,
-            timer: 1500,
-          }).then(async (result) => {
-            if (result) {
-              await location.reload()
-            }
-          })
+      if (this.switchauthtoagent.usernameByAuthen.length > 0) {
+        try {
+          const { data } = await this.swapAccount(this.switchauthtoagent.usernameByAuthen)
+          if (data.code == 404) {
+            this.$swal({
+              icon: 'error',
+              title: 'Invalid username!!',
+              allowOutsideClick: false,
+              showConfirmButton: false,
+              timer: 1500,
+            })
+          } else {
+            await localStorage.setItem('admin_user', this.username)
+            await this.set_login(data)
+            await this.$swal({
+              icon: 'success',
+              title: `Authen with : ${data.username}`,
+              allowOutsideClick: false,
+              showConfirmButton: false,
+              timer: 1500,
+            }).then(async (result) => {
+              if (result) {
+                await location.reload()
+              }
+            })
+          }
+        } catch (error) {
+          console.log(error)
+        } finally {
+          this.switch_auth = false
         }
-      } catch (error) {
-        console.log(error)
-      } finally {
-        this.switch_auth = false
       }
     },
     async switchBackToAdmin() {

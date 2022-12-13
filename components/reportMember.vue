@@ -594,7 +594,7 @@ export default {
       return (
         moment(`${moment(date).format(dateFormat)} ${moment(time).format(timeFormat)}`, 'YYYY-MM-DD HH:mm:ss')
           .utc()
-          .format(`${dateFormat} ${timeFormat}`) + 'Z'
+          .format(`${dateFormat} ${timeFormat}`)
       )
     },
     handleClickCopy(text) {
@@ -635,8 +635,8 @@ export default {
         // ...pagination,
         typeCode: this.group_select.join(',') ? this.group_select.join(',') : undefined,
         provider: this.provider_select.join(',') ? this.provider_select.join(',') : undefined,
-        start: moment(start).format(),
-        end: moment(end).format(),
+      end: moment(end).format('YYYY-MM-DD HH:mm:ss') + 'Z',
+        start: moment(start).format('YYYY-MM-DD HH:mm:ss') + 'Z',
       }
     },
     async onRequest(props) {

@@ -12,7 +12,6 @@ export async function get_profile(context) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get('/v1alpha/user/profile/')
-      console.log(response, 'res')
       context.commit('set_profile', response.data.result)
       resolve(response)
     } catch (error) {
@@ -86,7 +85,6 @@ export async function subaccontList(
   }
 ) {
   return new Promise(async (resolve, reject) => {
-    console.log(params, 'param')
     try {
       let data = await this.$axios.get('/v1alpha/user/sub-account/', {
         params: {

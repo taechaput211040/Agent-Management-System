@@ -56,8 +56,6 @@ export default {
           },
         }
       )
-      console.log(res, 'res')
-      console.log(this.token, 'token')
 
       this.lotto = res.data
     } catch (error) {

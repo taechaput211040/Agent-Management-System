@@ -15,7 +15,6 @@ export function clear_account(state) {
 
 export function setPallete(state, payload) {
   for (const [key, v] of Object.entries(payload.palette)) {
-    // console.log(key, v, 'jetmea')
     if (typeof v === 'object') {
       for (const [k, val] of Object.entries(v)) {
         for (const [valIn, valpay] of Object.entries(val)) {
