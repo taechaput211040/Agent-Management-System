@@ -94,7 +94,7 @@ span {
 .card-detail {
   // background-color: white;
   transition: 0.3s;
-  transform: scale(1);
+  transform: scale(1);  
   margin: auto;
   div {
     justify-content: space-between;
@@ -218,13 +218,16 @@ span {
 .img_logo {
   max-width: 100%;
   width: auto;
-  height: 120px;
+  // height: 120px;
+  height: 50px;
   cursor: pointer;
 }
 .img_logo_bar {
   max-width: 100%;
   width: auto;
-  height: 60px;
+  // height: 60px;
+  height: 25px;
+
   cursor: pointer;
 }
 .apexcharts-xaxis {
