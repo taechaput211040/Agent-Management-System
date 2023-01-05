@@ -50,7 +50,7 @@
             </v-list-item-content>
           </v-list-item>
           <!-- && isStaff-->
-          <v-list-item @click.prevent="switch_auth = true" v-if="showSwich && isStaff">
+          <v-list-item @click.prevent="switch_auth = true" v-if="showSwich ">
             <v-list-item-icon>
               <v-icon>mdi-account-switch</v-icon>
             </v-list-item-icon>
