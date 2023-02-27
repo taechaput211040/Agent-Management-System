@@ -38,12 +38,13 @@ export default {
             allowOutsideClick: false,
             showConfirmButton: false,
             timer: 1500,
-          }).then(async (result) => {
-            if (result) {
-              await location.reload()
-              //refreshandredirect/
-            }
           })
+          // .then(async (result) => {
+          //   if (result) {
+          //     await location.reload()
+          //     //refreshandredirect/
+          //   }
+          // })
         }
       } catch (error) {
         console.log(error)

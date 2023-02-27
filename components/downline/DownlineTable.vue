@@ -17,6 +17,7 @@
               label="ค้นหาอย่างน้อย3ตัวอักษร"
               hide-details="auto"
               required
+              @keyup.enter="searchList()"
             ></v-text-field>
           </v-col>
 

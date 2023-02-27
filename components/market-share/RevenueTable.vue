@@ -257,14 +257,26 @@ export default {
       }
       return params
     },
+    getMainProvider() {
+      let params = {
+        username: this.$store.state.auth.username,
+        page: this.paginationProvider.page,
+        limit: this.paginationProvider.rowsPerPage,
+      }
+      return params
+    },
     async getRevenueListByuser() {
       this.isLoading = true
       let parameters = this.getParameterProvider()
+      let getMainProvider = this.getMainProvider()
+      let { data: mainData } = await this.getRevenueProviderByUser(getMainProvider)
+      console.log(mainData, 'main')
       try {
         let { data } = await this.getRevenueProviderByUser(parameters)
         this.rendering = data.result.items
         this.paginationProvider.rowsNumber = data.result.count
-        this.rendering = this.rendering.map((object) => {
+        this.rendering = this.rendering.map((object, index) => {
+          object.percent_limit = mainData.result.items[index].percent
           return { ...object, edit_status: false }
         })
         this.rendering = this.rendering
@@ -299,6 +311,7 @@ export default {
         cancelButtonText: 'Cancel',
       }).then(async (result) => {
         if (result.isConfirmed) {
+          this.isLoading = true
           try {
             await Promise.all(
               await this.rendering.map(async (items) => {
@@ -311,6 +324,7 @@ export default {
                 }
                 if (items.percent != items.percent_limit) {
                   await this.updateMarketsharebyProvider(payload)
+                  this.isLoading = false
                 }
               })
             )
@@ -325,6 +339,7 @@ export default {
               }
             })
           } catch (error) {
+            this.isLoading = false
             console.log(error)
           }
         }

@@ -45,7 +45,14 @@
             </v-text-field>
           </div>
           <div class="col-12 col-sm-6 pa-1">
-            Username
+            Username :
+            <span
+              class="font-weight-bold yellow--text"
+              v-if="
+                !(checkRole() !== 'SHAREHOLDER' && !(formCreate.agentPrefix.length > 1 && checktrueProfix != false))
+              "
+              >{{ prefixRole + this.formCreate.agentPrefix + formCreate.username }}</span
+            >
             <v-text-field
               hide-details="auto"
               placeholder="username"

@@ -44,7 +44,10 @@
             </v-text-field>
           </div>
           <div class="col-12 col-sm-6 pa-1">
-            <small class="font-weigh-bold">Username</small>
+            <small class="font-weigh-bold">Username</small> :
+            <span class="font-weight-bold yellow--text" v-if="formCreate.comPrefix.length > 1 && checktrueProfix != false">
+              {{ formCreate.comPrefix + formCreate.username }}
+            </span>
             <v-text-field
               :prefix="formCreate.comPrefix"
               hide-details="auto"
