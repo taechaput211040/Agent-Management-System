@@ -48,7 +48,7 @@ export default {
   async created() {
     try {
       const res = await this.$axios.post(
-        'https://lotto-launchgame-service-ehhif4jpyq-as.a.run.app/api/auth/smart_agent_loging',
+        'https://lotto-launchgame-service-qlws7pv5wa-as.a.run.app/api/auth/smart_agent_loging',
         {},
         {
           params: {

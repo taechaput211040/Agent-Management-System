@@ -10,7 +10,7 @@ export async function getMemberList(
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://all-member-ehhif4jpyq-as.a.run.app/api/Member/Agent/SubScribe/${params.company}/${params.agent}?page=${params.page}&take=${params.take}`
+        `https://all-member-qlws7pv5wa-as.a.run.app/api/Member/Agent/SubScribe/${params.company}/${params.agent}?page=${params.page}&take=${params.take}`
       )
       resolve(response)
     } catch (error) {
@@ -21,7 +21,7 @@ export async function getMemberList(
 export async function createMember({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.post(`https://all-member-ehhif4jpyq-as.a.run.app/api/Member/Agent`, body)
+      let response = await this.$axios.post(`https://all-member-qlws7pv5wa-as.a.run.app/api/Member/Agent`, body)
       resolve(response)
     } catch (error) {
       reject(error)
@@ -31,7 +31,7 @@ export async function createMember({ commit }, body) {
 export async function editMember({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.put(`https://all-member-ehhif4jpyq-as.a.run.app/api/Member/Agent`, body)
+      let response = await this.$axios.put(`https://all-member-qlws7pv5wa-as.a.run.app/api/Member/Agent`, body)
       resolve(response)
     } catch (error) {
       reject(error)
@@ -54,7 +54,7 @@ export async function creditBalance({ commit }, username) {
 export async function topUpCredit({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.post(`https://all-member-ehhif4jpyq-as.a.run.app/api/Member/Agent/deposit`, body)
+      let response = await this.$axios.post(`https://all-member-qlws7pv5wa-as.a.run.app/api/Member/Agent/deposit`, body)
       resolve(response)
     } catch (error) {
       reject(error)
@@ -89,7 +89,7 @@ export async function searchByUsername({ commit }, param) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.get(
-        `https://all-member-ehhif4jpyq-as.a.run.app/api/Member/Agent/Search/${param.company}/${param.agent}/${param.username}`
+        `https://all-member-qlws7pv5wa-as.a.run.app/api/Member/Agent/Search/${param.company}/${param.agent}/${param.username}`
       )
       resolve(response)
     } catch (error) {
@@ -100,7 +100,7 @@ export async function searchByUsername({ commit }, param) {
 export async function lockstatus({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
-      let response = await this.$axios.patch(`https://all-member-ehhif4jpyq-as.a.run.app/api/Member/Agent/Status`, body)
+      let response = await this.$axios.patch(`https://all-member-qlws7pv5wa-as.a.run.app/api/Member/Agent/Status`, body)
       resolve(response)
     } catch (error) {
       reject(error)
@@ -112,7 +112,7 @@ export async function changePasswordByuser({ commit }, body) {
   return new Promise(async (resolve, reject) => {
     try {
       let response = await this.$axios.patch(
-        `https://all-member-ehhif4jpyq-as.a.run.app/api/Member/Agent/Password`,
+        `https://all-member-qlws7pv5wa-as.a.run.app/api/Member/Agent/Password`,
         body
       )
       resolve(response)

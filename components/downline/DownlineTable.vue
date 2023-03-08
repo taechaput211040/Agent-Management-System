@@ -211,7 +211,7 @@
           >
         </v-card>
       </v-dialog>
-      <v-dialog v-model="open_history" width="800">
+      <v-dialog v-model="open_history" width="900">
         <v-card class="pa-sm-3 pa-1">
           <v-card color="indigo darken-2" dark align-baseline>
             <v-card-title class="text-h5"
@@ -370,7 +370,21 @@ export default {
           text: 'Date/Time',
           value: 'createdAt',
           sortable: false,
-          width: '200px',
+        },
+        {
+          text: 'Type Ref.',
+          value: 'ref.type',
+          sortable: false,
+        },
+        {
+          text: 'username ปลายทาง',
+          value: 'ref.username',
+          sortable: false,
+        },
+        {
+          text: 'role',
+          value: 'ref.role',
+          sortable: false,
         },
       ],
       headers: [
