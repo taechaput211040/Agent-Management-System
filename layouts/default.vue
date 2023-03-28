@@ -3,7 +3,7 @@
     <v-app-bar clipped-left class="elevation-1" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <!-- <h1 class="amber--text darken-4">BETKUB</h1> -->
-      <!-- <img :src="image ? image : this.webPalette.logo" class="img_logo_bar" @click="$router.push('/')" /> -->
+      <img :src="image ? image : this.webPalette.logo" class="img_logo_bar" @click="$router.push('/')" />
       <!-- <img
         src="https://smart-binary.cloud/storage/smartagent/logo_smartbet.png"
         class="img_logo_bar"

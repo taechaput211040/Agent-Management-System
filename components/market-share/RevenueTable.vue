@@ -213,6 +213,22 @@ export default {
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
+            if (bodyConfig.code === 'PGA') {
+              await this.updateMarketsharebyProvider({
+                code: 'PGD',
+                username: this.username,
+                percent: item.percent,
+                commission: 0,
+                option: 0,
+              })
+              await this.updateMarketsharebyProvider({
+                code: 'PGL',
+                username: this.username,
+                percent: item.percent,
+                commission: 0,
+                option: 0,
+              })
+            }
             await this.updateMarketsharebyProvider(bodyConfig)
             this.$swal({
               icon: 'success',
@@ -299,6 +315,9 @@ export default {
       }
       this.isLoading = false
     },
+    async setProviderPGA(items) {
+      console.log(items, 'items')
+    },
     async settingAllMaximumn() {
       this.$swal({
         title: 'Are you sure you want to set to maximum all provider ?',
@@ -323,6 +342,22 @@ export default {
                   option: 0,
                 }
                 if (items.percent != items.percent_limit) {
+                  if (payload.code === 'PGA') {
+                    await this.updateMarketsharebyProvider({
+                      code: 'PGD',
+                      username: this.username,
+                      percent: bodyConfig.percent_limit,
+                      commission: 0,
+                      option: 0,
+                    })
+                    await this.updateMarketsharebyProvider({
+                      code: 'PGL',
+                      username: this.username,
+                      percent: items.percent_limit,
+                      commission: 0,
+                      option: 0,
+                    })
+                  }
                   await this.updateMarketsharebyProvider(payload)
                   this.isLoading = false
                 }

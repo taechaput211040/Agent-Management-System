@@ -45,7 +45,10 @@
           </div>
           <div class="col-12 col-sm-6 pa-1">
             <small class="font-weigh-bold">Username</small> :
-            <span class="font-weight-bold yellow--text" v-if="formCreate.comPrefix.length > 1 && checktrueProfix != false">
+            <span
+              class="font-weight-bold yellow--text"
+              v-if="formCreate.comPrefix.length > 1 && checktrueProfix != false"
+            >
               {{ formCreate.comPrefix + formCreate.username }}
             </span>
             <v-text-field
@@ -61,7 +64,17 @@
             >
             </v-text-field>
           </div>
-
+          <div class="col-12 pa-1">
+            <small class="font-weigh-bold">Company name</small>
+            <v-text-field
+              label="Company name"
+              v-model="formCreate.companyname"
+              hide-details="auto"
+              dense
+              outlined
+              :rules="[(v) => !!v || 'Company name is required']"
+            ></v-text-field>
+          </div>
           <div class="col-12 pa-1">
             <small class="font-weigh-bold">Password</small>
             <v-text-field
@@ -217,6 +230,7 @@ export default {
                 role: 'OWNER',
                 comPrefix: this.formCreate.comPrefix,
                 agentPrefix: this.formCreate.agentPrefix,
+                company: this.formCreate.companyname,
                 isClone: false,
                 groups: [],
               }
