@@ -10,9 +10,9 @@
           <div class="mx-auto col-sm-8 col-md-6 col-lg-12 col-12">
             <div class="elevation-0 pa-sm-6 white--text">
               <v-form>
-                <div class="justify-center text-center">
+                <!-- <div class="justify-center text-center">
                   <img :src="image ? image : this.webPalette.logo" class="img_logo" />
-                </div>
+                </div> -->
                 <!-- <div class="justify-center text-center">
                   <img
                     src="https://smart-binary.cloud/storage/smartagent/logo_smartbet.png"

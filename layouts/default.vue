@@ -3,7 +3,7 @@
     <v-app-bar clipped-left class="elevation-1" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <!-- <h1 class="amber--text darken-4">BETKUB</h1> -->
-      <img :src="image ? image : this.webPalette.logo" class="img_logo_bar" @click="$router.push('/')" />
+      <!-- <img :src="image ? image : this.webPalette.logo" class="img_logo_bar" @click="$router.push('/')" /> -->
       <!-- <img
         src="https://smart-binary.cloud/storage/smartagent/logo_smartbet.png"
         class="img_logo_bar"
@@ -41,7 +41,7 @@
         </template>
         <v-list>
           <!-- -->
-          <v-list-item @click.prevent="switchBackToAdmin" v-if="!showSwich" >
+          <v-list-item @click.prevent="switchBackToAdmin" v-if="!showSwich">
             <v-list-item-icon>
               <v-icon>mdi-shield-account</v-icon>
             </v-list-item-icon>
@@ -94,7 +94,7 @@
             <v-list-item-icon>
               <v-icon>{{ link.icon }}</v-icon>
             </v-list-item-icon>
-            <v-list-item-title v-text="link.title" />
+            <v-list-item-title :inner-text.prop="link.title" />
             <v-badge
               color="error"
               right
@@ -129,7 +129,7 @@
               <v-list-item-icon>
                 <v-icon>{{ sublink.icon }}</v-icon>
               </v-list-item-icon>
-              <v-list-item-title v-text="sublink.text" />
+              <v-list-item-title :inner-text.prop="sublink.text" />
               <v-badge
                 color="error"
                 right
@@ -239,7 +239,9 @@ export default {
       if (this.role === 'SENIOR' || this.role === 'AGENT') dynamicMenu = menu
       else if (this.role === 'OWNER') dynamicMenu = menu.filter((x) => x.title != 'Member Management')
       else {
-        dynamicMenu = menu.filter((x) => x.title != 'Member Management' && x.title != 'Palette Management')
+        dynamicMenu = menu.filter(
+          (x) => x.title != 'Member Management' && x.title != 'Setting System' && x.title != 'Palette Management'
+        )
       }
       if (this.isClone) {
         dynamicMenu = dynamicMenu.filter((menu) => this.groups.includes(menu.permission))

@@ -156,6 +156,12 @@ export default function (/* { ssrContext } */) {
           icon: 'mdi-sitemap',
           permission: 'downline_read',
           status: 1,
+        },  {
+          title: 'Setting System',
+          to: '/settingsystem',
+          icon: 'mdi-cog',
+          permission: 'member_read',
+          status: 1,
         },
         {
           title: 'Member Management',

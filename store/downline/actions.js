@@ -135,3 +135,22 @@ export async function changePasswordByuser({ commit }, body) {
     }
   })
 }
+
+export async function configSystem({ commit }, body) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await this.$axios.post(
+        `https://all-setting-qlws7pv5wa-as.a.run.app/api/Setting/createSettingAndToken`,
+        body,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      resolve(response)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}

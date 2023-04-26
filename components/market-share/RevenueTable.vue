@@ -289,10 +289,14 @@ export default {
       console.log(mainData, 'main')
       try {
         let { data } = await this.getRevenueProviderByUser(parameters)
+        console.log(data, 'data')
         this.rendering = data.result.items
         this.paginationProvider.rowsNumber = data.result.count
         this.rendering = this.rendering.map((object, index) => {
-          object.percent_limit = mainData.result.items[index].percent
+          // // console.log(object)
+          // if(object == mainData.result.items[index]){
+          //   object.percent_limit = mainData.result.items[index].percent
+          // }
           return { ...object, edit_status: false }
         })
         this.rendering = this.rendering
@@ -346,7 +350,7 @@ export default {
                     await this.updateMarketsharebyProvider({
                       code: 'PGD',
                       username: this.username,
-                      percent: bodyConfig.percent_limit,
+                      percent: items.percent_limit,
                       commission: 0,
                       option: 0,
                     })

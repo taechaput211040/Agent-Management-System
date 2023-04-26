@@ -10,7 +10,7 @@
       <div class="pa-2">
         <div class="row pa-5">
           <div class="col-12 col-sm-3 pa-1" v-if="$store.state.auth.role != 'OWNER'">
-            Agent Prefix
+            Agent Prefix <small class="font-weigh-bold error--text">**กรอกอย่างน้อย1ตัวอักษรเพื่อสุ่ม Prefix</small>
             <v-text-field
               hide-details="auto"
               v-model.trim="formCreate.agentPrefix"
@@ -53,13 +53,14 @@
               "
               >{{ prefixRole + this.formCreate.agentPrefix + formCreate.username }}</span
             >
+            <!--  -->
             <v-text-field
               hide-details="auto"
               placeholder="username"
-              v-model="formCreate.username"
               :disabled="
                 checkRole() !== 'SHAREHOLDER' && !(formCreate.agentPrefix.length > 1 && checktrueProfix != false)
               "
+              v-model="formCreate.username"
               :prefix="prefixRole + this.formCreate.agentPrefix"
               :rules="[(v) => !!v || 'Username  is required']"
               dense
@@ -219,8 +220,23 @@ export default {
     },
     async registerDownline() {
       if (this.$refs.formCreate.validate()) {
+        let body = {
+          username:
+            this.formCreate.comPrefix +
+            (this.formCreate.agentPrefix ? this.formCreate.agentPrefix : '') +
+            this.formCreate.username,
+          password: this.formCreate.password,
+          role: this.checkRole(),
+          comPrefix: this.formCreate.comPrefix,
+          agentPrefix: this.formCreate.agentPrefix,
+          isClone: false,
+          groups: [],
+        }
         this.$swal({
           title: 'Are you sure you want to register downline?',
+          html: `Agent Prefix: <b>${body.agentPrefix}</b> </br>
+          Username: <b>${body.username}</b> </br>
+         Password: <b>${body.password}</b> </br>`,
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -234,20 +250,8 @@ export default {
               this.formCreate.agentPrefix = undefined
             }
             try {
-              let body = {
-                username:
-                  this.formCreate.comPrefix +
-                  (this.formCreate.agentPrefix ? this.formCreate.agentPrefix : '') +
-                  this.formCreate.username,
-                password: this.formCreate.password,
-                role: this.checkRole(),
-                comPrefix: this.formCreate.comPrefix,
-                agentPrefix: this.formCreate.agentPrefix,
-                isClone: false,
-                groups: [],
-              }
-
-              await this.create_SubAccont(body)
+              let res = await this.create_SubAccont(body)
+              console.log(res, 'resregister')
               this.$swal({
                 icon: 'success',
                 title: 'Registered Success',
