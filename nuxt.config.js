@@ -9,40 +9,41 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - smart-office',
-    title: 'smart-office',
+    title: 'Agent Back Office',
     htmlAttrs: {
       lang: 'en',
     },
-    meta: [{
-        charset: 'utf-8'
+    meta: [
+      {
+        charset: 'utf-8',
       },
       {
         name: 'viewport',
-        content: 'width=device-width, initial-scale=1'
+        content: 'width=device-width, initial-scale=1',
       },
       {
-        hid: 'description',
-        name: 'description',
-        content: ''
+        hid: 'og:description',
+        property: 'og:description',
+        content: 'Agent Management System',
       },
       {
         name: 'format-detection',
-        content: 'telephone=no'
+        content: 'telephone=no',
+      },
+      {
+        'http-equiv': 'Content-Security-Policy',
+        // name: 'Content-Security-Policy',
+        content: 'upgrade-insecure-requests',
       },
     ],
-    link: [{
-      rel: 'icon',
-      type: 'image/x-icon',
-      href: '/favicon.ico'
-    }],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ['@/assets/main.scss'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['~/plugins/axios'],
+  plugins: ['~/plugins/axios', '~/plugins/formatter'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -61,6 +62,7 @@ export default {
     '@nuxtjs/axios',
     'nuxt-element-ui',
     '@nuxtjs/dayjs',
+    'vue-sweetalert2/nuxt',
   ],
 
   dayjs: {
@@ -75,28 +77,28 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: '/',
-    proxy: true
+    // baseURL: '/',
+    baseURL: 'https://kong-api-proxy-qlws7pv5wa-as.a.run.app',
+    // proxy: true,
   },
 
-  proxy: {
-    '/v1alpha': {
-      // target: "http://192.168.1.123:5000",
-      // target: "http://localhost:5000",
-      target: 'https://kong-api-kdz5uqbpia-as.a.run.app',
-      changeOrigin: true,
-    },
+  // proxy: {
+  //   '/v1alpha': {
+  //     target: 'https://kong-api-proxy-qlws7pv5wa-as.a.run.app',
+  //     changeOrigin: true,
+  //   },
 
-    '/api/V2/': {
-      target: 'https://backend-v2.smart-exchange.io',
-      pathRewrite: {
-        '^/apiV2/': ''
-      },
-    },
-  },
+  //   '/api/V2/': {
+  //     target: 'https://backend-v2.smart-exchange.io',
+  //     pathRewrite: {
+  //       '^/apiV2/': '',
+  //     },
+  //   },
+  // },
   server: {
-    port: process.env.APP_PORT || 3000, // default: 3000
+    port: process.env.APP_PORT || 8123, // default: 3000
   },
+
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
@@ -115,7 +117,22 @@ export default {
       },
     },
   },
-
+  // adding the below object made the compilation time go up again to
+  //"normal"
+  loaders: {
+    vue: {
+      prettify: false,
+    },
+  },
+  /*
+   ** You can extend webpack config here
+   */
+  extend(config, ctx) {
+    config.devtool = ctx.isClient ? 'eval-source-map' : 'inline-source-map'
+  },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+  router: {
+    mode: 'history',
+  },
 }

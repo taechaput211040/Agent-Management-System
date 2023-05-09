@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-md-6 col-12">
-      <div class="row" style="align-items: baseline;">
+      <div class="row" style="align-items: baseline">
         เริ่ม
         <div class="col-7 col-md-7">
           <el-date-picker
@@ -26,7 +26,7 @@
       </div>
     </div>
     <div class="col-md-6 col-12">
-      <div class="row" style="align-items: baseline;">
+      <div class="row" style="align-items: baseline">
         ถึง
         <div class="col-7 col-md-7">
           <el-date-picker
@@ -60,8 +60,8 @@ export default {
       startDate: new Date(),
       startTime: new Date(new Date().setHours(0, 0, 0, 0)),
       endDate: new Date(),
-      endTime: new Date(new Date().setHours(23, 59, 59, 999))
-    }
-  }
-};
+      endTime: new Date(new Date().setHours(23, 59, 59, 999)),
+    },
+  },
+}
 </script>

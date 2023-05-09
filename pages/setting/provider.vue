@@ -17,7 +17,7 @@
               >
             </v-row>
             <v-data-table
-              class="elevation-2"
+              class=" "
               :options.sync="options"
               :headers="headers"
               :items="dataList"
@@ -136,11 +136,10 @@ export default {
     ...mapActions('provider', ['load']),
   },
   async created() {
-    this.isLoading = true;
+    this.isLoading = true
     const { data } = await this.load()
     this.data = data
-    this.isLoading = false;
-    
+    this.isLoading = false
   },
 }
 </script>

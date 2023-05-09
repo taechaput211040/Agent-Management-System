@@ -1,6 +1,6 @@
 
 
-        <!-- <div class="mx-auto mt-5 justify-center white rounded-lg classtable">
+        <!-- <div class="mx-auto mt-5 justify-center  rounded-lg classtable">
           <v-data-table
             :headers="headers"
             :items="reportdata"

@@ -1,7 +1,9 @@
 # smart-office-next
 
 ## Design and specs [here](./design/design.md)
+
 ---
+
 ## Build Setup
 
 ```bash
