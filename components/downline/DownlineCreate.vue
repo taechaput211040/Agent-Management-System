@@ -1,128 +1,142 @@
 <template>
-  <v-card>
-    <div class="d-flex align-center pa-2">
-      <v-btn color="error" class="mx-3" small @click="$router.go(-1)">back</v-btn>
-      <h2>Add Downline : {{ checkRole() }}</h2>
-    </div>
+  <div>
+    <v-card>
+      <div class="d-flex align-center pa-2">
+        <v-btn color="error" class="mx-3" small @click="$router.go(-1)">back</v-btn>
+        <h2>Add Downline : {{ checkRole() }}</h2>
+      </div>
 
-    <v-divider></v-divider>
-    <v-form ref="formCreate" v-model="valid">
-      <div class="pa-2">
-        <div class="row pa-5">
-          <div class="col-12 col-sm-3 pa-1" v-if="$store.state.auth.role != 'OWNER'">
-            Agent Prefix <small class="font-weigh-bold error--text">**กรอกอย่างน้อย1ตัวอักษรเพื่อสุ่ม Prefix</small>
-            <v-text-field
-              hide-details="auto"
-              v-model.trim="formCreate.agentPrefix"
-              placeholder="Agent Prefix"
-              dense
-              autocomplete="username"
-              :filled="isRoleLevel >= 5"
-              :disabled="isRoleLevel >= 5"
-              max="2"
-              @keypress="(e) => rangeInput(e, 2, formCreate.agentPrefix)"
-              onkeypress="
+      <v-divider></v-divider>
+      <v-form ref="formCreate" v-model="valid">
+        <div class="pa-2">
+          <div class="row pa-5">
+            <div class="col-12 col-sm-3 pa-1" v-if="$store.state.auth.role != 'OWNER'">
+              Agent Prefix <small class="font-weigh-bold error--text">**กรอกอย่างน้อย1ตัวอักษรเพื่อสุ่ม Prefix</small>
+              <v-text-field
+                hide-details="auto"
+                v-model.trim="formCreate.agentPrefix"
+                placeholder="Agent Prefix"
+                dense
+                autocomplete="username"
+                :filled="isRoleLevel >= 5"
+                :disabled="isRoleLevel >= 5"
+                max="2"
+                @keypress="(e) => rangeInput(e, 2, formCreate.agentPrefix)"
+                onkeypress="
                 return (
                   (event.charCode >= 65 && event.charCode <= 90) ||
                   (event.charCode >= 97 && event.charCode <= 122) ||
                   (event.charCode >= 48 && event.charCode <= 57)
                 )
               "
-              required
-              outlined
-              :rules="[(v) => !!v || 'Agent Prefix  is required']"
-            >
-              <template slot="append" v-if="formCreate.agentPrefix.length == 1">
-                <v-btn :loading="loadingPrefix" @click="checkprefix(formCreate.agentPrefix)" dark color="primary" small>
-                  Random</v-btn
-                >
-              </template>
-              <template slot="append" v-if="formCreate.agentPrefix.length == 2">
-                <v-btn :loading="loadingPrefix" @click="checkprefix(formCreate.agentPrefix)" dark color="primary" small>
-                  Check</v-btn
-                >
-              </template>
-            </v-text-field>
-          </div>
-          <div class="col-12 col-sm-6 pa-1">
-            Username :
-            <span
-              class="font-weight-bold yellow--text"
-              v-if="
-                !(checkRole() !== 'SHAREHOLDER' && !(formCreate.agentPrefix.length > 1 && checktrueProfix != false))
-              "
-              >{{ prefixRole + this.formCreate.agentPrefix + formCreate.username }}</span
-            >
-            <!--  -->
-            <v-text-field
-              hide-details="auto"
-              placeholder="username"
-              :disabled="
-                checkRole() !== 'SHAREHOLDER' && !(formCreate.agentPrefix.length > 1 && checktrueProfix != false)
-              "
-              v-model="formCreate.username"
-              :prefix="prefixRole + this.formCreate.agentPrefix"
-              :rules="[(v) => !!v || 'Username  is required']"
-              dense
-              outlined
-            >
-            </v-text-field>
+                required
+                outlined
+                :rules="[(v) => !!v || 'Agent Prefix  is required']"
+              >
+                <template slot="append" v-if="formCreate.agentPrefix.length == 1">
+                  <v-btn
+                    :loading="loadingPrefix"
+                    @click="checkprefix(formCreate.agentPrefix)"
+                    dark
+                    color="primary"
+                    small
+                  >
+                    Random</v-btn
+                  >
+                </template>
+                <template slot="append" v-if="formCreate.agentPrefix.length == 2">
+                  <v-btn
+                    :loading="loadingPrefix"
+                    @click="checkprefix(formCreate.agentPrefix)"
+                    dark
+                    color="primary"
+                    small
+                  >
+                    Check</v-btn
+                  >
+                </template>
+              </v-text-field>
+            </div>
+            <div class="col-12 col-sm-6 pa-1">
+              Username :
+              <span
+                class="font-weight-bold yellow--text"
+                v-if="
+                  !(checkRole() !== 'SHAREHOLDER' && !(formCreate.agentPrefix.length > 1 && checktrueProfix != false))
+                "
+                >{{ prefixRole + this.formCreate.agentPrefix + formCreate.username }}</span
+              >
+              <!--  -->
+              <v-text-field
+                hide-details="auto"
+                placeholder="username"
+                :disabled="
+                  checkRole() !== 'SHAREHOLDER' && !(formCreate.agentPrefix.length > 1 && checktrueProfix != false)
+                "
+                v-model="formCreate.username"
+                :prefix="prefixRole + this.formCreate.agentPrefix"
+                :rules="[(v) => !!v || 'Username  is required']"
+                dense
+                outlined
+              >
+              </v-text-field>
+            </div>
+
+            <div class="col-12 col-sm-3 pa-1">
+              Role
+              <v-text-field
+                hide-details="auto"
+                filled
+                placeholder="role"
+                v-model="formCreate.role"
+                :value="checkRole()"
+                disabled
+                dense
+                outlined
+              ></v-text-field>
+            </div>
+
+            <div class="col-12 pa-1">
+              Password
+              <v-text-field
+                placeholder="password"
+                v-model="formCreate.password"
+                type="password"
+                hide-details="auto"
+                :rules="[(v) => !!v || 'Password is required']"
+                dense
+                outlined
+                autocomplete="new-password"
+              ></v-text-field>
+            </div>
+            <div class="col-12 pa-1">
+              Re-Password
+              <v-text-field
+                placeholder="Re-password"
+                v-model="rePassword"
+                type="password"
+                :rules="[
+                  (v) => !!v || 'Re-Passwords is Required ',
+                  (v) => (v && v === this.formCreate.password) || 'Re-passwords are not the same ',
+                ]"
+                hide-details="auto"
+                dense
+                autocomplete="off"
+                outlined
+              ></v-text-field>
+            </div>
           </div>
 
-          <div class="col-12 col-sm-3 pa-1">
-            Role
-            <v-text-field
-              hide-details="auto"
-              filled
-              placeholder="role"
-              v-model="formCreate.role"
-              :value="checkRole()"
-              disabled
-              dense
-              outlined
-            ></v-text-field>
-          </div>
-
-          <div class="col-12 pa-1">
-            Password
-            <v-text-field
-              placeholder="password"
-              v-model="formCreate.password"
-              type="password"
-              hide-details="auto"
-              :rules="[(v) => !!v || 'Password is required']"
-              dense
-              outlined
-              autocomplete="new-password"
-            ></v-text-field>
-          </div>
-          <div class="col-12 pa-1">
-            Re-Password
-            <v-text-field
-              placeholder="Re-password"
-              v-model="rePassword"
-              type="password"
-              :rules="[
-                (v) => !!v || 'Re-Passwords is Required ',
-                (v) => (v && v === this.formCreate.password) || 'Re-passwords are not the same ',
-              ]"
-              hide-details="auto"
-              dense
-              autocomplete="off"
-              outlined
-            ></v-text-field>
-          </div>
+          <v-card-actions align="right">
+            <v-spacer></v-spacer>
+            <v-btn push rounded color="success" @click="registerDownline()">Submit </v-btn>
+            <v-btn push rounded color="error" @click="$router.go(-1)">Cancel</v-btn>
+            <v-spacer></v-spacer>
+          </v-card-actions>
         </div>
-
-        <v-card-actions align="right">
-          <v-spacer></v-spacer>
-          <v-btn push rounded color="success" @click="registerDownline()">Submit </v-btn>
-          <v-btn push rounded color="error" @click="$router.go(-1)">Cancel</v-btn>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </div>
-    </v-form>
-  </v-card>
+      </v-form>
+    </v-card>
+  </div>
 </template>
 
 <script>
